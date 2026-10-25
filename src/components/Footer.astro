@@ -1,0 +1,22 @@
+---
+/**
+ * Override Footer Starlight: footer bawaan + disclaimer + tanda centang pelajaran selesai di sidebar.
+ */
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default><slot /></Default>
+<p class="disclaimer">
+	jagoklodi adalah situs komunitas independen dan tidak berafiliasi dengan Anthropic.
+	Claude adalah merek dagang Anthropic.
+</p>
+
+<script>
+	import { bacaSelesai, normalPath } from '../lib/progres';
+
+	const selesai = new Set(bacaSelesai());
+	document.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]').forEach((a) => {
+		const path = new URL(a.href, location.href).pathname;
+		if (selesai.has(normalPath(path))) a.dataset.selesai = '';
+	});
+</script>

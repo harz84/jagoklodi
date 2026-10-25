@@ -1,0 +1,63 @@
+---
+/**
+ * Override PageTitle Starlight:
+ * - menampilkan info pelajaran (level, durasi, prasyarat, tanggal verifikasi);
+ * - menggagalkan build bila halaman pelajaran tidak lengkap frontmatter-nya.
+ */
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+
+const route = Astro.locals.starlightRoute;
+const data = route.entry.data;
+const id = route.id;
+const diFolderLevel = /^level-\d\//.test(id);
+
+if (diFolderLevel && data.jenis !== 'pelajaran') {
+	throw new Error(`[jagoklodi] ${id}: file di folder level-* wajib memakai "jenis: pelajaran".`);
+}
+
+const isPelajaran = data.jenis === 'pelajaran';
+if (isPelajaran) {
+	const kurang = ['level', 'durasi', 'prasyarat', 'terakhirDiverifikasi'].filter(
+		(f) => data[f as keyof typeof data] === undefined,
+	);
+	if (kurang.length) {
+		throw new Error(`[jagoklodi] ${id}: frontmatter pelajaran belum lengkap, kurang: ${kurang.join(', ')}`);
+	}
+}
+
+const BATAS_HARI = 90;
+const tgl = data.terakhirDiverifikasi;
+const tglIso = tgl ? tgl.toISOString().slice(0, 10) : '';
+const tglTampil = tgl
+	? tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+	: '';
+---
+
+<Default><slot /></Default>
+{
+	isPelajaran && (
+		<dl class="info-pelajaran" data-tgl-verifikasi={tglIso} data-batas-hari={BATAS_HARI}>
+			<div><dt>Level</dt><dd>{data.level}</dd></div>
+			<div><dt>Durasi</dt><dd>{data.durasi}</dd></div>
+			<div><dt>Prasyarat</dt><dd>{data.prasyarat}</dd></div>
+			<div>
+				<dt>Terakhir diverifikasi</dt>
+				<dd>
+					<time datetime={tglIso}>{tglTampil}</time>
+					<span class="perlu-ditinjau" hidden>perlu ditinjau</span>
+				</dd>
+			</div>
+		</dl>
+	)
+}
+
+<script>
+	// Tanda "perlu ditinjau" dihitung di browser, supaya tetap akurat walau situs lama tidak di-build ulang.
+	document.querySelectorAll<HTMLElement>('.info-pelajaran').forEach((el) => {
+		const tgl = Date.parse(el.dataset.tglVerifikasi ?? '');
+		const batas = Number(el.dataset.batasHari ?? 90);
+		if (!Number.isNaN(tgl) && Date.now() - tgl > batas * 864e5) {
+			el.querySelector<HTMLElement>('.perlu-ditinjau')?.removeAttribute('hidden');
+		}
+	});
+</script>

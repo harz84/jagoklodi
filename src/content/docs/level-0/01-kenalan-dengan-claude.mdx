@@ -1,0 +1,110 @@
+---
+title: Kenalan dengan Claude
+description: Apa itu Claude, pekerjaan apa yang cocok dibantu, dan batasan yang perlu Anda waspadai sejak awal.
+jenis: pelajaran
+level: 0
+durasi: 20 menit
+prasyarat: Tidak ada. Cukup browser dan alamat email.
+terakhirDiverifikasi: 2026-10-25
+sidebar:
+  order: 1
+  label: 1. Kenalan dengan Claude
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan dengan bahasa sendiri apa itu Claude.
+2. Menyebutkan tiga pekerjaan yang cocok dibantu Claude dan tiga batasannya.
+3. Mengirim percakapan pertama, lalu memeriksa hasilnya dengan kritis.
+
+## Apa itu Claude
+
+Claude adalah asisten AI buatan perusahaan Anthropic. Anda bercakap dengannya memakai bahasa sehari-hari, termasuk Bahasa Indonesia, dan Claude membalas dengan teks. Claude juga bisa membaca file atau gambar yang Anda unggah, misalnya PDF, dokumen Word, atau foto tabel.
+
+Claude bisa dipakai lewat browser di [claude.ai](https://claude.ai), aplikasi desktop, dan aplikasi HP. Fitur yang tersedia bergantung pada paket langganan; perbedaan paket dibahas di pelajaran berikutnya.
+
+### Cocok untuk
+
+| Jenis pekerjaan | Contoh |
+| --- | --- |
+| Menulis dan menyunting | Draf email, surat undangan, merapikan kalimat laporan |
+| Meringkas dan menjelaskan | Meringkas notulen rapat, menjelaskan istilah teknis dengan bahasa awam |
+| Membaca dokumen | Mencari poin penting di kontrak, membandingkan dua versi dokumen |
+| Bertukar pikiran | Mencari ide nama program, menyusun kerangka presentasi |
+| Membuat alat kecil | Rumus Excel, tabel perhitungan, halaman web sederhana |
+
+### Batasan yang harus Anda ketahui
+
+<Aside type="caution" title="Claude bisa salah dengan nada yakin">
+Kadang Claude menyampaikan fakta, angka, atau kutipan yang keliru seolah-olah benar. Istilahnya _halusinasi_. Untuk hal penting, selalu periksa ke sumber aslinya.
+</Aside>
+
+- **Pengetahuan punya batas waktu.** Tanpa fitur pencarian web, Claude tidak tahu kejadian terbaru.
+- **Tidak otomatis tahu konteks Anda.** Claude tidak tahu kantor, jabatan, atau kebiasaan Anda kecuali Anda ceritakan.
+- **Bukan pengganti profesional.** Untuk keputusan hukum, medis, atau keuangan, jadikan jawaban Claude sebagai bahan diskusi, bukan keputusan akhir.
+- **Hitungan panjang perlu dicek.** Untuk angka penting, cocokkan lagi dengan kalkulator atau Excel.
+
+## Langkah praktik
+
+<Steps>
+
+1. Buka [claude.ai](https://claude.ai) di browser, lalu masuk atau daftar dengan email Anda.
+
+2. Kirim perkenalan yang memberi konteks. Salin prompt ini dan ganti bagian dalam kurung:
+
+    ```text
+    Halo Claude. Saya bekerja sebagai [jabatan] di [jenis tempat kerja].
+    Pekerjaan rutin saya antara lain [sebutkan 2–3 pekerjaan].
+    Dari pekerjaan itu, mana yang paling cocok dibantu AI, dan mana yang sebaiknya tetap saya kerjakan sendiri? Jelaskan alasannya singkat.
+    ```
+
+3. Uji kemampuan meringkas. Kirim prompt berikut beserta teks contohnya (data fiktif):
+
+    ```text
+    Ringkas pengumuman berikut menjadi 3 poin untuk dikirim ke grup WhatsApp:
+
+    Diberitahukan kepada seluruh karyawan PT Contoh Sejahtera bahwa mulai Senin,
+    3 November, jam masuk kantor berubah dari pukul 08.00 menjadi 07.30 WIB.
+    Jam pulang tetap pukul 16.30 WIB. Perubahan ini berlaku selama tiga bulan
+    sebagai uji coba. Karyawan yang memiliki kendala transportasi dapat mengajukan
+    keringanan kepada bagian SDM paling lambat Jumat, 31 Oktober.
+    ```
+
+4. Periksa hasilnya. Bandingkan ringkasan dengan teks asli: apakah tanggal dan jam sudah tepat? Apakah ada informasi yang **ditambahkan** padahal tidak ada di teks asli?
+
+5. Uji batasan. Tanyakan sesuatu yang terjadi minggu ini, misalnya hasil pertandingan sepak bola terakhir tim favorit Anda. Perhatikan apakah Claude mencari di web, mengaku tidak tahu, atau justru menebak.
+
+</Steps>
+
+## Contoh nyata
+
+Pada langkah 3, ringkasan yang baik kurang lebih memuat tiga hal: jam masuk baru 07.30 WIB mulai 3 November, jam pulang tetap 16.30 WIB, dan batas pengajuan keringanan ke SDM pada 31 Oktober. Jika Claude menyebut hal yang tidak ada di teks, misalnya "wajib absen sidik jari", berarti ia menambahkan informasi sendiri. Inilah alasan langkah 4 tidak boleh dilewati.
+
+## Latihan
+
+Buat tabel kecil berisi pekerjaan rutin Anda sendiri:
+
+| Pekerjaan | Cocok dibantu Claude? | Alasan |
+| --- | --- | --- |
+| … | Ya / Tidak | … |
+
+**Kriteria berhasil:** tabel berisi minimal tiga pekerjaan yang cocok dan satu yang tidak cocok, masing-masing dengan alasan yang masuk akal. Simpan tabel ini; Anda akan memakainya lagi di pelajaran tentang prompt.
+
+## Kesalahan umum
+
+- **Menganggap semua jawaban benar.** Claude membantu menyusun draf, tetapi Anda tetap penanggung jawab isinya.
+- **Menempelkan data rahasia.** Jangan mengunggah data pelanggan, gaji, atau dokumen internal sebelum memahami aturan privasi. Topik ini dibahas di Pelajaran 3.
+- **Prompt terlalu singkat.** "Buatkan surat" menghasilkan surat generik. Sebutkan tujuan, penerima, dan nada yang diinginkan.
+- **Mengira Claude ingat semua percakapan.** Setiap percakapan baru dimulai dari awal, kecuali Anda memakai fitur seperti Projects atau memory.
+
+## Rujukan
+
+- [Pusat bantuan Claude](https://support.claude.com): panduan resmi pemakaian Claude.
+- [Anthropic Academy](https://anthropic.skilljar.com/): kursus resmi gratis, berbahasa Inggris.
+
+<TandaSelesai />

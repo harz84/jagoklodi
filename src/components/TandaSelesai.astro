@@ -1,0 +1,47 @@
+---
+/**
+ * Tombol "Tandai selesai" di akhir setiap pelajaran.
+ * Pemakaian di MDX:  import TandaSelesai from '~/components/TandaSelesai.astro';  lalu  <TandaSelesai />
+ */
+---
+
+<div class="tanda-selesai not-content">
+	<button type="button" aria-pressed="false">Tandai pelajaran ini selesai</button>
+	<p class="tanda-selesai__catatan" hidden>
+		Progres tidak bisa disimpan di browser ini (mungkin mode privat atau penyimpanan diblokir).
+	</p>
+</div>
+
+<script>
+	import { bacaSelesai, setSelesai, normalPath } from '../lib/progres';
+
+	document.querySelectorAll<HTMLElement>('.tanda-selesai').forEach((wadah) => {
+		const tombol = wadah.querySelector('button')!;
+		const catatan = wadah.querySelector<HTMLElement>('.tanda-selesai__catatan')!;
+		const path = normalPath(location.pathname);
+
+		const tampilkan = (selesai: boolean) => {
+			tombol.setAttribute('aria-pressed', String(selesai));
+			tombol.textContent = selesai ? '✓ Selesai (klik untuk membatalkan)' : 'Tandai pelajaran ini selesai';
+			document
+				.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]')
+				.forEach((a) => {
+					if (normalPath(new URL(a.href, location.href).pathname) !== path) return;
+					if (selesai) a.dataset.selesai = '';
+					else delete a.dataset.selesai;
+				});
+		};
+
+		tampilkan(bacaSelesai().includes(path));
+
+		tombol.addEventListener('click', () => {
+			const baru = tombol.getAttribute('aria-pressed') !== 'true';
+			if (setSelesai(path, baru)) {
+				catatan.hidden = true;
+				tampilkan(baru);
+			} else {
+				catatan.hidden = false;
+			}
+		});
+	});
+</script>
