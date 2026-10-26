@@ -14,7 +14,8 @@ export const collections = {
 		loader: docsLoader(),
 		schema: docsSchema({
 			extend: z.object({
-				jenis: z.enum(['pelajaran', 'halaman']).default('halaman'),
+				// pelajaran = materi + kuis 3–5 soal; kuis = kuis akhir level (minimal 10 soal); halaman = halaman biasa
+				jenis: z.enum(['pelajaran', 'kuis', 'halaman']).default('halaman'),
 				level: z.number().int().min(0).max(4).optional(),
 				durasi: z.string().optional(),
 				prasyarat: z.string().optional(),

@@ -11,11 +11,11 @@ const data = route.entry.data;
 const id = route.id;
 const diFolderLevel = /^level-\d\//.test(id);
 
-if (diFolderLevel && data.jenis !== 'pelajaran') {
-	throw new Error(`[jagoklodi] ${id}: file di folder level-* wajib memakai "jenis: pelajaran".`);
+if (diFolderLevel && data.jenis === 'halaman') {
+	throw new Error(`[jagoklodi] ${id}: file di folder level-* wajib memakai "jenis: pelajaran" atau "jenis: kuis".`);
 }
 
-const isPelajaran = data.jenis === 'pelajaran';
+const isPelajaran = data.jenis === 'pelajaran' || data.jenis === 'kuis';
 if (isPelajaran) {
 	const kurang = ['level', 'durasi', 'prasyarat', 'terakhirDiverifikasi'].filter(
 		(f) => data[f as keyof typeof data] === undefined,

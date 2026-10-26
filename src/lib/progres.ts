@@ -31,3 +31,49 @@ export function setSelesai(path: string, selesai: boolean): boolean {
 		return false;
 	}
 }
+
+/* ---------- Kuis ---------- */
+
+const KUNCI_KUIS = 'jagoklodi:kuis';
+
+export interface HasilKuis {
+	/** Skor terbaik dalam persen (0–100). */
+	terbaik: number;
+	/** Pernah mencapai ambang lulus. */
+	lulus: boolean;
+}
+
+function bacaSemuaKuis(): Record<string, HasilKuis> {
+	try {
+		const isi = JSON.parse(localStorage.getItem(KUNCI_KUIS) ?? '{}');
+		return isi && typeof isi === 'object' && !Array.isArray(isi) ? isi : {};
+	} catch {
+		return {};
+	}
+}
+
+export function bacaKuis(path: string): HasilKuis | undefined {
+	const h = bacaSemuaKuis()[normalPath(path)];
+	return h && typeof h.terbaik === 'number' ? { terbaik: h.terbaik, lulus: Boolean(h.lulus) } : undefined;
+}
+
+/** Simpan hasil percobaan; skor terbaik dan status lulus tidak pernah turun. Mengembalikan null bila penyimpanan gagal. */
+export function simpanKuis(path: string, skor: number, lulus: boolean): HasilKuis | null {
+	try {
+		const semua = bacaSemuaKuis();
+		const p = normalPath(path);
+		const lama = semua[p];
+		const baru: HasilKuis = {
+			terbaik: Math.max(skor, lama?.terbaik ?? 0),
+			lulus: lulus || Boolean(lama?.lulus),
+		};
+		semua[p] = baru;
+		localStorage.setItem(KUNCI_KUIS, JSON.stringify(semua));
+		return baru;
+	} catch {
+		return null;
+	}
+}
+
+/** Nama event yang dikirim komponen Kuis saat pengguna lulus. */
+export const EVENT_KUIS_LULUS = 'jagoklodi:kuis-lulus';

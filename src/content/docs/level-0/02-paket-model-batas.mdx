@@ -13,6 +13,7 @@ sidebar:
 
 import { Steps, Aside } from '@astrojs/starlight/components';
 import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
 
 ## Tujuan
 
@@ -124,5 +125,62 @@ Pilih paket yang paling sesuai untuk tiga orang fiktif berikut, beserta alasanny
 - [Memilih paket Claude](https://support.claude.com/en/articles/11049762-choosing-a-claude-plan): daftar paket dan harga terbaru.
 - [Cara kerja batas pemakaian dan batas panjang](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work): penjelasan resmi kuota dan context window.
 - [Tips agar kuota tidak cepat habis](https://support.claude.com/en/articles/9797557-usage-limit-best-practices): praktik terbaik dari pusat bantuan Claude.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa perbedaan utama antara paket Free, Pro, dan Max?',
+			pilihan: [
+				'Bahasa yang bisa dipakai',
+				'Berapa banyak Anda bisa memakai Claude (kapasitas pemakaian)',
+				'Hanya paket Max yang bisa membaca file',
+			],
+			jawaban: 1,
+			pembahasan: 'Perbedaan utama antarpaket perorangan adalah kapasitas pemakaian. Rinciannya bisa berubah, jadi selalu cek halaman resmi.',
+		},
+		{
+			tanya: 'Pak Dimas memakai Claude di claude.ai pagi hari lalu di Claude Code sore harinya. Bagaimana kuotanya dihitung?',
+			pilihan: [
+				'Terpisah; tiap aplikasi punya kuota sendiri',
+				'Dari kuota yang sama; pemakaian di keduanya saling mengurangi',
+				'Claude Code tidak memakai kuota sama sekali',
+			],
+			jawaban: 1,
+			pembahasan: 'Pemakaian di claude.ai, aplikasi desktop, dan Claude Code mengambil dari kuota yang sama.',
+		},
+		{
+			tanya: 'Apa yang dimaksud context window?',
+			pilihan: [
+				'Jumlah pesan yang boleh dikirim per minggu',
+				'"Ingatan kerja" Claude dalam satu percakapan',
+				'Jendela pengaturan di menu Settings',
+			],
+			jawaban: 1,
+			pembahasan: 'Context window adalah batas informasi yang bisa diolah Claude dalam satu percakapan. Ini berbeda dari kuota pemakaian.',
+		},
+		{
+			tanya: 'Mana kebiasaan yang paling menghemat kuota?',
+			pilihan: [
+				'Mengirim satu pesan lengkap berisi semua detail, daripada beberapa pesan pendek terpisah',
+				'Memakai satu percakapan panjang untuk semua topik',
+				'Mengaktifkan semua connector supaya Claude lebih pintar',
+			],
+			jawaban: 0,
+			pembahasan: 'Menggabungkan pertanyaan dan detail dalam satu pesan mengurangi bolak-balik. Percakapan yang terlalu panjang dan connector yang tidak dipakai justru membuat kuota lebih cepat habis.',
+		},
+		{
+			tanya: 'Sebuah koperasi dengan sepuluh pengurus ingin memakai Claude dengan tagihan terpusat. Paket apa yang paling sesuai?',
+			pilihan: [
+				'Satu akun Pro dipakai bersama sepuluh orang',
+				'Paket organisasi (Team atau Enterprise), dengan akun untuk setiap anggota',
+				'Sepuluh akun Free',
+			],
+			jawaban: 1,
+			pembahasan: 'Paket organisasi memberi akun per anggota, pengelolaan oleh admin, dan tagihan terpusat. Satu akun yang dipakai ramai-ramai sulit dikelola dan datanya bercampur.',
+		},
+	]}
+/>
 
 <TandaSelesai />
