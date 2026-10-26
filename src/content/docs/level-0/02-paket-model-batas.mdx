@@ -1,0 +1,128 @@
+---
+title: Paket, model, dan batas pemakaian
+description: Memilih paket Claude yang sesuai kebutuhan, memahami cara kerja batas pemakaian, dan menghemat kuota.
+jenis: pelajaran
+level: 0
+durasi: 25 menit
+prasyarat: Pelajaran 1 dan akun Claude (paket apa saja).
+terakhirDiverifikasi: 2026-10-26
+sidebar:
+  order: 2
+  label: 2. Paket, model, dan batas
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Membedakan paket Claude untuk perorangan dan untuk organisasi.
+2. Menjelaskan dua jenis batas: batas pemakaian (kuota) dan batas panjang percakapan.
+3. Memeriksa pemakaian Anda sendiri dan menerapkan tiga cara menghemat kuota.
+
+<Aside type="note" title="Harga tidak ditulis di sini">
+Harga dan kuota bisa berubah sewaktu-waktu. Angka terbaru selalu ada di halaman resmi [Memilih paket Claude](https://support.claude.com/en/articles/11049762-choosing-a-claude-plan).
+</Aside>
+
+## Paket Claude secara singkat
+
+Perbedaan utama antarpaket adalah **berapa banyak** Anda bisa memakai Claude, bukan cara memakainya.
+
+| Paket | Cocok untuk |
+| --- | --- |
+| **Free** | Mencoba dan memakai sesekali |
+| **Pro** | Pemakaian rutin, misalnya beberapa kali sehari untuk pekerjaan |
+| **Max** | Pemakaian intens hampir sepanjang hari; kapasitasnya berlipat dibanding Pro |
+| **Team** dan **Enterprise** | Organisasi: akun per anggota, pengelolaan oleh admin, tagihan terpusat |
+
+Saran praktis: mulailah dari paket yang paling murah yang mencukupi. Naikkan paket hanya setelah Anda **berulang kali** terkena batas pemakaian, bukan karena khawatir akan terkena.
+
+## Dua jenis batas yang sering tertukar
+
+### 1. Batas pemakaian (kuota)
+
+Kuota adalah "anggaran percakapan" Anda. Pada paket berbayar, ada dua kuota:
+
+- **Kuota sesi**, yang pulih setiap lima jam.
+- **Kuota mingguan**, yang pulih sekali seminggu.
+
+Pemakaian di claude.ai, aplikasi desktop, dan Claude Code mengambil dari **kuota yang sama**. Jadi kalau Anda banyak bekerja di satu aplikasi, sisa kuota di aplikasi lain ikut berkurang.
+
+Yang membuat kuota cepat habis:
+
+- Percakapan yang panjang dan rumit.
+- Fitur tambahan seperti tool dan connector.
+- Model yang dipilih dan tingkat _effort_ (seberapa dalam Claude berpikir sebelum menjawab).
+
+### 2. Batas panjang percakapan (context window)
+
+_Context window_ adalah "ingatan kerja" Claude dalam **satu** percakapan. Kalau percakapan sangat panjang, Claude perlu meringkas bagian awalnya, dan percakapan seperti itu juga lebih boros kuota. Karena itu, untuk topik baru, sebaiknya mulai percakapan baru.
+
+## Langkah praktik
+
+<Steps>
+
+1. Buka [claude.ai](https://claude.ai), lalu buka menu **Settings** (pengaturan). Catat nama paket yang sedang Anda pakai.
+
+2. Jika Anda memakai paket berbayar, buka **Settings → Usage**. Perhatikan dua bar pemakaian: sesi lima jam dan mingguan. Catat persentasenya hari ini.
+
+3. Mulai percakapan baru, lalu cari pilihan model di area kotak pesan. Catat model yang terpilih secara bawaan.
+
+4. Latih kebiasaan menggabungkan pertanyaan. Daripada mengirim tiga pesan terpisah, kirim satu pesan yang rapi seperti contoh di bawah.
+
+5. Setelah selesai dengan satu topik, biasakan menekan **New chat** (percakapan baru) sebelum pindah ke topik lain.
+
+</Steps>
+
+## Contoh nyata
+
+Tiga pesan terpisah seperti ini membuat Claude bekerja tiga kali, dan masing-masing jawaban kurang konteks:
+
+```text
+Buatkan judul untuk pengumuman rapat.
+```
+```text
+Rapatnya Kamis jam 9 di ruang serbaguna.
+```
+```text
+Oh iya, tambahkan juga agenda dan buat lebih singkat.
+```
+
+Satu pesan berikut memberi hasil yang lebih baik dengan pemakaian yang lebih hemat (data fiktif):
+
+```text
+Buatkan pengumuman rapat singkat untuk grup WhatsApp kantor.
+- Judul: menarik tapi tetap formal
+- Waktu: Kamis, pukul 09.00 WIB
+- Tempat: ruang serbaguna lantai 2
+- Agenda: evaluasi program bulan lalu dan rencana bulan depan
+- Panjang: maksimal 5 baris
+```
+
+## Latihan
+
+Pilih paket yang paling sesuai untuk tiga orang fiktif berikut, beserta alasannya:
+
+1. **Bu Rina**, staf administrasi, memakai Claude dua sampai tiga kali seminggu untuk merapikan surat.
+2. **Pak Dimas**, analis, memakai Claude hampir setiap jam kerja untuk membaca laporan dan menyusun ringkasan.
+3. **Koperasi Maju Bersama**, sepuluh pengurus yang ingin memakai Claude dengan tagihan terpusat.
+
+**Kriteria berhasil:** setiap pilihan disertai alasan yang merujuk pada **frekuensi pemakaian** atau **kebutuhan organisasi**, bukan sekadar "paket yang paling lengkap".
+
+## Kesalahan umum
+
+- **Langsung naik paket.** Banyak orang upgrade sebelum tahu pola pemakaiannya sendiri. Pantau dulu di Settings → Usage selama satu sampai dua minggu.
+- **Satu percakapan untuk semua hal.** Percakapan yang terlalu panjang membuat jawaban kurang fokus dan menghabiskan kuota lebih cepat.
+- **Mengaktifkan semua connector.** Matikan tool atau connector yang tidak sedang dipakai.
+- **Mengira kuota tiap aplikasi terpisah.** claude.ai, aplikasi desktop, dan Claude Code memakai kuota yang sama.
+- **Satu akun dipakai beramai-ramai.** Untuk tim, gunakan paket organisasi agar setiap anggota punya akun sendiri dan datanya terkelola.
+
+## Rujukan
+
+- [Memilih paket Claude](https://support.claude.com/en/articles/11049762-choosing-a-claude-plan): daftar paket dan harga terbaru.
+- [Cara kerja batas pemakaian dan batas panjang](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work): penjelasan resmi kuota dan context window.
+- [Tips agar kuota tidak cepat habis](https://support.claude.com/en/articles/9797557-usage-limit-best-practices): praktik terbaik dari pusat bantuan Claude.
+
+<TandaSelesai />
