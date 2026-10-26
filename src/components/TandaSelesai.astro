@@ -7,13 +7,14 @@
 
 <div class="tanda-selesai not-content">
 	<button type="button" aria-pressed="false">Tandai pelajaran ini selesai</button>
+	<p class="tanda-selesai__kunci" hidden></p>
 	<p class="tanda-selesai__catatan" hidden>
 		Progres tidak bisa disimpan di browser ini (mungkin mode privat atau penyimpanan diblokir).
 	</p>
 </div>
 
 <script>
-	import { bacaSelesai, setSelesai, normalPath } from '../lib/progres';
+	import { bacaSelesai, setSelesai, normalPath, bacaKuis, EVENT_KUIS_LULUS } from '../lib/progres';
 
 	document.querySelectorAll<HTMLElement>('.tanda-selesai').forEach((wadah) => {
 		const tombol = wadah.querySelector('button')!;
@@ -32,7 +33,23 @@
 				});
 		};
 
-		tampilkan(bacaSelesai().includes(path));
+		const sudahSelesai = bacaSelesai().includes(path);
+		tampilkan(sudahSelesai);
+
+		// Bila halaman punya kuis, tombol terkunci sampai kuis lulus.
+		// Pelajaran yang sudah ditandai selesai sebelum kuis ditambahkan tetap dihormati.
+		const kuis = document.querySelector<HTMLElement>('form[data-kuis]');
+		const pesanKunci = wadah.querySelector<HTMLElement>('.tanda-selesai__kunci')!;
+		const buka = () => {
+			tombol.disabled = false;
+			pesanKunci.hidden = true;
+		};
+		if (kuis && !sudahSelesai && !bacaKuis(path)?.lulus) {
+			tombol.disabled = true;
+			pesanKunci.hidden = false;
+			pesanKunci.textContent = `Kerjakan kuis di atas dengan skor minimal ${kuis.dataset.ambang ?? 70}% untuk membuka tombol ini.`;
+			window.addEventListener(EVENT_KUIS_LULUS, buka);
+		}
 
 		tombol.addEventListener('click', () => {
 			const baru = tombol.getAttribute('aria-pressed') !== 'true';

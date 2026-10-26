@@ -1,0 +1,182 @@
+---
+/**
+ * Kuis pilihan ganda di akhir pelajaran atau di akhir level.
+ *
+ * Pemakaian di MDX (taruh judul "## Kuis" di atasnya agar masuk daftar isi):
+ *   import Kuis from '~/components/Kuis.astro';
+ *   <Kuis soal={[
+ *     { tanya: '...', pilihan: ['A', 'B', 'C'], jawaban: 1, pembahasan: '...' },
+ *   ]} />
+ *
+ * `jawaban` adalah indeks pilihan yang benar, dimulai dari 0.
+ * Urutan pilihan diacak di browser setiap kali kuis dimulai, jadi penulis soal tidak perlu
+ * memvariasikan posisi jawaban benar. Jangan memakai pilihan seperti "Semua benar" yang bergantung pada urutan.
+ * Pelajaran wajib 3–5 soal; halaman kuis akhir level minimal 10 soal. Build gagal bila tidak sesuai.
+ *
+ * Catatan: situs ini statis, jadi kunci jawaban ikut terkirim ke browser.
+ * Kuis ini untuk latihan mandiri, bukan ujian resmi.
+ */
+export interface Soal {
+	tanya: string;
+	pilihan: string[];
+	jawaban: number;
+	pembahasan: string;
+}
+interface Props {
+	soal: Soal[];
+	/** Skor minimal (persen) untuk lulus. */
+	ambang?: number;
+}
+
+const { soal, ambang = 70 } = Astro.props;
+const route = Astro.locals.starlightRoute;
+const jenis = route.entry.data.jenis;
+const id = route.id;
+
+const salah = (pesan: string) => {
+	throw new Error(`[jagoklodi] ${id}: kuis tidak valid, ${pesan}`);
+};
+if (!Array.isArray(soal) || soal.length === 0) salah('belum ada soal.');
+if (jenis === 'pelajaran' && (soal.length < 3 || soal.length > 5)) salah(`pelajaran wajib 3–5 soal, saat ini ${soal.length}.`);
+if (jenis === 'kuis' && soal.length < 10) salah(`kuis akhir level minimal 10 soal, saat ini ${soal.length}.`);
+soal.forEach((s, i) => {
+	const n = i + 1;
+	if (!s.tanya?.trim()) salah(`soal ${n} belum ada pertanyaannya.`);
+	if (!Array.isArray(s.pilihan) || s.pilihan.length < 2) salah(`soal ${n} butuh minimal 2 pilihan.`);
+	if (!Number.isInteger(s.jawaban) || s.jawaban < 0 || s.jawaban >= s.pilihan.length)
+		salah(`soal ${n}: "jawaban" harus indeks 0 sampai ${s.pilihan.length - 1}.`);
+	if (!s.pembahasan?.trim()) salah(`soal ${n} belum ada pembahasannya.`);
+});
+if (ambang <= 0 || ambang > 100) salah('ambang harus antara 1 dan 100.');
+---
+
+<form class="kuis not-content" data-kuis data-ambang={ambang} novalidate>
+	<p class="kuis__intro">
+		{soal.length} soal. Skor minimal <strong>{ambang}%</strong> untuk lulus. Anda boleh mengulang sesering yang
+		Anda mau.
+	</p>
+	<p class="kuis__terbaik" hidden></p>
+	<ol class="kuis__daftar">
+		{
+			soal.map((s, i) => (
+				<li>
+					<fieldset class="kuis__soal" data-jawaban={s.jawaban}>
+						<legend>{s.tanya}</legend>
+						{s.pilihan.map((p, j) => (
+							<label class="kuis__pilihan">
+								<input type="radio" name={`soal-${i}`} value={j} />
+								<span>{p}</span>
+							</label>
+						))}
+						<p class="kuis__pembahasan" hidden>
+							<strong class="kuis__vonis" />
+							{s.pembahasan}
+						</p>
+					</fieldset>
+				</li>
+			))
+		}
+	</ol>
+	<p class="kuis__hasil" role="status" aria-live="polite" tabindex="-1"></p>
+	<div class="kuis__aksi">
+		<button type="submit" class="kuis__periksa">Periksa jawaban</button>
+		<button type="button" class="kuis__ulangi" hidden>Ulangi kuis</button>
+	</div>
+</form>
+
+<script>
+	import { bacaKuis, simpanKuis, normalPath, EVENT_KUIS_LULUS } from '../lib/progres';
+
+	document.querySelectorAll<HTMLFormElement>('form[data-kuis]').forEach((form) => {
+		const path = normalPath(location.pathname);
+		const ambang = Number(form.dataset.ambang ?? 70);
+		const daftarSoal = [...form.querySelectorAll<HTMLFieldSetElement>('.kuis__soal')];
+		const hasil = form.querySelector<HTMLElement>('.kuis__hasil')!;
+		const terbaik = form.querySelector<HTMLElement>('.kuis__terbaik')!;
+		const periksa = form.querySelector<HTMLButtonElement>('.kuis__periksa')!;
+		const ulangi = form.querySelector<HTMLButtonElement>('.kuis__ulangi')!;
+
+		// Acak urutan pilihan (Fisher–Yates) agar posisi jawaban benar tidak bisa ditebak.
+		const acakPilihan = () => {
+			daftarSoal.forEach((fs) => {
+				const label = [...fs.querySelectorAll<HTMLLabelElement>('.kuis__pilihan')];
+				for (let i = label.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[label[i], label[j]] = [label[j], label[i]];
+				}
+				const pembahasan = fs.querySelector('.kuis__pembahasan');
+				label.forEach((l) => fs.insertBefore(l, pembahasan));
+			});
+		};
+		acakPilihan();
+
+		const tampilkanTerbaik = () => {
+			const h = bacaKuis(path);
+			if (!h) return;
+			terbaik.hidden = false;
+			terbaik.textContent = `Skor terbaik Anda: ${h.terbaik}%${h.lulus ? ' (lulus)' : ''}`;
+			terbaik.classList.toggle('kuis__terbaik--lulus', h.lulus);
+		};
+		tampilkanTerbaik();
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			const belum = daftarSoal.filter((fs) => !fs.querySelector('input:checked'));
+			daftarSoal.forEach((fs) => fs.classList.toggle('kuis__soal--belum', belum.includes(fs)));
+			if (belum.length) {
+				hasil.className = 'kuis__hasil kuis__hasil--info';
+				hasil.textContent = `Masih ada ${belum.length} soal yang belum dijawab.`;
+				belum[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+				return;
+			}
+
+			let benar = 0;
+			daftarSoal.forEach((fs) => {
+				const kunci = Number(fs.dataset.jawaban);
+				const dipilih = Number(fs.querySelector<HTMLInputElement>('input:checked')!.value);
+				const tepat = dipilih === kunci;
+				if (tepat) benar++;
+				fs.classList.add(tepat ? 'kuis__soal--benar' : 'kuis__soal--salah');
+				fs.querySelectorAll<HTMLInputElement>('input').forEach((inp) => {
+					inp.disabled = true;
+					const label = inp.closest('label')!;
+					if (Number(inp.value) === kunci) label.classList.add('kuis__pilihan--kunci');
+					else if (inp.checked) label.classList.add('kuis__pilihan--keliru');
+				});
+				const pembahasan = fs.querySelector<HTMLElement>('.kuis__pembahasan')!;
+				pembahasan.querySelector('.kuis__vonis')!.textContent = tepat ? 'Benar. ' : 'Belum tepat. ';
+				pembahasan.hidden = false;
+			});
+
+			const skor = Math.round((benar / daftarSoal.length) * 100);
+			const lulus = skor >= ambang;
+			const tersimpan = simpanKuis(path, skor, lulus);
+			hasil.className = `kuis__hasil ${lulus ? 'kuis__hasil--lulus' : 'kuis__hasil--gagal'}`;
+			hasil.textContent =
+				`Skor Anda ${skor}% (${benar} dari ${daftarSoal.length} benar). ` +
+				(lulus ? 'Selamat, Anda lulus!' : `Belum lulus; butuh minimal ${ambang}%. Baca pembahasannya, lalu coba lagi.`) +
+				(tersimpan ? '' : ' Catatan: skor tidak bisa disimpan di browser ini.');
+			periksa.hidden = true;
+			ulangi.hidden = false;
+			tampilkanTerbaik();
+			hasil.focus();
+			if (lulus) window.dispatchEvent(new CustomEvent(EVENT_KUIS_LULUS, { detail: { path, skor } }));
+		});
+
+		ulangi.addEventListener('click', () => {
+			form.reset();
+			daftarSoal.forEach((fs) => {
+				fs.classList.remove('kuis__soal--benar', 'kuis__soal--salah', 'kuis__soal--belum');
+				fs.querySelectorAll<HTMLInputElement>('input').forEach((inp) => (inp.disabled = false));
+				fs.querySelectorAll('.kuis__pilihan').forEach((l) => l.classList.remove('kuis__pilihan--kunci', 'kuis__pilihan--keliru'));
+				fs.querySelector<HTMLElement>('.kuis__pembahasan')!.hidden = true;
+			});
+			hasil.textContent = '';
+			hasil.className = 'kuis__hasil';
+			acakPilihan();
+			periksa.hidden = false;
+			ulangi.hidden = true;
+			daftarSoal[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+		});
+	});
+</script>

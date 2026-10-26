@@ -12,14 +12,18 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - `src/content/docs/level-N/NN-judul.mdx`: satu file per pelajaran, nomor urut dua digit.
 - `src/content.config.ts`: skema frontmatter.
 - `src/components/PageTitle.astro`: info pelajaran dan penjaga kelengkapan frontmatter (build gagal bila kurang).
-- `src/components/TandaSelesai.astro`: tombol progres (localStorage), dipasang di akhir setiap pelajaran.
+- `src/components/TandaSelesai.astro`: tombol progres (localStorage), dipasang di akhir setiap pelajaran; terkunci sampai kuis lulus.
+- `src/components/Kuis.astro`: kuis pilihan ganda dengan validasi saat build.
 - `src/components/Footer.astro`: disclaimer dan centang progres di sidebar.
 
 ## Aturan materi
 
 - Bahasa Indonesia baku yang ramah. Istilah teknis tetap dalam bahasa Inggris dan dijelaskan saat pertama kali muncul.
 - Setiap pelajaran mengikuti format baku, dengan contoh di `src/content/docs/level-0/01-kenalan-dengan-claude.mdx`:
-  Tujuan → Penjelasan singkat → Langkah (komponen Steps) → Contoh nyata → Latihan dengan kriteria berhasil → Kesalahan umum → Rujukan → `<TandaSelesai />`.
+  Tujuan → Penjelasan singkat → Langkah (komponen Steps) → Contoh nyata → Latihan dengan kriteria berhasil → Kesalahan umum → Rujukan → `## Kuis` + `<Kuis />` → `<TandaSelesai />`.
+- Kuis (`src/components/Kuis.astro`): pelajaran wajib 3–5 soal pilihan ganda; halaman kuis akhir level (`jenis: kuis`) minimal 10 soal. Setiap soal wajib punya pembahasan. Urutan pilihan diacak otomatis, jadi jangan pakai pilihan "Semua benar" atau "A dan B". Soal hanya boleh menguji isi pelajaran itu sendiri.
+- Tombol "Tandai selesai" terkunci sampai kuis lulus (skor minimal 70%). Skor terbaik disimpan di localStorage.
+- `scripts/cek-konten.mjs` berjalan sebelum build dan gagal bila ada pelajaran tanpa `<Kuis>` atau `<TandaSelesai />`.
 - Frontmatter wajib untuk pelajaran: `jenis: pelajaran`, `level`, `durasi`, `prasyarat`, `terakhirDiverifikasi` (YYYY-MM-DD), `sidebar.order`.
 - Jangan mengarang fitur, harga, kuota, atau nama model. Harga dan kuota cukup ditautkan ke halaman resmi. Setiap klaim produk harus punya tautan ke sumber resmi (support.claude.com, docs.claude.com, anthropic.skilljar.com).
 - Saat memperbarui isi pelajaran setelah dicek ulang, perbarui juga `terakhirDiverifikasi`.
