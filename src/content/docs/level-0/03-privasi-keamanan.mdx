@@ -1,0 +1,179 @@
+---
+title: Privasi dan keamanan data
+description: Data apa yang aman dipakai bersama Claude, cara mengatur privasi akun, dan cara menyamarkan data sebelum mengunggahnya.
+jenis: pelajaran
+level: 0
+durasi: 30 menit
+prasyarat: Pelajaran 1 dan 2, serta akun Claude.
+terakhirDiverifikasi: 2026-10-27
+sidebar:
+  order: 3
+  label: 3. Privasi dan keamanan
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Memilah data menjadi tiga golongan: jangan diunggah, samarkan dulu, dan aman.
+2. Mengatur privasi akun: pelatihan model, percakapan incognito, dan menghapus percakapan.
+3. Menyamarkan data pribadi sebelum meminta bantuan Claude.
+
+<Aside type="caution" title="Aturan kantor Anda yang paling utama">
+Sebelum memakai Claude untuk pekerjaan, cek kebijakan kantor tentang penggunaan AI. Banyak organisasi melarang data internal diunggah ke akun AI pribadi. Di Indonesia, data pribadi orang lain juga dilindungi oleh UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi.
+</Aside>
+
+## Apa yang terjadi dengan percakapan Anda
+
+Aturannya berbeda antara paket perorangan dan paket organisasi.
+
+| | Paket perorangan (Free, Pro, Max) | Paket organisasi (Team, Enterprise) |
+| --- | --- | --- |
+| Dipakai untuk melatih model AI? | Tergantung pengaturan **Help improve our AI models**. Bila aktif, percakapan baru bisa disimpan tanpa identitas Anda hingga 5 tahun | Tidak, secara bawaan |
+| Percakapan yang Anda hapus | Langsung hilang dari riwayat, terhapus dari server dalam 30 hari | Mengikuti pengaturan organisasi |
+
+Ada dua hal yang sering terlewat:
+
+- **Tombol jempol (feedback) bukan sekadar penilaian.** Saat Anda memberi jempol atau melaporkan masalah, seluruh percakapan terkait disimpan hingga 5 tahun dan bisa dipakai untuk pelatihan, termasuk di paket organisasi. Jangan memberi feedback pada percakapan yang berisi data sensitif.
+- **Mematikan pengaturan pelatihan tidak berlaku mundur.** Data yang sudah masuk proses pelatihan sebelumnya tetap ada di sana.
+
+### Percakapan incognito
+
+Percakapan incognito tidak masuk riwayat, tidak dipakai untuk memory, dan tidak dipakai untuk pelatihan. Namun percakapan ini **tetap disimpan sementara** di server, secara bawaan selama 30 hari. Jadi incognito mengurangi jejak, tetapi tidak membuat data sensitif menjadi aman untuk diunggah.
+
+## Lampu lalu lintas data
+
+| Golongan | Contoh | Sikap |
+| --- | --- | --- |
+| 🔴 **Merah** | Password, PIN, kode OTP, nomor kartu atau rekening lengkap, NIK, data kesehatan, data pelanggan, dokumen rahasia kantor | Jangan diunggah, dalam bentuk apa pun |
+| 🟡 **Kuning** | Dokumen internal yang tidak rahasia, nama dan nomor HP orang lain, angka penjualan | Samarkan dulu, dan pastikan kebijakan kantor mengizinkan |
+| 🟢 **Hijau** | Informasi publik, tulisan Anda sendiri, data fiktif, pertanyaan umum | Aman dipakai |
+
+## Langkah praktik
+
+<Steps>
+
+1. Buka **Settings → Privacy** di claude.ai. Lihat posisi pengaturan **Help improve our AI models**, lalu putuskan apakah Anda ingin menyalakan atau mematikannya. Tidak ada pilihan yang salah; yang penting Anda memilih dengan sadar.
+
+2. Mulai percakapan baru di luar Projects, lalu klik **ikon hantu** di kanan atas untuk masuk mode incognito. Pastikan muncul bingkai hitam dan label "Incognito chat". Kirim satu pesan percobaan, lalu tutup.
+
+3. Latih penyamaran data. Salin teks keluhan fiktif di bagian **Contoh nyata**, ganti semua data pribadinya dengan penanda seperti `[PELANGGAN_1]`, lalu baru kirim ke Claude untuk diringkas.
+
+4. Buka riwayat percakapan, lalu hapus satu percakapan percobaan dari pelajaran sebelumnya. Ingat: percakapan itu langsung hilang dari riwayat dan terhapus dari server dalam 30 hari.
+
+</Steps>
+
+## Contoh nyata
+
+Teks keluhan berikut **fiktif**, tetapi bentuknya mirip keluhan sungguhan:
+
+```text
+Pelanggan atas nama Budi Santoso (NIK 3275xxxxxxxxxxxx, HP 0812-3456-7890)
+mengeluh internet di rumahnya, Jl. Melati No. 12, Bekasi, putus tiga kali
+minggu ini. Ia meminta kompensasi dan mengancam berhenti berlangganan.
+```
+
+Sebelum dikirim ke Claude, samarkan dulu seperti ini:
+
+```text
+Pelanggan [PELANGGAN_1] mengeluh internet di rumahnya, [ALAMAT_1],
+putus tiga kali minggu ini. Ia meminta kompensasi dan mengancam berhenti
+berlangganan.
+
+Tolong ringkas keluhan ini dalam 2 kalimat dan sarankan 3 langkah
+penanganan yang sopan.
+```
+
+Claude tetap bisa membantu dengan baik, karena yang ia butuhkan adalah **isi masalahnya**, bukan identitas pelanggannya. NIK dan nomor HP tidak perlu ikut dikirim sama sekali.
+
+## Latihan
+
+Golongkan enam data berikut ke merah, kuning, atau hijau, beserta alasannya:
+
+1. Kode OTP dari bank yang baru Anda terima.
+2. Draf undangan halalbihalal kantor yang Anda tulis sendiri.
+3. Rekap jumlah keluhan pelanggan per bulan, tanpa nama pelanggan.
+4. File Excel berisi nama, alamat, dan nomor HP 500 pelanggan.
+5. Pengumuman jadwal libur nasional dari situs pemerintah.
+6. Notulen rapat internal yang menyebut nama-nama peserta.
+
+**Kriteria berhasil:** OTP dan file data pelanggan masuk **merah**; notulen dan rekap keluhan masuk **kuning** (perlu disamarkan atau dicek kebijakannya); draf undangan dan jadwal libur masuk **hijau**. Setiap jawaban disertai alasan.
+
+## Kesalahan umum
+
+- **Memberi jempol pada percakapan sensitif.** Feedback membuat seluruh percakapan disimpan hingga 5 tahun.
+- **Mengira incognito berarti tidak tersimpan sama sekali.** Percakapan incognito tetap disimpan sementara, secara bawaan 30 hari.
+- **Lupa isi tangkapan layar.** Screenshot sering memuat nomor HP, nama, atau saldo yang tidak Anda sadari. Periksa atau potong dulu sebelum diunggah.
+- **Memakai akun pribadi untuk data kantor** tanpa izin dari kebijakan kantor.
+- **Hanya menyamarkan nama.** Nomor HP, alamat, NIK, dan nomor pelanggan juga identitas. Samarkan semuanya.
+
+## Rujukan
+
+- [Mengatur pengaturan pelatihan model](https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings)
+- [Berapa lama data disimpan](https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data)
+- [Apakah data dipakai untuk pelatihan (paket organisasi)](https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training)
+- [Memakai percakapan incognito](https://support.claude.com/en/articles/12260368-use-incognito-chats)
+- [Siapa yang bisa melihat percakapan Anda](https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda baru mendapat jawaban bagus dari Claude dalam percakapan yang memuat data pelanggan. Bolehkah Anda memberi jempol (feedback)?',
+			pilihan: [
+				'Boleh, jempol hanya penilaian dan tidak menyimpan apa pun',
+				'Sebaiknya tidak, karena feedback membuat seluruh percakapan disimpan hingga 5 tahun dan bisa dipakai pelatihan',
+				'Boleh, asalkan memakai paket Pro',
+			],
+			jawaban: 1,
+			pembahasan: 'Feedback menyimpan seluruh percakapan terkait hingga 5 tahun dan bisa dipakai untuk pelatihan, di paket perorangan maupun organisasi. Lagi pula, data pelanggan sejak awal tidak boleh diunggah.',
+		},
+		{
+			tanya: 'Mana pernyataan yang benar tentang percakapan incognito?',
+			pilihan: [
+				'Tidak tersimpan di mana pun, jadi aman untuk password',
+				'Tidak masuk riwayat dan tidak dipakai pelatihan, tetapi tetap disimpan sementara (secara bawaan 30 hari)',
+				'Hanya tersedia untuk paket Enterprise',
+			],
+			jawaban: 1,
+			pembahasan: 'Incognito mengurangi jejak, tetapi percakapannya tetap disimpan sementara. Password dan data merah lainnya tetap tidak boleh diunggah.',
+		},
+		{
+			tanya: 'Data mana yang termasuk golongan merah (jangan diunggah)?',
+			pilihan: [
+				'Kode OTP dari bank',
+				'Draf pengumuman yang Anda tulis sendiri',
+				'Jadwal libur nasional dari situs pemerintah',
+			],
+			jawaban: 0,
+			pembahasan: 'OTP, password, PIN, NIK, nomor kartu atau rekening, data kesehatan, dan data pelanggan termasuk merah. Jangan diunggah dalam bentuk apa pun.',
+		},
+		{
+			tanya: 'Cara paling tepat meminta Claude meringkas keluhan pelanggan adalah...',
+			pilihan: [
+				'Menempelkan keluhan lengkap beserta NIK dan nomor HP agar ringkasannya akurat',
+				'Mengganti identitas dengan penanda seperti [PELANGGAN_1] dan menghapus NIK serta nomor HP',
+				'Memakai mode incognito supaya data pelanggan boleh disertakan',
+			],
+			jawaban: 1,
+			pembahasan: 'Claude butuh isi masalahnya, bukan identitas pelanggan. Samarkan semua penanda identitas: nama, alamat, nomor HP, NIK, dan nomor pelanggan.',
+		},
+		{
+			tanya: 'Anda mematikan pengaturan "Help improve our AI models" hari ini. Apa dampaknya?',
+			pilihan: [
+				'Semua data lama langsung terhapus dari model yang sudah dilatih',
+				'Percakapan Anda tidak dipakai untuk pelatihan berikutnya, tetapi data yang sudah masuk pelatihan sebelumnya tetap ada di sana',
+				'Akun Anda otomatis berubah menjadi paket organisasi',
+			],
+			jawaban: 1,
+			pembahasan: 'Pengaturan ini berlaku untuk pelatihan berikutnya saja, tidak berlaku mundur.',
+		},
+	]}
+/>
+
+<TandaSelesai />
