@@ -23,8 +23,8 @@ export default defineConfig({
 			sidebar: [
 				{ label: 'Mulai di sini', items: [{ label: 'Tentang jagoklodi', slug: 'tentang' }] },
 				{ label: 'Level 0 · Orientasi', items: [{ autogenerate: { directory: 'level-0' } }] },
-				// Tambahkan grup level berikutnya setelah folder-nya berisi minimal satu pelajaran, contoh:
-				// { label: 'Level 1 · Dasar pemakaian', items: [{ autogenerate: { directory: 'level-1' } }] },
+				{ label: 'Level 1 · Dasar pemakaian', items: [{ autogenerate: { directory: 'level-1' } }] },
+				// Tambahkan grup level berikutnya setelah folder-nya berisi minimal satu pelajaran.
 			],
 		}),
 	],
