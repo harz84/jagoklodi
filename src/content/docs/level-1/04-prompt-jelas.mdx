@@ -1,0 +1,183 @@
+---
+title: Prompt yang jelas
+description: Resep lima bagian untuk menulis prompt yang menghasilkan jawaban sesuai kebutuhan sejak percobaan pertama.
+jenis: pelajaran
+level: 1
+durasi: 30 menit
+prasyarat: Level 0 selesai, terutama Pelajaran 1.
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 4
+  label: 4. Prompt yang jelas
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menyusun prompt dengan resep lima bagian: **Siapa, Apa, Kenapa, Bentuk, Contoh**.
+2. Mengubah prompt yang samar menjadi prompt yang jelas.
+3. Menguji prompt Anda dengan "tes rekan kerja".
+
+## Bayangkan karyawan baru yang cerdas
+
+Panduan resmi Anthropic menyarankan agar Claude diperlakukan seperti **karyawan baru yang sangat cerdas tetapi belum tahu kebiasaan dan konteks kerja Anda**. Ia cepat belajar, tetapi tidak bisa menebak hal yang tidak Anda sampaikan.
+
+Ada juga tes sederhana dari panduan yang sama: **tunjukkan prompt Anda ke rekan kerja yang tidak tahu konteksnya.** Kalau ia bingung harus berbuat apa, Claude kemungkinan besar juga akan bingung.
+
+## Resep lima bagian
+
+| Bagian | Pertanyaan yang dijawab | Contoh isi |
+| --- | --- | --- |
+| **Siapa** | Untuk siapa hasilnya, dan Claude berperan sebagai apa? | "Pembacanya pengurus RT yang sudah sepuh" |
+| **Apa** | Tugas apa yang harus dikerjakan? | "Buatkan pengumuman kerja bakti" |
+| **Kenapa** | Apa tujuan atau alasan di balik tugas itu? | "Supaya warga yang biasanya absen tergerak hadir" |
+| **Bentuk** | Hasilnya harus seperti apa? | "Maksimal 6 baris, untuk grup WhatsApp, tanpa emoji" |
+| **Contoh** | Ada contoh gaya atau format yang diinginkan? | Tempelkan pengumuman lama yang Anda sukai |
+
+Tidak semua prompt butuh kelima bagian. Untuk pertanyaan sederhana, cukup **Apa**. Semakin penting hasilnya, semakin banyak bagian yang sebaiknya Anda isi.
+
+<Aside type="tip" title="Bagian &quot;Kenapa&quot; sering dilupakan, padahal paling ampuh">
+Instruksi "jangan pakai singkatan" saja kurang kuat dibanding "jangan pakai singkatan, karena pengumuman ini akan dibacakan lewat pengeras suara masjid". Dengan tahu alasannya, Claude bisa menerapkan maksud Anda ke hal lain yang tidak sempat Anda sebutkan, misalnya menghindari angka yang sulit dibaca.
+</Aside>
+
+## Langkah praktik
+
+<Steps>
+
+1. Kirim prompt samar ini ke Claude dan simpan hasilnya:
+
+    ```text
+    Buatkan pengumuman kerja bakti.
+    ```
+
+2. Mulai percakapan baru, lalu kirim versi lengkapnya (data fiktif):
+
+    ```text
+    Saya pengurus RT 05. Buatkan pengumuman kerja bakti untuk grup WhatsApp warga.
+
+    Tujuannya supaya warga yang biasanya tidak datang tergerak hadir,
+    jadi nadanya ramah dan mengajak, bukan memerintah.
+
+    Isi wajib:
+    - Hari Minggu, 9 November, pukul 07.00 WIB
+    - Kumpul di pos ronda
+    - Bawa sapu atau cangkul masing-masing
+    - Ada sarapan bersama setelahnya
+
+    Bentuk: maksimal 6 baris, tanpa emoji, diakhiri satu kalimat ajakan.
+    ```
+
+3. Bandingkan kedua hasil. Mana yang bisa langsung Anda kirim tanpa banyak diedit?
+
+4. Lakukan "tes rekan kerja": baca prompt di langkah 2 seolah-olah Anda orang lain. Adakah informasi yang masih kurang?
+
+5. Tambahkan bagian **Contoh**: tempelkan pengumuman lain yang gayanya Anda sukai, lalu minta Claude menulis dengan gaya serupa.
+
+</Steps>
+
+## Contoh nyata
+
+Prompt samar di tempat kerja sering berbentuk seperti ini:
+
+```text
+Rangkum laporan ini.
+```
+
+Versi jelasnya:
+
+```text
+Saya kepala bagian. Tolong rangkum laporan bulanan di bawah untuk saya
+sampaikan ke direktur dalam rapat 5 menit besok.
+
+Direktur hanya peduli pada tiga hal: pencapaian target, masalah terbesar,
+dan bantuan yang kami perlukan. Jadi fokuskan ringkasan pada tiga hal itu.
+
+Bentuk: 3 poin berlabel (Pencapaian, Masalah, Permintaan),
+masing-masing maksimal 2 kalimat.
+
+Laporan:
+"""
+[tempel laporan yang sudah disamarkan di sini]
+"""
+```
+
+Perhatikan tanda `"""` di sekitar laporan. Tanda pembatas seperti ini membantu Claude membedakan **instruksi Anda** dari **teks yang harus diolah**. Ingat aturan Pelajaran 3: samarkan dulu data yang termasuk golongan kuning.
+
+## Latihan
+
+Ambil tabel pekerjaan rutin yang Anda buat di Pelajaran 1. Pilih **dua** pekerjaan yang cocok dibantu Claude, lalu tulis prompt lengkap untuk masing-masing memakai resep lima bagian.
+
+**Kriteria berhasil:** setiap prompt memuat minimal **Apa**, **Kenapa**, dan **Bentuk**; lolos tes rekan kerja; dan hasil dari Claude bisa dipakai dengan sedikit atau tanpa suntingan.
+
+## Kesalahan umum
+
+- **Mengira Claude bisa membaca pikiran.** Hal yang "sudah jelas" bagi Anda belum tentu jelas bagi Claude.
+- **Melarang tanpa alasan.** "Jangan terlalu panjang" lebih lemah daripada "maksimal 5 baris, karena dibaca di layar HP".
+- **Mencampur instruksi dengan teks yang diolah.** Gunakan pembatas seperti `"""` agar tidak tertukar.
+- **Memberi satu contoh lalu heran hasilnya mirip sekali.** Kalau ingin variasi, beri beberapa contoh yang berbeda-beda.
+- **Langsung menyerah setelah hasil pertama.** Prompt bisa diperbaiki bertahap; topik ini dibahas di pelajaran berikutnya.
+
+## Rujukan
+
+- [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices): panduan resmi menulis prompt (bahasa Inggris, ditujukan untuk developer, tetapi prinsipnya berlaku umum).
+- [Best practices for prompt engineering](https://claude.com/blog/best-practices-for-prompt-engineering): artikel blog resmi tentang dasar-dasar menulis prompt.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Menurut panduan resmi, Claude sebaiknya diperlakukan seperti apa saat Anda menulis prompt?',
+			pilihan: [
+				'Mesin pencari yang cukup diberi kata kunci',
+				'Karyawan baru yang cerdas tetapi belum tahu konteks dan kebiasaan kerja Anda',
+				'Atasan yang sudah tahu semua kebutuhan Anda',
+			],
+			jawaban: 1,
+			pembahasan: 'Claude cepat memahami instruksi, tetapi tidak tahu konteks yang tidak Anda sampaikan. Karena itu konteks dan tujuan perlu ditulis.',
+		},
+		{
+			tanya: 'Instruksi mana yang paling efektif?',
+			pilihan: [
+				'Jangan pakai singkatan.',
+				'JANGAN PERNAH PAKAI SINGKATAN!!!',
+				'Jangan pakai singkatan, karena teks ini akan dibacakan lewat pengeras suara.',
+			],
+			jawaban: 2,
+			pembahasan: 'Menjelaskan alasan (bagian "Kenapa") membantu Claude memahami maksud Anda, bahkan untuk hal serupa yang tidak Anda sebutkan.',
+		},
+		{
+			tanya: 'Apa itu "tes rekan kerja"?',
+			pilihan: [
+				'Meminta rekan kerja menulis prompt untuk Anda',
+				'Membayangkan rekan yang tidak tahu konteks membaca prompt Anda; bila ia bingung, Claude juga kemungkinan bingung',
+				'Membandingkan hasil Claude dengan hasil rekan kerja',
+			],
+			jawaban: 1,
+			pembahasan: 'Tes ini cara cepat menemukan informasi yang kurang di prompt sebelum dikirim.',
+		},
+		{
+			tanya: 'Kenapa teks yang ingin diringkas sebaiknya diberi pembatas seperti """ ?',
+			pilihan: [
+				'Agar Claude bisa membedakan instruksi Anda dari teks yang harus diolah',
+				'Agar kuota tidak terpakai',
+				'Karena Claude menolak teks tanpa tanda kutip',
+			],
+			jawaban: 0,
+			pembahasan: 'Pembatas yang jelas mencegah Claude mengira isi dokumen sebagai bagian dari instruksi.',
+		},
+		{
+			tanya: 'Bagian mana dari resep lima bagian yang menjawab "hasilnya harus seperti apa"?',
+			pilihan: ['Siapa', 'Kenapa', 'Bentuk', 'Contoh'],
+			jawaban: 2,
+			pembahasan: 'Bagian Bentuk mengatur format hasil, misalnya panjang, susunan poin, atau tujuan pemakaian seperti grup WhatsApp.',
+		},
+	]}
+/>
+
+<TandaSelesai />
