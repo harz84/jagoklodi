@@ -1,0 +1,120 @@
+---
+title: "Proyek akhir Level 1: asisten kerja pribadi"
+description: Menggabungkan semua materi Level 1 menjadi satu Project berisi template prompt pribadi untuk pekerjaan rutin Anda.
+jenis: pelajaran
+level: 1
+durasi: 60 menit
+prasyarat: Pelajaran 4 sampai 9.
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 10
+  label: 10. Proyek akhir Level 1
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Di proyek ini Anda membangun **asisten kerja pribadi**: satu Project berisi aturan kerja Anda dan tiga template prompt untuk pekerjaan yang paling sering Anda lakukan. Setelah selesai, Anda bisa:
+
+1. Menerapkan resep lima bagian, koreksi spesifik, Projects, dan artifact dalam satu alur kerja.
+2. Memakai ulang template prompt tanpa menulis dari nol.
+3. Menilai sendiri kualitas hasil sebelum dipakai.
+
+<Aside type="note" title="Bahan yang dibutuhkan">
+Tabel pekerjaan rutin dari Pelajaran 1 dan prompt hasil latihan Pelajaran 4. Kalau belum ada, buat dulu, karena keduanya adalah bahan utama proyek ini.
+</Aside>
+
+## Langkah proyek
+
+<Steps>
+
+1. **Pilih tiga pekerjaan rutin** dari tabel Pelajaran 1 yang paling sering Anda kerjakan dan cocok dibantu Claude.
+
+2. **Tulis template untuk masing-masing**, memakai resep lima bagian. Tandai bagian yang berubah setiap kali dipakai dengan kurung siku. Contoh (fiktif):
+
+    ```text
+    TEMPLATE: Notulen menjadi ringkasan
+    Ringkas notulen rapat [nama rapat] untuk [pembaca].
+    Mereka hanya perlu tahu keputusan dan tugas masing-masing.
+    Bentuk: keputusan maksimal 3 poin, tugas dalam tabel (nama, tugas, tenggat).
+    Notulen:
+    """
+    [tempel notulen yang sudah disamarkan]
+    """
+    ```
+
+3. **Buat Project "Asisten kerja saya".** Isi project instructions dengan aturan umum Anda, misalnya peran, gaya bahasa, dan "tanyakan dulu bila data kurang; jangan mengarang". Masukkan ketiga template ke project knowledge.
+
+4. **Uji setiap template** di dalam Project dengan data fiktif atau data yang sudah disamarkan. Perbaiki hasilnya dengan koreksi spesifik, lalu **perbarui templatenya** agar koreksi yang sama tidak perlu diulang.
+
+5. **Rapikan hasil akhir sebagai artifact**: satu dokumen "Buku saku prompt saya" berisi ketiga template final beserta catatan kapan masing-masing dipakai.
+
+</Steps>
+
+## Penilaian mandiri
+
+Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya terpenuhi.
+
+| Kriteria | Pertanyaan pemeriksa |
+| --- | --- |
+| Resep lima bagian | Apakah setiap template minimal memuat Apa, Kenapa, dan Bentuk? |
+| Privasi | Apakah tidak ada data golongan merah di Project maupun template? |
+| Project | Apakah prompt di dalam Project bekerja tanpa menjelaskan ulang konteks? |
+| Iterasi | Apakah setiap template sudah diperbaiki minimal sekali berdasarkan hasil uji? |
+| Verifikasi | Apakah fakta, nama, dan angka di hasil uji sudah Anda cek? |
+| Artifact | Apakah "Buku saku prompt saya" tersimpan dan bisa dibuka lagi? |
+
+## Kesalahan umum
+
+- **Template terlalu umum**, misalnya "Buatkan laporan tentang [topik]". Template yang baik sudah memuat konteks dan bentuk yang selalu sama.
+- **Tidak memperbarui template setelah dikoreksi**, sehingga kesalahan yang sama terulang setiap kali.
+- **Menguji dengan data asli** yang belum disamarkan.
+- **Berhenti setelah satu kali uji.** Uji dengan dua atau tiga contoh yang berbeda agar template benar-benar andal.
+
+## Rujukan
+
+- [What are projects?](https://support.claude.com/en/articles/9517075-what-are-projects)
+- [What are artifacts and how do I use them?](https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them)
+- [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa fungsi kurung siku seperti [pembaca] di dalam template prompt?',
+			pilihan: [
+				'Menandai bagian yang diganti setiap kali template dipakai',
+				'Perintah khusus yang hanya dimengerti Claude',
+				'Penanda bagian yang boleh dilewati Claude',
+			],
+			jawaban: 0,
+			pembahasan: 'Kurung siku menandai isian yang berubah, sedangkan bagian lain template tetap sama setiap kali dipakai.',
+		},
+		{
+			tanya: 'Setelah mengoreksi hasil sebuah template, apa yang sebaiknya Anda lakukan?',
+			pilihan: [
+				'Memperbarui template agar koreksi yang sama tidak perlu diulang',
+				'Membuat Project baru',
+				'Menghapus template itu',
+			],
+			jawaban: 0,
+			pembahasan: 'Template yang baik terus disempurnakan dari hasil uji, sehingga makin jarang perlu dikoreksi.',
+		},
+		{
+			tanya: 'Aturan "tanyakan dulu bila data kurang; jangan mengarang" paling tepat ditaruh di mana?',
+			pilihan: [
+				'Di project instructions, supaya berlaku di semua percakapan dalam Project',
+				'Di nama Project',
+				'Cukup diingat sendiri',
+			],
+			jawaban: 0,
+			pembahasan: 'Project instructions berlaku untuk semua percakapan di Project. Nama Project tidak dibaca oleh Claude.',
+		},
+	]}
+/>
+
+<TandaSelesai />

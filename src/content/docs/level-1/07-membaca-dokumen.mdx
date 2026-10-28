@@ -1,0 +1,156 @@
+---
+title: Membaca dokumen
+description: Mengunggah PDF, Word, dan Excel ke Claude untuk diringkas, ditanya, dan dibandingkan, serta memahami batas kemampuannya.
+jenis: pelajaran
+level: 1
+durasi: 30 menit
+prasyarat: Pelajaran 3 (privasi) dan Pelajaran 4 (prompt yang jelas).
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 7
+  label: 7. Membaca dokumen
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Mengunggah dokumen ke percakapan dan mengajukan pertanyaan yang tepat.
+2. Mengetahui jenis file dan batasan yang perlu diperhatikan.
+3. Meminta Claude menunjukkan bagian dokumen yang menjadi dasar jawabannya, agar mudah dicek.
+
+<Aside type="caution" title="Ingat lampu lalu lintas data">
+Sebelum mengunggah, pastikan dokumennya bukan golongan merah (Pelajaran 3). Untuk dokumen golongan kuning, samarkan dulu atau pastikan kebijakan kantor mengizinkan.
+</Aside>
+
+## Jenis file dan batasannya
+
+Menurut pusat bantuan resmi (per tanggal verifikasi pelajaran ini):
+
+| Hal | Ketentuan |
+| --- | --- |
+| Dokumen yang didukung | PDF, DOCX (Word), XLSX (Excel), CSV, TXT, HTML, ODT, RTF, EPUB, JSON |
+| Gambar yang didukung | JPEG, PNG, GIF, WebP |
+| Batas di percakapan | 500 MB per file, hingga 20 file per percakapan |
+| PDF hingga 100 halaman | Claude membaca teks **dan** unsur visual seperti grafik |
+| PDF 101–1000 halaman | Claude hanya membaca teksnya |
+| Word dan dokumen non-PDF lain | Hanya teks; gambar di dalam dokumen tidak terbaca |
+| Excel (XLSX) | Pengaturan "code execution and file creation" harus aktif dulu |
+
+Angka-angka ini bisa berubah. Cek halaman [Upload files to Claude](https://support.claude.com/en/articles/8241126-upload-files-to-claude) bila ragu.
+
+## Langkah praktik
+
+<Steps>
+
+1. Siapkan satu dokumen **publik**, misalnya laporan tahunan perusahaan terbuka atau peraturan pemerintah dalam bentuk PDF yang bisa diunduh dari internet.
+
+2. Di kotak percakapan, klik tombol **+**, pilih **Add files or photos**, lalu pilih dokumennya. Anda juga bisa menyeret file ke jendela percakapan.
+
+3. Minta ringkasan yang terarah, jangan sekadar "ringkas dokumen ini":
+
+    ```text
+    Saya ingin memahami dokumen ini dalam 5 menit.
+    Ringkas dalam 5 poin: tujuan dokumen, isi utama, angka penting,
+    hal yang berubah dibanding sebelumnya (jika ada), dan siapa yang terdampak.
+    ```
+
+4. Ajukan pertanyaan spesifik, lalu minta buktinya:
+
+    ```text
+    Apa saja kewajiban yang disebut di dokumen ini?
+    Untuk setiap kewajiban, kutip kalimat aslinya dan sebutkan nomor halamannya.
+    ```
+
+5. Buka dokumen aslinya dan cocokkan dua kutipan secara acak. Apakah kutipan dan halamannya tepat?
+
+</Steps>
+
+## Contoh nyata
+
+**Membandingkan dua versi dokumen.** Unggah dua file, misalnya kebijakan lama dan kebijakan baru (data fiktif atau dokumen publik), lalu kirim:
+
+```text
+Saya lampirkan dua dokumen: versi lama dan versi baru dari kebijakan cuti.
+Buat tabel perbedaannya dengan kolom: Topik, Versi lama, Versi baru, Dampak bagi karyawan.
+Hanya tulis hal yang benar-benar berubah. Jika tidak yakin, tandai dengan "perlu dicek".
+```
+
+**Membaca tabel Excel.** Setelah mengunggah file XLSX berisi data fiktif penjualan:
+
+```text
+Dari file ini, sebutkan 3 produk dengan penjualan tertinggi dan 3 terendah bulan lalu.
+Jelaskan juga cara Anda menghitungnya, supaya saya bisa mengecek di Excel.
+```
+
+## Latihan
+
+Unggah satu dokumen publik yang relevan dengan pekerjaan atau kegiatan Anda. Minta ringkasan terarah dan tiga jawaban yang disertai kutipan beserta nomor halamannya.
+
+**Kriteria berhasil:** prompt ringkasan menyebut tujuan Anda membaca dokumen itu; minimal dua kutipan sudah Anda cocokkan dengan dokumen aslinya; dan Anda mencatat satu hal yang ternyata **tidak** tepat atau tidak lengkap, bila ada.
+
+## Kesalahan umum
+
+- **Mengunggah dokumen rahasia** tanpa memeriksa golongan datanya.
+- **Mengira Claude membaca gambar di dalam file Word.** Untuk dokumen non-PDF, hanya teksnya yang terbaca.
+- **Tidak meminta kutipan atau nomor halaman**, sehingga jawaban sulit dicek.
+- **Mengandalkan hitungan tanpa verifikasi.** Untuk angka penting, minta cara menghitungnya, lalu cek di Excel.
+- **Lupa bahwa PDF yang sangat tebal hanya dibaca teksnya**, sehingga grafik dan tabel bergambar bisa terlewat.
+
+## Rujukan
+
+- [Upload files to Claude](https://support.claude.com/en/articles/8241126-upload-files-to-claude): jenis file, batas ukuran, dan cara mengunggah.
+- [Create and edit files with Claude](https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude): fitur pembuatan dan pengolahan file.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda mengunggah file Word berisi diagram bergambar. Apa yang terjadi pada diagram itu?',
+			pilihan: [
+				'Claude membaca diagramnya dengan lengkap',
+				'Claude hanya membaca teks dokumen; gambar di dalam file Word tidak terbaca',
+				'File Word tidak bisa diunggah sama sekali',
+			],
+			jawaban: 1,
+			pembahasan: 'Untuk dokumen non-PDF, Claude hanya membaca teksnya. Jika gambarnya penting, unggah sebagai PDF (hingga 100 halaman) atau sebagai gambar terpisah.',
+		},
+		{
+			tanya: 'Cara terbaik agar jawaban tentang isi dokumen mudah dicek adalah...',
+			pilihan: [
+				'Meminta Claude mengutip kalimat aslinya dan menyebut nomor halamannya',
+				'Meminta jawaban sesingkat mungkin',
+				'Mengunggah dokumen yang sama dua kali',
+			],
+			jawaban: 0,
+			pembahasan: 'Kutipan dan nomor halaman membuat Anda bisa langsung mencocokkan jawaban dengan dokumen aslinya.',
+		},
+		{
+			tanya: 'Anda mengunggah PDF setebal 400 halaman. Apa yang perlu diwaspadai?',
+			pilihan: [
+				'Claude hanya membaca teksnya, sehingga grafik dan gambar bisa terlewat',
+				'Claude hanya membaca 10 halaman pertama',
+				'PDF di atas 100 halaman ditolak',
+			],
+			jawaban: 0,
+			pembahasan: 'PDF 101–1000 halaman hanya dibaca teksnya. Unsur visual seperti grafik dibaca untuk PDF hingga 100 halaman.',
+		},
+		{
+			tanya: 'Kenapa prompt "Ringkas dalam 5 poin: tujuan, isi utama, angka penting, perubahan, dan pihak terdampak" lebih baik daripada "Ringkas dokumen ini"?',
+			pilihan: [
+				'Karena lebih panjang',
+				'Karena memberi tahu Claude apa yang penting bagi Anda dan bentuk hasilnya',
+				'Karena Claude menolak prompt pendek',
+			],
+			jawaban: 1,
+			pembahasan: 'Ini penerapan resep lima bagian: Apa dan Bentuk yang jelas menghasilkan ringkasan yang sesuai kebutuhan.',
+		},
+	]}
+/>
+
+<TandaSelesai />

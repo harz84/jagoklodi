@@ -1,0 +1,160 @@
+---
+title: Menulis dan menyunting
+description: Memakai Claude untuk menyusun email, surat, dan laporan, sekaligus menyunting tulisan Anda sendiri tanpa kehilangan gaya Anda.
+jenis: pelajaran
+level: 1
+durasi: 30 menit
+prasyarat: Pelajaran 4 dan 5.
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 6
+  label: 6. Menulis dan menyunting
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Meminta draf email, surat, atau laporan yang langsung sesuai tujuan dan pembacanya.
+2. Meminta Claude menyunting tulisan Anda tanpa mengubah gaya dan isinya.
+3. Memeriksa draf dari Claude sebelum dikirim atas nama Anda.
+
+## Dua mode: menulis dan menyunting
+
+| Mode | Kapan dipakai | Hal yang perlu disebut di prompt |
+| --- | --- | --- |
+| **Menulis** (Claude membuat draf) | Anda punya poin-poin, tetapi belum ada tulisannya | Pembaca, tujuan, poin wajib, nada, panjang |
+| **Menyunting** (Claude memperbaiki tulisan Anda) | Tulisan sudah ada, tetapi perlu dirapikan | Apa yang boleh diubah, apa yang **tidak** boleh diubah |
+
+Dalam mode menyunting, batasan sangat penting. Tanpa batasan, Claude bisa menulis ulang seluruh teks dengan gayanya sendiri, padahal Anda hanya ingin ejaannya dirapikan.
+
+## Tingkat suntingan
+
+Sebutkan dengan jelas seberapa jauh Claude boleh mengubah tulisan Anda:
+
+- **Ringan:** "Perbaiki ejaan dan tanda baca saja. Jangan ubah susunan kalimat."
+- **Sedang:** "Rapikan kalimat yang bertele-tele, tetapi pertahankan gaya bahasa saya."
+- **Berat:** "Tulis ulang supaya lebih meyakinkan. Isi dan fakta tidak boleh berubah."
+
+<Aside type="tip" title="Minta daftar perubahannya">
+Tambahkan: "Setelah itu, sebutkan perubahan apa saja yang Anda lakukan." Dengan begitu Anda bisa memeriksa setiap perubahan, bukan sekadar menerima hasil akhirnya.
+</Aside>
+
+## Langkah praktik
+
+<Steps>
+
+1. **Menulis email.** Kirim prompt ini (data fiktif):
+
+    ```text
+    Tuliskan email ke Pak Hendra, manajer vendor percetakan.
+    Tujuan: menunda pengiriman brosur dari 3 November ke 10 November karena desainnya masih direvisi.
+    Hubungan kami sudah lama dan baik, jadi nadanya sopan tapi tidak kaku.
+    Wajib ada: permintaan maaf singkat, tanggal baru, dan pertanyaan apakah ada biaya tambahan.
+    Panjang: maksimal 120 kata. Sertakan baris subjek.
+    ```
+
+2. Periksa hasilnya: apakah tanggal, nama, dan permintaannya benar? Apakah nadanya sesuai hubungan Anda dengan Pak Hendra?
+
+3. **Menyunting tulisan sendiri.** Ambil satu paragraf yang pernah Anda tulis (tanpa data sensitif), lalu kirim dengan instruksi suntingan **ringan** dan minta daftar perubahannya.
+
+4. Ulangi paragraf yang sama dengan suntingan **sedang**. Bandingkan kedua hasilnya.
+
+5. Putuskan versi mana yang paling terasa seperti tulisan Anda sendiri.
+
+</Steps>
+
+## Contoh nyata
+
+Draf laporan singkat yang perlu dirapikan:
+
+```text
+Sunting paragraf laporan berikut.
+
+Batasan:
+- Rapikan kalimat yang bertele-tele dan perbaiki ejaan.
+- Pertahankan semua angka dan nama program.
+- Gaya tetap formal untuk laporan ke pimpinan.
+- Setelah itu, sebutkan perubahan yang Anda lakukan dalam bentuk daftar.
+
+Paragraf:
+"""
+Pada bulan oktober ini program pelatihan karyawan baru sudah di laksanakan
+sebanyak 3 kali dan pesertanya ada 45 orang dimana tingkat kepuasan peserta
+nya mencapai 87% yang mana itu sudah melebihi target yang sudah di tetapkan
+yaitu 80%.
+"""
+```
+
+Hasil yang baik mempertahankan angka 3, 45, 87%, dan 80%, memperbaiki penulisan seperti "di laksanakan" menjadi "dilaksanakan", dan memecah kalimat panjang tanpa mengubah maknanya.
+
+## Latihan
+
+Pilih satu tulisan yang benar-benar akan Anda kirim minggu ini, misalnya email, pengumuman, atau bagian laporan. Buat drafnya dengan Claude, atau sunting tulisan Anda sendiri dengan batasan yang jelas.
+
+**Kriteria berhasil:** prompt menyebut pembaca, tujuan, dan batasan; semua fakta, nama, dan angka sudah Anda cek ulang; dan Anda nyaman mengirimnya atas nama Anda sendiri.
+
+## Kesalahan umum
+
+- **Mengirim tanpa membaca ulang.** Tulisan itu dikirim atas nama Anda, jadi tanggung jawabnya juga ada pada Anda.
+- **Menyunting tanpa batasan**, sehingga gaya dan isi tulisan berubah semua.
+- **Tidak menyebut hubungan dengan pembaca.** Email ke atasan, vendor, dan teman dekat butuh nada yang berbeda.
+- **Membiarkan kata-kata yang tidak biasa Anda pakai.** Pembaca yang mengenal Anda akan merasa ada yang janggal. Minta Claude menggantinya, atau sunting sendiri.
+
+## Rujukan
+
+- [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices): prinsip memberi konteks, alasan, dan contoh.
+- [Pusat bantuan Claude](https://support.claude.com): panduan resmi pemakaian Claude.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda hanya ingin ejaan tulisan Anda dirapikan. Instruksi mana yang paling tepat?',
+			pilihan: [
+				'"Perbaiki tulisan ini."',
+				'"Perbaiki ejaan dan tanda baca saja; jangan ubah susunan kalimat."',
+				'"Tulis ulang supaya lebih bagus."',
+			],
+			jawaban: 1,
+			pembahasan: 'Dalam mode menyunting, sebutkan dengan jelas apa yang boleh dan tidak boleh diubah. Tanpa batasan, Claude bisa menulis ulang seluruh teks.',
+		},
+		{
+			tanya: 'Kenapa sebaiknya Anda meminta Claude menyebutkan daftar perubahan setelah menyunting?',
+			pilihan: [
+				'Supaya Anda bisa memeriksa setiap perubahan, bukan sekadar menerima hasil akhirnya',
+				'Supaya tulisannya jadi lebih panjang',
+				'Karena Claude tidak bisa menyunting tanpa membuat daftar',
+			],
+			jawaban: 0,
+			pembahasan: 'Daftar perubahan membantu Anda memastikan tidak ada fakta atau makna yang ikut berubah tanpa disadari.',
+		},
+		{
+			tanya: 'Informasi apa yang paling memengaruhi nada sebuah email?',
+			pilihan: [
+				'Jenis font yang dipakai',
+				'Siapa pembacanya dan bagaimana hubungan Anda dengannya',
+				'Jam pengiriman email',
+			],
+			jawaban: 1,
+			pembahasan: 'Email ke atasan, vendor lama, dan rekan dekat membutuhkan nada berbeda. Sebutkan pembaca dan hubungannya di prompt.',
+		},
+		{
+			tanya: 'Claude menyusun email ke vendor untuk Anda. Apa yang wajib Anda lakukan sebelum mengirimnya?',
+			pilihan: [
+				'Langsung mengirim karena sudah dibuat AI',
+				'Memeriksa tanggal, nama, angka, dan nada karena email itu dikirim atas nama Anda',
+				'Meminta Claude mengirimkannya',
+			],
+			jawaban: 1,
+			pembahasan: 'Anda tetap penanggung jawab tulisan yang dikirim atas nama Anda. Selalu cek ulang fakta dan nadanya.',
+		},
+	]}
+/>
+
+<TandaSelesai />
