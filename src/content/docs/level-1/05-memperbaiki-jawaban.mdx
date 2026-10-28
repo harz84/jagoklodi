@@ -1,0 +1,162 @@
+---
+title: Memperbaiki jawaban
+description: Cara mengarahkan ulang jawaban Claude yang belum pas lewat koreksi spesifik, permintaan alternatif, dan memulai ulang dengan prompt yang lebih baik.
+jenis: pelajaran
+level: 1
+durasi: 25 menit
+prasyarat: Pelajaran 4 (prompt yang jelas).
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 5
+  label: 5. Memperbaiki jawaban
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Memberi koreksi yang spesifik, bukan sekadar "kurang bagus".
+2. Meminta beberapa alternatif lalu memilih yang terbaik.
+3. Memutuskan kapan cukup mengoreksi dan kapan lebih baik memulai percakapan baru.
+
+## Jawaban pertama adalah draf
+
+Jarang ada jawaban yang langsung sempurna, baik dari manusia maupun AI. Perlakukan jawaban pertama Claude sebagai **draf**, lalu arahkan dengan koreksi. Kuncinya: semakin spesifik koreksi Anda, semakin cepat hasilnya sesuai.
+
+| Koreksi samar | Koreksi spesifik |
+| --- | --- |
+| "Kurang bagus." | "Paragraf kedua terlalu kaku. Buat lebih santai, seperti bicara ke rekan satu tim." |
+| "Terlalu panjang." | "Potong jadi maksimal 4 kalimat. Pertahankan bagian tanggal dan tempat." |
+| "Bukan itu maksud saya." | "Yang saya perlukan bukan surat resmi, tapi pesan WhatsApp singkat ke atasan." |
+
+<Aside type="tip" title="Sebutkan juga apa yang sudah benar">
+"Pembukaannya sudah pas, pertahankan. Yang perlu diubah hanya penutupnya." Kalimat seperti ini mencegah Claude ikut mengubah bagian yang sudah Anda sukai.
+</Aside>
+
+## Tiga jurus memperbaiki jawaban
+
+1. **Koreksi spesifik.** Tunjuk bagian mana, apa masalahnya, dan seperti apa yang Anda mau.
+2. **Minta alternatif.** "Beri 3 versi judul dengan gaya berbeda: formal, santai, dan lucu." Memilih dari beberapa pilihan biasanya lebih cepat daripada mengoreksi satu versi berulang kali.
+3. **Mulai ulang dengan prompt yang lebih baik.** Kalau sudah tiga atau empat kali koreksi dan hasilnya masih melenceng, biasanya masalahnya ada di prompt awal. Tulis ulang prompt itu dengan resep lima bagian, lalu kirim di **percakapan baru**.
+
+Kenapa percakapan baru? Percakapan yang penuh koreksi berisi banyak versi lama dan instruksi yang saling bertentangan. Memulai dari awal dengan prompt yang sudah matang biasanya lebih bersih, dan juga lebih hemat kuota.
+
+## Langkah praktik
+
+<Steps>
+
+1. Kirim prompt ini (data fiktif):
+
+    ```text
+    Buatkan pesan ucapan terima kasih untuk tim yang sudah lembur menyelesaikan laporan akhir tahun.
+    ```
+
+2. Baca hasilnya, lalu beri **satu koreksi spesifik**. Misalnya: "Sebutkan bahwa laporannya selesai dua hari lebih cepat dari tenggat. Nadanya hangat tapi tetap profesional."
+
+3. Minta alternatif: "Beri 3 versi lain: satu untuk email, satu untuk grup WhatsApp, satu untuk diucapkan langsung di rapat pagi."
+
+4. Pilih versi terbaik, lalu minta penyempurnaan terakhir yang spesifik, misalnya "Ganti kata 'luar biasa' karena terlalu sering dipakai."
+
+5. Renungkan: berapa kali koreksi yang Anda butuhkan? Bagian mana yang seharusnya sudah ditulis sejak prompt pertama?
+
+</Steps>
+
+## Contoh nyata
+
+Sebuah percakapan yang mulai melenceng:
+
+```text
+Anda:   Buatkan ringkasan rapat.
+Claude: [ringkasan panjang 2 halaman]
+Anda:   Terlalu panjang.
+Claude: [ringkasan 1 halaman]
+Anda:   Masih panjang, dan bukan itu yang penting.
+Claude: [ringkasan pendek, tapi fokusnya salah]
+```
+
+Daripada koreksi keempat, lebih baik mulai percakapan baru dengan prompt yang matang:
+
+```text
+Ringkas notulen rapat di bawah untuk dikirim ke peserta yang tidak hadir.
+Mereka hanya perlu tahu keputusan dan tugas masing-masing.
+
+Bentuk:
+- Keputusan: maksimal 3 poin
+- Tugas: tabel berisi nama, tugas, dan tenggat
+
+Notulen:
+"""
+[tempel notulen yang sudah disamarkan]
+"""
+```
+
+## Latihan
+
+Ambil salah satu prompt dari latihan Pelajaran 4. Kirim ke Claude, lalu perbaiki hasilnya dengan **tepat dua koreksi spesifik** dan **satu permintaan alternatif**.
+
+**Kriteria berhasil:** setiap koreksi menyebut bagian yang dimaksud dan perubahan yang diinginkan, dan hasil akhirnya bisa Anda pakai langsung. Catat juga satu hal yang akan Anda tambahkan ke prompt awal di lain waktu.
+
+## Kesalahan umum
+
+- **Koreksi yang samar.** "Kurang bagus" tidak memberi Claude petunjuk apa pun.
+- **Mengoreksi terlalu lama di satu percakapan.** Setelah tiga atau empat putaran tanpa kemajuan, mulai ulang dengan prompt yang lebih baik.
+- **Lupa menyebut bagian yang sudah benar**, sehingga ikut berubah.
+- **Menerima versi pertama karena malas mengoreksi.** Satu koreksi spesifik sering membuat perbedaan besar.
+
+## Rujukan
+
+- [Jawaban Claude terlalu singkat](https://support.claude.com/en/articles/8114518-claude-s-response-to-my-prompt-is-too-brief): saran resmi untuk memperbaiki prompt bila jawaban kurang lengkap.
+- [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices): panduan resmi menulis prompt.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Mana koreksi yang paling efektif?',
+			pilihan: [
+				'"Kurang bagus, coba lagi."',
+				'"Paragraf kedua terlalu kaku; buat lebih santai seperti bicara ke rekan satu tim."',
+				'"Ulangi saja dari awal."',
+			],
+			jawaban: 1,
+			pembahasan: 'Koreksi yang efektif menyebut bagian mana, apa masalahnya, dan hasil seperti apa yang diinginkan.',
+		},
+		{
+			tanya: 'Sudah empat kali koreksi dan hasilnya masih melenceng. Apa langkah terbaik?',
+			pilihan: [
+				'Terus mengoreksi di percakapan yang sama sampai berhasil',
+				'Menulis ulang prompt awal dengan lebih lengkap lalu mengirimnya di percakapan baru',
+				'Menyerah karena Claude tidak bisa mengerjakannya',
+			],
+			jawaban: 1,
+			pembahasan: 'Bila koreksi berulang tidak membantu, biasanya prompt awalnya yang kurang. Percakapan baru dengan prompt yang matang lebih bersih dan lebih hemat kuota.',
+		},
+		{
+			tanya: 'Kenapa meminta beberapa alternatif sering lebih cepat daripada mengoreksi satu versi?',
+			pilihan: [
+				'Karena Claude wajib memberi minimal tiga jawaban',
+				'Karena memilih dari beberapa pilihan lebih mudah daripada menjelaskan perubahan satu per satu',
+				'Karena alternatif tidak memakai kuota',
+			],
+			jawaban: 1,
+			pembahasan: 'Melihat beberapa versi sekaligus membantu Anda menemukan gaya yang cocok tanpa banyak putaran koreksi.',
+		},
+		{
+			tanya: 'Apa gunanya menyebut bagian yang sudah benar saat mengoreksi?',
+			pilihan: [
+				'Supaya bagian itu tidak ikut diubah',
+				'Supaya Claude merasa senang',
+				'Tidak ada gunanya',
+			],
+			jawaban: 0,
+			pembahasan: 'Tanpa penanda itu, Claude bisa ikut mengubah bagian yang sebenarnya sudah Anda sukai.',
+		},
+	]}
+/>
+
+<TandaSelesai />
