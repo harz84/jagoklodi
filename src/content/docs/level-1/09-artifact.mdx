@@ -1,0 +1,148 @@
+---
+title: Artifact
+description: Membuat dokumen, tabel, halaman, dan alat kecil yang terbuka di samping percakapan, bisa disunting, disimpan, dan dibagikan.
+jenis: pelajaran
+level: 1
+durasi: 30 menit
+prasyarat: Pelajaran 4 (prompt yang jelas) dan Pelajaran 5 (memperbaiki jawaban).
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 9
+  label: 9. Artifact
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan apa itu artifact dan bedanya dengan jawaban biasa.
+2. Meminta Claude membuat artifact lalu menyempurnakannya.
+3. Membagikan artifact dengan aman.
+
+## Apa itu artifact
+
+Artifact adalah hasil karya Claude yang terbuka di samping percakapan: bisa Anda sunting, buka lagi nanti, dan bagikan. Contohnya dokumen, tabel, halaman web satu halaman, diagram, dashboard, alat kecil yang interaktif, atau slide.
+
+Claude biasanya membuat artifact bila hasilnya cukup besar, berdiri sendiri, dan kemungkinan akan dipakai ulang. Anda juga bisa memintanya secara langsung, misalnya "buatkan sebagai artifact".
+
+| Jawaban biasa | Artifact |
+| --- | --- |
+| Teks di dalam alur percakapan | Terbuka di panel terpisah di samping percakapan |
+| Sulit dicari lagi | Tersimpan di tab **Artifacts** di sidebar |
+| Disalin manual bila ingin dipakai | Bisa disunting, diekspor (misalnya ke Word, PDF, atau PowerPoint, tergantung jenisnya), dan dibagikan |
+
+<Aside type="note" title="Sebelum mulai">
+- Artifact membutuhkan pengaturan **code execution and file creation** yang aktif di Settings.
+- Membuat artifact di percakapan, serta template Docs, Slides, dan Design, tersedia di semua paket. Beberapa template lain hanya ada di paket tertentu; lihat tabel di halaman resmi.
+</Aside>
+
+## Berbagi dengan aman
+
+- Artifact **bersifat pribadi sejak awal.** Tidak ada yang bisa melihatnya sampai Anda membagikannya.
+- Orang yang membuka artifact yang dibagikan **perlu akun Claude.** Bila dibagikan lewat link, siapa pun yang sudah login ke Claude dan memegang link itu bisa membukanya.
+- Aturan lampu lalu lintas data tetap berlaku: jangan membuat artifact berisi data merah, apalagi membagikannya.
+- Buka artifact kiriman orang lain hanya bila Anda mempercayai pengirimnya.
+
+## Langkah praktik
+
+<Steps>
+
+1. Pastikan pengaturan **code execution and file creation** sudah aktif di Settings.
+
+2. Minta sebuah alat kecil (data fiktif):
+
+    ```text
+    Buatkan alat hitung iuran kas RT sebagai artifact.
+    - Input: jumlah rumah, iuran per rumah per bulan, dan jumlah bulan
+    - Output: total iuran, ditampilkan dalam format Rupiah (Rp 1.250.000)
+    - Tampilan sederhana dan mudah dipakai di HP
+    ```
+
+3. Coba alatnya: isi angka, lalu periksa hasil hitungannya dengan kalkulator.
+
+4. Sempurnakan dengan koreksi spesifik (Pelajaran 5), misalnya "Tambahkan kolom jumlah rumah yang sudah membayar, lalu tampilkan sisa iuran yang belum terkumpul."
+
+5. Buka tab **Artifacts** di sidebar dan pastikan artifact Anda tersimpan di sana.
+
+</Steps>
+
+## Contoh nyata
+
+Artifact juga cocok untuk dokumen yang perlu dirapikan dan diekspor:
+
+```text
+Buat artifact dokumen berisi susunan acara pengajian bulanan (data fiktif):
+- Tanggal: Sabtu, 15 November, pukul 19.30 WIB
+- Susunan: pembukaan, tilawah, tausiyah 30 menit, tanya jawab, doa penutup
+- Tambahkan tabel petugas dengan kolom: Acara, Petugas, Durasi
+Gaya: rapi dan siap dicetak.
+```
+
+Setelah dokumennya jadi, Anda bisa menyunting langsung di artifact atau meminta Claude mengubahnya, lalu mengekspornya ke format yang dibutuhkan.
+
+## Latihan
+
+Buat satu artifact yang benar-benar berguna untuk pekerjaan atau kegiatan Anda: alat hitung sederhana, daftar periksa, atau dokumen yang perlu dicetak.
+
+**Kriteria berhasil:** artifact berfungsi sesuai tujuan; minimal satu kali disempurnakan dengan koreksi spesifik; hasil hitungannya (bila ada) sudah Anda cek manual; dan tidak memuat data golongan merah.
+
+## Kesalahan umum
+
+- **Langsung percaya hasil hitungan alat buatan Claude.** Uji dulu dengan beberapa angka yang hasilnya Anda ketahui.
+- **Membagikan artifact berisi data sensitif.** Ingat, pemegang link yang sudah login bisa membukanya.
+- **Lupa mengaktifkan pengaturan** code execution and file creation, lalu mengira fiturnya tidak ada.
+- **Meminta semuanya sekaligus di prompt pertama.** Mulai dari versi sederhana, lalu tambahkan fitur satu per satu.
+
+## Rujukan
+
+- [What are artifacts and how do I use them?](https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them): penjelasan resmi artifact dan ketersediaan per paket.
+- [Share artifacts](https://support.claude.com/en/articles/9547008-publish-and-share-artifacts): cara berbagi dan siapa yang bisa membuka artifact.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa bedanya artifact dengan jawaban biasa?',
+			pilihan: [
+				'Artifact terbuka di panel terpisah, bisa disunting, disimpan di tab Artifacts, dan dibagikan',
+				'Artifact hanya berisi teks pendek',
+				'Artifact selalu langsung bisa dilihat publik',
+			],
+			jawaban: 0,
+			pembahasan: 'Artifact adalah hasil karya yang berdiri sendiri: bisa disunting, dibuka lagi, diekspor, dan dibagikan.',
+		},
+		{
+			tanya: 'Siapa yang bisa melihat artifact yang baru Anda buat dan belum dibagikan?',
+			pilihan: ['Semua orang di internet', 'Hanya Anda', 'Semua pengguna Claude'],
+			jawaban: 1,
+			pembahasan: 'Artifact bersifat pribadi sejak awal. Tidak ada yang bisa melihatnya sampai Anda membagikannya.',
+		},
+		{
+			tanya: 'Fitur artifact tidak muncul. Apa yang pertama kali perlu dicek?',
+			pilihan: [
+				'Apakah pengaturan code execution and file creation sudah aktif',
+				'Apakah Anda memakai paket Enterprise',
+				'Apakah koneksi internet memakai Wi-Fi',
+			],
+			jawaban: 0,
+			pembahasan: 'Artifact membutuhkan pengaturan code execution and file creation yang aktif di Settings.',
+		},
+		{
+			tanya: 'Claude membuatkan alat hitung iuran. Apa yang sebaiknya Anda lakukan sebelum membagikannya ke pengurus lain?',
+			pilihan: [
+				'Langsung membagikan karena dibuat oleh AI',
+				'Menguji dengan beberapa angka yang hasilnya Anda ketahui',
+				'Mengubahnya menjadi gambar',
+			],
+			jawaban: 1,
+			pembahasan: 'Alat buatan Claude bisa keliru. Uji dulu dengan angka yang hasilnya sudah Anda ketahui.',
+		},
+	]}
+/>
+
+<TandaSelesai />
