@@ -1,0 +1,135 @@
+---
+title: Kuis akhir Level 1
+description: Uji pemahaman Anda tentang prompt, perbaikan jawaban, menulis, membaca dokumen, Projects, dan artifact sebelum lanjut ke Level 2.
+jenis: kuis
+level: 1
+durasi: 15 menit
+prasyarat: Pelajaran 4 sampai 10.
+terakhirDiverifikasi: 2026-10-28
+sidebar:
+  order: 99
+  label: Kuis akhir Level 1
+  badge:
+    text: Kuis
+    variant: tip
+---
+
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+Kuis ini menggabungkan materi Level 1. Sebagian besar soal berupa kasus sehari-hari; pilih jawaban yang paling tepat menurut materi pelajaran.
+
+Kalau ragu, buka lagi pelajarannya:
+
+- [4. Prompt yang jelas](/level-1/04-prompt-jelas/)
+- [5. Memperbaiki jawaban](/level-1/05-memperbaiki-jawaban/)
+- [6. Menulis dan menyunting](/level-1/06-menulis-menyunting/)
+- [7. Membaca dokumen](/level-1/07-membaca-dokumen/)
+- [8. Projects](/level-1/08-projects/)
+- [9. Artifact](/level-1/09-artifact/)
+- [10. Proyek akhir Level 1](/level-1/10-proyek-akhir-level-1/)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Prompt "Buatkan undangan rapat" menghasilkan undangan yang terlalu formal untuk grup WhatsApp tim. Bagian resep mana yang kurang?',
+			pilihan: ['Siapa dan Bentuk', 'Contoh saja', 'Tidak ada yang kurang'],
+			jawaban: 0,
+			pembahasan: 'Claude tidak tahu pembacanya adalah tim di grup WhatsApp (Siapa) dan bentuk yang diinginkan (Bentuk). Keduanya perlu ditulis.',
+		},
+		{
+			tanya: 'Instruksi mana yang paling membantu Claude memahami maksud Anda?',
+			pilihan: [
+				'"Jangan pakai istilah teknis."',
+				'"Jangan pakai istilah teknis, karena pembacanya pengurus yang bukan orang IT."',
+				'"Pokoknya jangan teknis!"',
+			],
+			jawaban: 1,
+			pembahasan: 'Menyertakan alasan (Kenapa) membuat Claude bisa menerapkan maksud Anda ke hal serupa yang tidak Anda sebutkan.',
+		},
+		{
+			tanya: 'Anda puas dengan pembukaan email buatan Claude, tetapi penutupnya terlalu panjang. Koreksi mana yang paling tepat?',
+			pilihan: [
+				'"Tulis ulang emailnya."',
+				'"Pembukaannya sudah pas, pertahankan. Penutupnya cukup satu kalimat ajakan."',
+				'"Kurang bagus."',
+			],
+			jawaban: 1,
+			pembahasan: 'Koreksi spesifik menyebut bagian yang dipertahankan dan bagian yang diubah, sehingga yang sudah bagus tidak ikut berubah.',
+		},
+		{
+			tanya: 'Kapan sebaiknya Anda berhenti mengoreksi dan memulai percakapan baru?',
+			pilihan: [
+				'Setelah koreksi pertama',
+				'Setelah tiga atau empat putaran koreksi tanpa kemajuan; tulis ulang prompt awal yang lebih lengkap',
+				'Tidak pernah',
+			],
+			jawaban: 1,
+			pembahasan: 'Bila koreksi berulang tidak membantu, masalahnya biasanya di prompt awal. Mulai ulang dengan prompt yang matang.',
+		},
+		{
+			tanya: 'Anda meminta Claude merapikan laporan, tetapi angka-angkanya tidak boleh berubah. Apa yang sebaiknya ditulis di prompt?',
+			pilihan: [
+				'Batasan: "pertahankan semua angka dan nama program", serta minta daftar perubahan',
+				'Cukup "rapikan laporan ini"',
+				'Minta Claude menulis ulang sepenuhnya',
+			],
+			jawaban: 0,
+			pembahasan: 'Dalam mode menyunting, sebutkan apa yang tidak boleh diubah dan minta daftar perubahan agar mudah diperiksa.',
+		},
+		{
+			tanya: 'Anda bertanya tentang isi PDF peraturan setebal 60 halaman. Cara terbaik agar jawabannya bisa dicek adalah...',
+			pilihan: [
+				'Meminta kutipan kalimat asli dan nomor halamannya',
+				'Meminta jawaban satu kata',
+				'Bertanya tanpa mengunggah dokumennya',
+			],
+			jawaban: 0,
+			pembahasan: 'Kutipan dan nomor halaman memudahkan Anda mencocokkan jawaban dengan dokumen asli.',
+		},
+		{
+			tanya: 'Grafik penting di dalam file Word tidak dibahas oleh Claude. Kenapa?',
+			pilihan: [
+				'Untuk dokumen non-PDF, Claude hanya membaca teksnya',
+				'Grafik selalu diabaikan di semua jenis file',
+				'Karena memakai paket Free',
+			],
+			jawaban: 0,
+			pembahasan: 'Gambar di dalam dokumen non-PDF tidak terbaca. PDF hingga 100 halaman dibaca beserta unsur visualnya.',
+		},
+		{
+			tanya: 'Setiap bulan Anda menyusun laporan dengan template dan aturan gaya yang sama. Fitur apa yang paling tepat?',
+			pilihan: [
+				'Project dengan template di project knowledge dan aturan di project instructions',
+				'Percakapan baru tanpa konteks setiap bulan',
+				'Mode incognito',
+			],
+			jawaban: 0,
+			pembahasan: 'Project menyimpan konteks dan aturan sehingga tidak perlu dijelaskan ulang setiap bulan.',
+		},
+		{
+			tanya: 'Anda ingin membagikan alat hitung (artifact) ke pengurus lain. Mana pernyataan yang benar?',
+			pilihan: [
+				'Artifact pribadi sejak awal; penerima link perlu login ke akun Claude untuk membukanya',
+				'Artifact langsung publik begitu dibuat',
+				'Penerima tidak perlu akun apa pun',
+			],
+			jawaban: 0,
+			pembahasan: 'Artifact pribadi sampai Anda membagikannya, dan untuk membukanya penerima perlu akun Claude.',
+		},
+		{
+			tanya: 'Apa ciri template prompt yang baik untuk pekerjaan rutin?',
+			pilihan: [
+				'Bagian tetap sudah memuat konteks dan bentuk; bagian yang berubah ditandai kurung siku',
+				'Sependek mungkin, misalnya "Buatkan laporan tentang [topik]"',
+				'Ditulis ulang dari nol setiap kali dipakai',
+			],
+			jawaban: 0,
+			pembahasan: 'Template yang baik menyimpan konteks dan bentuk yang selalu sama, dan hanya menyisakan isian yang berubah.',
+		},
+	]}
+/>
+
+<TandaSelesai />
