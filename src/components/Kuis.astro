@@ -85,7 +85,7 @@ if (ambang <= 0 || ambang > 100) salah('ambang harus antara 1 dan 100.');
 </form>
 
 <script>
-	import { bacaKuis, simpanKuis, normalPath, EVENT_KUIS_LULUS } from '../lib/progres';
+	import { bacaKuis, simpanKuis, normalPath, EVENT_KUIS_LULUS, EVENT_PROGRES_DIMUAT } from '../lib/progres';
 
 	document.querySelectorAll<HTMLFormElement>('form[data-kuis]').forEach((form) => {
 		const path = normalPath(location.pathname);
@@ -118,6 +118,7 @@ if (ambang <= 0 || ambang > 100) salah('ambang harus antara 1 dan 100.');
 			terbaik.classList.toggle('kuis__terbaik--lulus', h.lulus);
 		};
 		tampilkanTerbaik();
+		window.addEventListener(EVENT_PROGRES_DIMUAT, tampilkanTerbaik);
 
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();

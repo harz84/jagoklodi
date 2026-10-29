@@ -1,6 +1,7 @@
 ---
 /**
- * Override Footer Starlight: footer bawaan + disclaimer + tanda centang pelajaran selesai di sidebar.
+ * Override Footer Starlight: footer bawaan + disclaimer + tanda centang pelajaran selesai di sidebar,
+ * serta memulai sinkronisasi progres bila pengguna sudah login.
  */
 import Default from '@astrojs/starlight/components/Footer.astro';
 ---
@@ -8,15 +9,22 @@ import Default from '@astrojs/starlight/components/Footer.astro';
 <Default><slot /></Default>
 <p class="disclaimer">
 	jagoklodi adalah situs komunitas independen dan tidak berafiliasi dengan Anthropic.
-	Claude adalah merek dagang Anthropic.
+	Claude adalah merek dagang Anthropic. <a href="/privasi/">Kebijakan privasi</a>.
 </p>
 
 <script>
-	import { bacaSelesai, normalPath } from '../lib/progres';
+	import { bacaSelesai, normalPath, EVENT_PROGRES_DIMUAT } from '../lib/progres';
+	import { mulaiSinkronOtomatis } from '../lib/sinkron';
 
-	const selesai = new Set(bacaSelesai());
-	document.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]').forEach((a) => {
-		const path = new URL(a.href, location.href).pathname;
-		if (selesai.has(normalPath(path))) a.dataset.selesai = '';
-	});
+	const tandaiSidebar = () => {
+		const selesai = new Set(bacaSelesai());
+		document.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]').forEach((a) => {
+			const path = normalPath(new URL(a.href, location.href).pathname);
+			if (selesai.has(path)) a.dataset.selesai = '';
+			else delete a.dataset.selesai;
+		});
+	};
+	tandaiSidebar();
+	window.addEventListener(EVENT_PROGRES_DIMUAT, tandaiSidebar);
+	mulaiSinkronOtomatis();
 </script>
