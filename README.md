@@ -10,6 +10,7 @@ Butuh Node.js 22 atau lebih baru.
 npm install
 npm run dev      # buka http://localhost:4321
 npm run build    # build produksi + validasi skema dan tautan
+npm test         # uji di browser desktop dan HP (setelah build)
 ```
 
 ## Menambah pelajaran

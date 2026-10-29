@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "node scripts/cek-konten.mjs && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "playwright test"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.7",
@@ -16,6 +17,7 @@
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "starlight-links-validator": "^0.27.0"
   },
   "engines": {

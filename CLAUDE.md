@@ -6,6 +6,8 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 
 - `npm run dev`: server lokal di http://localhost:4321
 - `npm run build`: build produksi, termasuk validasi skema frontmatter dan tautan internal. WAJIB lolos sebelum pekerjaan dinyatakan selesai.
+- `npm test`: uji Playwright di browser desktop dan HP untuk setiap halaman (jalankan setelah `npm run build`). Header produksi dari `netlify.toml`, termasuk CSP, ikut dipasang saat uji. WAJIB lolos sebelum membuka PR.
+- CI (`.github/workflows/ci.yml`) menjalankan build dan uji di setiap PR. Penjelasan keamanan ada di `docs/keamanan.md`.
 
 ## Struktur
 
@@ -35,6 +37,11 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - Jangan memakai logo, ikon, atau aset visual Anthropic.
 - Jangan memakai kata "resmi", "official", atau "Anthropic" sebagai bagian dari nama, tagline, atau domain.
 - Disclaimer di footer tidak boleh dihapus.
+
+## Aturan keamanan
+
+- Jangan pernah menyimpan rahasia (API key, token, password) di repo; repo ini publik.
+- Jangan menambah skrip, font, atau layanan dari domain luar tanpa memperbarui CSP di `netlify.toml` dan `docs/keamanan.md`.
 
 ## Alur git
 

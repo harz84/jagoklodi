@@ -1,0 +1,48 @@
+# Pemeriksaan otomatis untuk setiap pull request dan setiap perubahan di main.
+# Build (pemeriksaan konten, skema, kuis, tautan) lalu uji di browser desktop dan HP.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-dan-uji:
+    name: Build dan uji
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Pasang dependensi
+        run: npm ci
+
+      - name: Build dan pemeriksaan konten
+        run: npm run build
+
+      - name: Pasang browser untuk uji
+        run: npx playwright install --with-deps chromium
+
+      - name: Uji di browser (desktop dan HP)
+        run: npm test
+
+      - name: Simpan laporan bila uji gagal
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: hasil-uji
+          path: test-results/
+          retention-days: 7
