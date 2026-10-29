@@ -21,7 +21,14 @@ export default defineConfig({
 				Footer: './src/components/Footer.astro',
 			},
 			sidebar: [
-				{ label: 'Mulai di sini', items: [{ label: 'Tentang jagoklodi', slug: 'tentang' }] },
+				{
+					label: 'Mulai di sini',
+					items: [
+						{ label: 'Tentang jagoklodi', slug: 'tentang' },
+						{ label: 'Akun dan sinkron progres', slug: 'akun' },
+						{ label: 'Kebijakan privasi', slug: 'privasi' },
+					],
+				},
 				{ label: 'Level 0 · Orientasi', items: [{ autogenerate: { directory: 'level-0' } }] },
 				{ label: 'Level 1 · Dasar pemakaian', items: [{ autogenerate: { directory: 'level-1' } }] },
 				// Tambahkan grup level berikutnya setelah folder-nya berisi minimal satu pelajaran.
