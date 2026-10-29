@@ -11,7 +11,7 @@ Ringkasan pengamanan situs, untuk dibaca saat mengubah konfigurasi.
 | `X-Content-Type-Options: nosniff` | Browser tidak menebak jenis file, sehingga file teks tidak bisa dijalankan sebagai skrip. |
 | `Referrer-Policy` | Saat pengunjung mengklik tautan keluar, situs tujuan hanya tahu domainnya, bukan alamat halaman lengkap. |
 | `Permissions-Policy` | Mematikan akses kamera, mikrofon, lokasi, pembayaran, dan USB yang memang tidak dipakai. |
-| `Content-Security-Policy` | Hanya mengizinkan skrip, style, gambar, dan font dari domain sendiri. |
+| `Content-Security-Policy` | Hanya mengizinkan skrip, style, gambar, dan font dari domain sendiri. Koneksi keluar hanya ke domain sendiri dan `*.supabase.co` (login dan sinkron progres). |
 
 ### Kenapa CSP masih memakai `'unsafe-inline'`
 
@@ -26,8 +26,14 @@ Risikonya kecil untuk situs ini, karena tidak ada konten dari pengguna dan tidak
 - GitHub Actions (`.github/workflows/ci.yml`) menjalankan keduanya di setiap pull request.
 - Dependabot (`.github/dependabot.yml`) membuka PR untuk pembaruan paket setiap Senin.
 
+## Login dan data pengguna
+
+- Hanya publishable key Supabase yang ada di situs; secret key tidak pernah dipakai.
+- Tabel `progres` dilindungi Row Level Security: setiap pengguna hanya bisa membaca dan mengubah barisnya sendiri (`supabase/migrations/0001_progres.sql`).
+- Data pribadi yang tersimpan hanya email. Rincian untuk pengguna ada di halaman `/privasi/`; panduan aktivasi di `docs/login.md`.
+
 ## Pengaturan akun (dilakukan pemilik)
 
-- [ ] 2FA aktif di GitHub, Netlify, dan Sumopod.
+- [ ] 2FA aktif di GitHub, Netlify, Sumopod, dan Supabase.
 - [ ] Branch `main` dilindungi: wajib pull request dan wajib lolos pemeriksaan **CI / Build dan uji**.
 - [ ] Dependabot alerts dan security updates aktif (GitHub → Settings → Code security).

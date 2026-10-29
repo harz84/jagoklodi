@@ -11,45 +11,57 @@
 	<p class="tanda-selesai__catatan" hidden>
 		Progres tidak bisa disimpan di browser ini (mungkin mode privat atau penyimpanan diblokir).
 	</p>
+	<p class="tanda-selesai__ajak" hidden>
+		Progres tersimpan di browser ini saja. <a href="/akun/">Masuk dengan email</a> agar progres tersimpan di semua perangkat.
+	</p>
 </div>
 
 <script>
-	import { bacaSelesai, setSelesai, normalPath, bacaKuis, EVENT_KUIS_LULUS } from '../lib/progres';
+	import {
+		bacaSelesai,
+		setSelesai,
+		normalPath,
+		bacaKuis,
+		EVENT_KUIS_LULUS,
+		EVENT_PROGRES_DIMUAT,
+	} from '../lib/progres';
+	import { loginAktif, adaSesiTersimpan } from '../lib/sinkron';
 
 	document.querySelectorAll<HTMLElement>('.tanda-selesai').forEach((wadah) => {
 		const tombol = wadah.querySelector('button')!;
 		const catatan = wadah.querySelector<HTMLElement>('.tanda-selesai__catatan')!;
+		const pesanKunci = wadah.querySelector<HTMLElement>('.tanda-selesai__kunci')!;
+		const ajak = wadah.querySelector<HTMLElement>('.tanda-selesai__ajak')!;
+		const kuis = document.querySelector<HTMLElement>('form[data-kuis]');
 		const path = normalPath(location.pathname);
 
 		const tampilkan = (selesai: boolean) => {
 			tombol.setAttribute('aria-pressed', String(selesai));
 			tombol.textContent = selesai ? '✓ Selesai (klik untuk membatalkan)' : 'Tandai pelajaran ini selesai';
-			document
-				.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]')
-				.forEach((a) => {
-					if (normalPath(new URL(a.href, location.href).pathname) !== path) return;
-					if (selesai) a.dataset.selesai = '';
-					else delete a.dataset.selesai;
-				});
+			document.querySelectorAll<HTMLAnchorElement>('nav.sidebar a[href]').forEach((a) => {
+				if (normalPath(new URL(a.href, location.href).pathname) !== path) return;
+				if (selesai) a.dataset.selesai = '';
+				else delete a.dataset.selesai;
+			});
 		};
-
-		const sudahSelesai = bacaSelesai().includes(path);
-		tampilkan(sudahSelesai);
 
 		// Bila halaman punya kuis, tombol terkunci sampai kuis lulus.
 		// Pelajaran yang sudah ditandai selesai sebelum kuis ditambahkan tetap dihormati.
-		const kuis = document.querySelector<HTMLElement>('form[data-kuis]');
-		const pesanKunci = wadah.querySelector<HTMLElement>('.tanda-selesai__kunci')!;
-		const buka = () => {
-			tombol.disabled = false;
-			pesanKunci.hidden = true;
+		const perbarui = () => {
+			const sudahSelesai = bacaSelesai().includes(path);
+			tampilkan(sudahSelesai);
+			const terkunci = Boolean(kuis) && !sudahSelesai && !bacaKuis(path)?.lulus;
+			tombol.disabled = terkunci;
+			pesanKunci.hidden = !terkunci;
+			if (terkunci) {
+				pesanKunci.textContent = `Kerjakan kuis di atas dengan skor minimal ${kuis!.dataset.ambang ?? 70}% untuk membuka tombol ini.`;
+			}
+			ajak.hidden = !loginAktif || adaSesiTersimpan();
 		};
-		if (kuis && !sudahSelesai && !bacaKuis(path)?.lulus) {
-			tombol.disabled = true;
-			pesanKunci.hidden = false;
-			pesanKunci.textContent = `Kerjakan kuis di atas dengan skor minimal ${kuis.dataset.ambang ?? 70}% untuk membuka tombol ini.`;
-			window.addEventListener(EVENT_KUIS_LULUS, buka);
-		}
+
+		perbarui();
+		window.addEventListener(EVENT_KUIS_LULUS, perbarui);
+		window.addEventListener(EVENT_PROGRES_DIMUAT, perbarui);
 
 		tombol.addEventListener('click', () => {
 			const baru = tombol.getAttribute('aria-pressed') !== 'true';

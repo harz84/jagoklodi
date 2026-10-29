@@ -39,6 +39,16 @@ jobs:
       - name: Uji di browser (desktop dan HP)
         run: npm test
 
+      # Uji login memakai Supabase tiruan; tidak ada data sungguhan yang dikirim.
+      - name: Build dengan login aktif (nilai uji)
+        run: npm run build
+        env:
+          PUBLIC_SUPABASE_URL: https://uji.supabase.co
+          PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_uji
+
+      - name: Uji login dan sinkron progres
+        run: npx playwright test tests/login.spec.ts --project=desktop
+
       - name: Simpan laporan bila uji gagal
         if: failure()
         uses: actions/upload-artifact@v6

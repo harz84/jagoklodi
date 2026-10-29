@@ -1,0 +1,282 @@
+---
+/**
+ * Halaman Akun: masuk dengan email (kode 6 digit atau tautan), status sinkron, keluar, dan hapus data.
+ * Semua logika ada di src/lib/sinkron.ts.
+ */
+---
+
+<div class="akun not-content" data-akun>
+	<p class="akun__memuat">Memuat status akun…</p>
+
+	<section class="akun__panel" data-langkah="nonaktif" hidden>
+		<p>Fitur login belum diaktifkan di situs ini. Progres belajar Anda tetap tersimpan di browser ini.</p>
+	</section>
+
+	<section class="akun__panel" data-langkah="email" hidden>
+		<form class="akun__form" data-form="email" novalidate>
+			<label for="akun-email">Email</label>
+			<input id="akun-email" type="email" autocomplete="email" inputmode="email" required placeholder="nama@contoh.com" />
+			<button type="submit">Kirim kode masuk</button>
+		</form>
+		<p class="akun__catatan">
+			Tanpa password. Kami mengirim kode 6 digit ke email Anda. Akun dibuat otomatis saat pertama kali masuk.
+		</p>
+	</section>
+
+	<section class="akun__panel" data-langkah="kode" hidden>
+		<p>Kode masuk sudah dikirim ke <strong data-isi="email"></strong>. Periksa juga folder spam.</p>
+		<form class="akun__form" data-form="kode" novalidate>
+			<label for="akun-kode">Kode dari email</label>
+			<input id="akun-kode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="10" required placeholder="123456" />
+			<button type="submit">Masuk</button>
+		</form>
+		<p class="akun__catatan">
+			Atau klik tautan di email itu, asalkan dibuka di browser yang sama dengan halaman ini.
+		</p>
+		<p class="akun__catatan">
+			Salah alamat? <button type="button" class="akun__tautan" data-aksi="ganti-email">Ganti email</button>
+		</p>
+	</section>
+
+	<section class="akun__panel" data-langkah="masuk" hidden>
+		<p>Anda masuk sebagai <strong data-isi="email"></strong>.</p>
+		<p class="akun__status" data-isi="status"></p>
+		<div class="akun__aksi">
+			<button type="button" data-aksi="sinkron">Sinkronkan sekarang</button>
+			<button type="button" class="akun__sekunder" data-aksi="keluar">Keluar</button>
+		</div>
+		<details class="akun__bahaya">
+			<summary>Hapus progres saya</summary>
+			<p>
+				Menghapus semua progres belajar dan skor kuis Anda, di server dan di browser ini. Tindakan ini tidak bisa
+				dibatalkan.
+			</p>
+			<button type="button" class="akun__hapus" data-aksi="hapus">Ya, hapus progres saya</button>
+		</details>
+	</section>
+
+	<p class="akun__pesan" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+	import {
+		loginAktif,
+		klien,
+		sinkronkan,
+		kirimKode,
+		masukDenganKode,
+		emailPengguna,
+		keluar,
+		hapusProgresSaya,
+		waktuSinkronTerakhir,
+		type StatusSinkron,
+	} from '../lib/sinkron';
+	import { bacaProgres } from '../lib/progres';
+
+	const root = document.querySelector<HTMLElement>('[data-akun]');
+	if (root) {
+		const panel = (nama: string) => root.querySelector<HTMLElement>(`[data-langkah="${nama}"]`)!;
+		const pesan = root.querySelector<HTMLElement>('.akun__pesan')!;
+		let emailDiminta = '';
+
+		const tampilkan = (nama: string) => {
+			root.querySelector<HTMLElement>('.akun__memuat')!.hidden = true;
+			root.querySelectorAll<HTMLElement>('.akun__panel').forEach((p) => (p.hidden = p.dataset.langkah !== nama));
+		};
+		const isi = (kunci: string, teks: string) =>
+			root.querySelectorAll<HTMLElement>(`[data-isi="${kunci}"]`).forEach((el) => (el.textContent = teks));
+		const beriPesan = (teks: string, jenis: 'info' | 'galat' = 'info') => {
+			pesan.textContent = teks;
+			pesan.dataset.jenis = jenis;
+		};
+		const sibuk = (tombol: HTMLButtonElement | null, ya: boolean) => {
+			if (tombol) tombol.disabled = ya;
+		};
+
+		const teksStatus = (s: StatusSinkron) => {
+			const p = bacaProgres();
+			const jumlah = `${p.selesai.length} pelajaran selesai, ${Object.keys(p.kuis).length} kuis dikerjakan.`;
+			if (s === 'gagal') return `Sinkron gagal; progres tetap aman di browser ini dan akan dicoba lagi. ${jumlah}`;
+			const t = waktuSinkronTerakhir();
+			const kapan = t ? new Date(t).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'belum pernah';
+			return `Tersinkron (terakhir ${kapan}). ${jumlah}`;
+		};
+
+		const tampilkanMasuk = async () => {
+			isi('email', (await emailPengguna()) ?? '');
+			tampilkan('masuk');
+			isi('status', 'Menyinkronkan…');
+			isi('status', teksStatus(await sinkronkan()));
+		};
+
+		const mulai = async () => {
+			if (!loginAktif) return tampilkan('nonaktif');
+			const sb = await klien()!;
+			// Bila pengguna datang dari tautan di email, Supabase menyelesaikan login di sini.
+			const { data } = await sb.auth.getSession();
+			if (data.session) {
+				if (location.search.includes('code=')) history.replaceState(null, '', location.pathname);
+				return tampilkanMasuk();
+			}
+			tampilkan('email');
+		};
+
+		root.querySelector<HTMLFormElement>('[data-form="email"]')!.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const input = root.querySelector<HTMLInputElement>('#akun-email')!;
+			const email = input.value.trim();
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return beriPesan('Periksa lagi alamat email Anda.', 'galat');
+			const tombol = (e.currentTarget as HTMLFormElement).querySelector('button');
+			sibuk(tombol, true);
+			beriPesan('Mengirim kode…');
+			const galat = await kirimKode(email);
+			sibuk(tombol, false);
+			if (galat) return beriPesan(galat, 'galat');
+			emailDiminta = email;
+			isi('email', email);
+			beriPesan('');
+			tampilkan('kode');
+			root.querySelector<HTMLInputElement>('#akun-kode')!.focus();
+		});
+
+		root.querySelector<HTMLFormElement>('[data-form="kode"]')!.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const kode = root.querySelector<HTMLInputElement>('#akun-kode')!.value.replace(/\s/g, '');
+			if (!/^\d{6,10}$/.test(kode)) return beriPesan('Masukkan kode angka dari email.', 'galat');
+			const tombol = (e.currentTarget as HTMLFormElement).querySelector('button');
+			sibuk(tombol, true);
+			beriPesan('Memeriksa kode…');
+			const galat = await masukDenganKode(emailDiminta, kode);
+			sibuk(tombol, false);
+			if (galat) return beriPesan(galat, 'galat');
+			beriPesan('Berhasil masuk. Progres di browser ini digabungkan dengan akun Anda.');
+			await tampilkanMasuk();
+		});
+
+		root.addEventListener('click', async (e) => {
+			const tombol = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-aksi]');
+			if (!tombol) return;
+			const aksi = tombol.dataset.aksi;
+			if (aksi === 'ganti-email') {
+				beriPesan('');
+				return tampilkan('email');
+			}
+			sibuk(tombol, true);
+			if (aksi === 'sinkron') {
+				isi('status', 'Menyinkronkan…');
+				isi('status', teksStatus(await sinkronkan()));
+			} else if (aksi === 'keluar') {
+				await keluar();
+				beriPesan('Anda sudah keluar. Progres tetap tersimpan di browser ini.');
+				tampilkan('email');
+			} else if (aksi === 'hapus') {
+				const galat = await hapusProgresSaya();
+				beriPesan(galat ?? 'Progres Anda sudah dihapus dari server dan dari browser ini.', galat ? 'galat' : 'info');
+				if (!galat) isi('status', teksStatus('tersinkron'));
+				root.querySelector<HTMLDetailsElement>('.akun__bahaya')!.open = false;
+			}
+			sibuk(tombol, false);
+		});
+
+		mulai().catch(() => {
+			tampilkan('email');
+			beriPesan('Layanan akun sedang tidak bisa dihubungi. Progres Anda tetap tersimpan di browser ini.', 'galat');
+		});
+	}
+</script>
+
+<style>
+	.akun {
+		display: grid;
+		gap: 1rem;
+		max-width: 32rem;
+		margin-top: 1rem;
+	}
+	.akun__panel {
+		display: grid;
+		gap: 0.75rem;
+		padding: 1.25rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+	}
+	.akun__form {
+		display: grid;
+		gap: 0.5rem;
+	}
+	.akun__form label {
+		font-weight: 600;
+	}
+	.akun__form input {
+		font: inherit;
+		padding: 0.6rem 0.75rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-gray-4);
+		background: var(--sl-color-bg);
+		color: var(--sl-color-white);
+	}
+	.akun button {
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+		padding: 0.6rem 1.1rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-accent);
+		background: var(--sl-color-accent);
+		color: var(--sl-color-black);
+		justify-self: start;
+	}
+	.akun button:disabled {
+		opacity: 0.6;
+		cursor: progress;
+	}
+	.akun .akun__sekunder {
+		background: transparent;
+		color: var(--sl-color-accent-high);
+	}
+	.akun .akun__tautan {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--sl-color-accent-high);
+		text-decoration: underline;
+		font-weight: 400;
+	}
+	.akun__aksi {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.akun__catatan,
+	.akun__status {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+	.akun__bahaya {
+		margin-top: 0.5rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+		font-size: var(--sl-text-sm);
+	}
+	.akun__bahaya summary {
+		cursor: pointer;
+		color: var(--sl-color-red-high);
+	}
+	.akun__bahaya p {
+		margin: 0.5rem 0;
+	}
+	.akun .akun__hapus {
+		background: transparent;
+		border-color: var(--sl-color-red);
+		color: var(--sl-color-red-high);
+	}
+	/* Atribut hidden harus menang atas display: grid di atas. */
+	.akun [hidden] {
+		display: none;
+	}
+	.akun__pesan:empty {
+		display: none;
+	}
+	.akun__pesan[data-jenis='galat'] {
+		color: var(--sl-color-red-high);
+	}
+</style>

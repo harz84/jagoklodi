@@ -43,7 +43,8 @@
 	color: var(--sl-color-black);
 }
 .tanda-selesai__kunci,
-.tanda-selesai__catatan {
+.tanda-selesai__catatan,
+.tanda-selesai__ajak {
 	margin-top: 0.5rem;
 	font-size: var(--sl-text-sm);
 	color: var(--sl-color-gray-3);
@@ -206,4 +207,10 @@ nav.sidebar a[aria-current='page'][data-selesai]::after {
 	border-color: var(--sl-color-gray-4);
 	color: var(--sl-color-gray-3);
 	background: transparent;
+}
+
+/* Tautan di komponen non-konten mengikuti warna aksen tema */
+.tanda-selesai a,
+.disclaimer a {
+	color: var(--sl-color-text-accent);
 }
