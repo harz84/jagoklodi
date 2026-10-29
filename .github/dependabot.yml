@@ -1,0 +1,24 @@
+# Dependabot memeriksa versi baru paket setiap minggu dan membuka pull request otomatis.
+# Pembaruan kecil (minor/patch) digabung dalam satu PR supaya tidak banjir notifikasi.
+# Pembaruan keamanan tetap datang sebagai PR terpisah secepatnya.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Asia/Jakarta
+    open-pull-requests-limit: 5
+    groups:
+      paket-minor-dan-patch:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: "deps"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "ci"
