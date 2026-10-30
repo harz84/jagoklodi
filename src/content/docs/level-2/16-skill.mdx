@@ -1,0 +1,166 @@
+---
+title: "Skill: mengajari Claude cara kerja Anda"
+description: Mengemas cara kerja yang sudah terbukti, seperti format laporan atau gaya surat, menjadi skill yang dipakai Claude otomatis di percakapan mana pun.
+jenis: pelajaran
+level: 2
+durasi: 40 menit
+prasyarat: Pelajaran 8 (Projects), Pelajaran 10 (proyek akhir Level 1), dan Pelajaran 13 (membuat file).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 16
+  label: 16. Skill
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan apa itu skill dan bedanya dengan Projects dan instruksi umum.
+2. Membuat skill pertama Anda lewat percakapan dengan Claude.
+3. Menguji skill dan memperbaiki deskripsinya bila Claude tidak memakainya.
+
+## Apa itu skill
+
+**Skill** adalah paket petunjuk, dan bila perlu file contoh atau skrip, yang mengajari Claude cara mengerjakan satu jenis tugas dengan konsisten. Misalnya format laporan mingguan tim Anda, gaya surat resmi organisasi, atau langkah menganalisis data penjualan.
+
+Yang membuat skill istimewa: Claude **memuatnya sendiri saat relevan**. Claude awalnya hanya membaca nama dan deskripsi setiap skill. Isi lengkapnya baru dibaca ketika tugas Anda cocok. Karena itu Anda bisa punya banyak skill tanpa membebani setiap percakapan.
+
+Ada tiga jenis skill:
+
+- **Skill bawaan Anthropic**, misalnya pembuatan file Excel, Word, PowerPoint, dan PDF. Inilah yang bekerja di balik Pelajaran 13; Claude memakainya otomatis.
+- **Skill buatan sendiri** untuk cara kerja Anda atau organisasi.
+- **Skill mitra** dari direktori, dibuat oleh layanan seperti Notion atau Figma agar cocok dengan connector-nya.
+
+## Skill, Project, atau instruksi umum?
+
+| | **Instruksi umum** (Settings) | **Project** (Pelajaran 8) | **Skill** |
+| --- | --- | --- | --- |
+| Berlaku | Di semua percakapan | Hanya di dalam Project itu | Di mana saja, **saat tugasnya cocok** |
+| Cocok untuk | Preferensi umum, misalnya "jawab ringkas" | Konteks dan dokumen satu pekerjaan | Cara mengerjakan satu jenis tugas berulang |
+| Contoh | "Selalu pakai Bahasa Indonesia" | Project "Laporan bulanan koperasi" | Skill "Notulen rapat pengurus" |
+
+Instruksi umum diatur di **Settings > Your Claude** (di tata letak lama: **Settings > Account**).
+
+Patokan sederhananya: bila Anda menjelaskan **format, nada, dan contoh hasil yang baik** untuk tugas yang sama lebih dari dua kali, itu tanda tugas tersebut layak dijadikan skill.
+
+<Aside type="note" title="Sebelum mulai">
+- Skill tersedia di **semua paket**, tetapi membutuhkan **Code execution and file creation** (atau **Create and edit files**) yang aktif di **Settings > Capabilities**.
+- Daftar skill ada di **Customize > Skills**. Sejak akhir Oktober 2026, **Customize** bertahap berganti nama menjadi **Plugins**; di tampilan itu, skill bisa dipanggil lewat tombol **+** atau dengan mengetik `/` di kotak pesan.
+- Di paket Team dan Enterprise, owner bisa mematikan pembuatan skill oleh anggota.
+</Aside>
+
+## Langkah praktik
+
+<Steps>
+
+1. Pastikan **Code execution and file creation** aktif, lalu buka **Customize > Skills** (atau **Plugins**) untuk melihat skill yang sudah ada.
+
+2. Pilih satu tugas berulang. Bila Anda sudah mengerjakan proyek akhir Level 1, ambil salah satu dari tiga template prompt Anda.
+
+3. Di percakapan baru, minta Claude membuatkan skill dengan menyebut tiga hal: **format**, **nada**, dan **contoh hasil yang baik**. Contoh (fiktif):
+
+    ```text
+    Saya ingin membuat skill untuk laporan mingguan tim.
+    Format: tiga bagian, yaitu Capaian, Kendala, dan Rencana
+    minggu depan; masing-masing maksimal tiga poin.
+    Nada: lugas dan faktual, untuk atasan yang membaca sekilas.
+    Contoh laporan yang bagus:
+    """
+    [tempel satu laporan lama yang sudah disamarkan]
+    """
+    ```
+
+4. Jawab pertanyaan Claude tentang cara kerja Anda. Bayangkan Anda menjelaskan ke rekan baru yang cerdas tetapi belum tahu kebiasaan tim.
+
+5. Baca isi skill yang disusun Claude, terutama bagian **deskripsi**. Deskripsi inilah yang dipakai Claude untuk memutuskan kapan skill dipakai. Pastikan isinya spesifik, misalnya "Dipakai saat menyusun laporan mingguan tim…", bukan sekadar "Membantu menulis".
+
+6. Simpan skill sesuai petunjuk yang muncul di percakapan. Bila Claude memberikan file ZIP, unggah lewat **Customize > Skills → + → Create skill → Upload a skill**. Pastikan skill dalam keadaan aktif.
+
+7. Uji di **dua percakapan baru** tanpa menjelaskan formatnya, misalnya: "Ini catatan kerja minggu ini, susun laporan mingguan: …". Periksa apakah hasilnya mengikuti skill.
+
+</Steps>
+
+## Contoh nyata
+
+Sekretaris DKM selalu menulis notulen rapat dengan aturan yang sama: daftar hadir, keputusan bernomor, tabel tindak lanjut (siapa, apa, kapan), dan penutup berisi jadwal rapat berikutnya. Setelah dikemas menjadi skill "Notulen rapat pengurus DKM", ia cukup menulis:
+
+```text
+Rapikan catatan rapat ini jadi notulen:
+[tempel catatan]
+```
+
+Claude mengenali tugasnya, memuat skill, dan menghasilkan notulen dengan format yang sama setiap kali, termasuk bila dibuat sebagai file Word.
+
+## Latihan
+
+Buat satu skill untuk tugas berulang Anda, lalu uji di dua percakapan baru.
+
+**Kriteria berhasil:** skill tersimpan dan aktif; deskripsinya menyebut dengan jelas kapan skill dipakai; di dua percakapan uji, hasilnya mengikuti format skill tanpa Anda jelaskan ulang; dan skill tidak memuat data golongan merah, password, atau API key.
+
+## Kesalahan umum
+
+- **Deskripsi terlalu umum.** Claude memakai deskripsi untuk memutuskan kapan skill dipakai. "Membantu menulis" terlalu luas; sebutkan jenis tugasnya.
+- **Satu skill untuk semua hal.** Beberapa skill kecil yang fokus lebih mudah dipakai dan dirawat daripada satu skill raksasa.
+- **Memasukkan data rahasia ke skill**, misalnya password atau data pelanggan sebagai contoh. Pakai contoh yang sudah disamarkan.
+- **Memasang skill dari sumber tak dikenal tanpa membacanya.** Skill bisa berisi skrip; baca isinya dulu.
+- **Mengira skill tidak berfungsi** padahal belum aktif. Cek di Customize > Skills, atau sebut nama skill secara langsung di prompt.
+
+## Rujukan
+
+- [What are skills?](https://support.claude.com/en/articles/12512176-what-are-skills): pengertian, jenis skill, dan perbandingan dengan Projects dan instruksi umum.
+- [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude): mengaktifkan, mengunggah, dan membagikan skill.
+- [How to create a skill with Claude through conversation](https://support.claude.com/en/articles/12599426-how-to-create-a-skill-with-claude-through-conversation): membuat skill lewat percakapan, tanpa menulis kode.
+- [How to create custom skills](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills): struktur file SKILL.md untuk yang ingin menulis sendiri.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa yang paling menentukan apakah Claude memakai sebuah skill secara otomatis?',
+			pilihan: [
+				'Deskripsi skill yang menjelaskan dengan spesifik kapan skill dipakai',
+				'Panjang nama file skill',
+				'Jumlah percakapan yang pernah Anda buat',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude membaca nama dan deskripsi setiap skill lebih dulu, lalu memuat isi lengkapnya bila tugas Anda cocok dengan deskripsi itu.',
+		},
+		{
+			tanya: 'Anda ingin aturan "selalu jawab dalam Bahasa Indonesia" berlaku di semua percakapan. Tempat yang paling tepat?',
+			pilihan: [
+				'Skill khusus',
+				'Instruksi umum di Settings',
+				'Nama Project',
+			],
+			jawaban: 1,
+			pembahasan: 'Preferensi umum yang berlaku di semua percakapan paling tepat ditaruh di instruksi umum. Skill untuk cara mengerjakan satu jenis tugas.',
+		},
+		{
+			tanya: 'Menu skill tidak muncul di akun Anda. Pengaturan apa yang perlu dicek lebih dulu?',
+			pilihan: [
+				'Code execution and file creation (Create and edit files) di Settings > Capabilities',
+				'Ukuran huruf',
+				'Bahasa keyboard',
+			],
+			jawaban: 0,
+			pembahasan: 'Skill berjalan di lingkungan komputasi Claude, sehingga membutuhkan pengaturan Code execution and file creation yang aktif.',
+		},
+		{
+			tanya: 'Kapan sebuah tugas layak dijadikan skill?',
+			pilihan: [
+				'Saat Anda sudah lebih dari sekali menjelaskan format, nada, dan contoh hasil yang baik untuk tugas yang sama',
+				'Untuk setiap pertanyaan sekali jalan',
+				'Hanya untuk tugas yang membutuhkan kode',
+			],
+			jawaban: 0,
+			pembahasan: 'Skill paling berguna untuk tugas berulang yang cara kerjanya sudah Anda ketahui. Tidak perlu kode untuk skill sederhana.',
+		},
+	]}
+/>
+
+<TandaSelesai />
