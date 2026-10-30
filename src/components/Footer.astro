@@ -2,11 +2,25 @@
 /**
  * Override Footer Starlight: footer bawaan + disclaimer + tanda centang pelajaran selesai di sidebar,
  * serta memulai sinkronisasi progres bila pengguna sudah login.
+ * Tautan "Laporkan kesalahan" membawa path halaman ini agar formulir /lapor/ terisi otomatis.
  */
 import Default from '@astrojs/starlight/components/Footer.astro';
+
+const path = Astro.url.pathname;
+// Tidak perlu di halaman laporan itu sendiri dan di halaman 404 (path aslinya tidak diketahui saat build).
+const tampilkanLapor = !path.startsWith('/lapor/') && !/^\/404\/?$/.test(path);
+// Garis miring boleh apa adanya di query string, supaya alamatnya tetap mudah dibaca.
+const tautanLapor = `/lapor/?halaman=${encodeURIComponent(path).replace(/%2F/g, '/')}`;
 ---
 
 <Default><slot /></Default>
+{
+	tampilkanLapor && (
+		<p class="lapor-tautan">
+			Ada yang salah atau sudah berubah di halaman ini? <a href={tautanLapor}>Laporkan kesalahan</a>
+		</p>
+	)
+}
 <p class="disclaimer">
 	jagoklodi adalah situs komunitas independen dan tidak berafiliasi dengan Anthropic.
 	Claude adalah merek dagang Anthropic. <a href="/privasi/">Kebijakan privasi</a>.
