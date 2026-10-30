@@ -1,0 +1,159 @@
+---
+title: Kuis akhir Level 2
+description: Uji pemahaman Anda tentang connector, pembuatan file, riset web, memory, skill, dan tugas terjadwal sebelum lanjut ke Level 3.
+jenis: kuis
+level: 2
+durasi: 15 menit
+prasyarat: Pelajaran 12 sampai 18.
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 99
+  label: Kuis akhir Level 2
+  badge:
+    text: Kuis
+    variant: tip
+---
+
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+Kuis ini menggabungkan materi Level 2. Sebagian besar soal berupa kasus sehari-hari; pilih jawaban yang paling tepat menurut materi pelajaran.
+
+Kalau ragu, buka lagi pelajarannya:
+
+- [12. Connector](/level-2/12-connector/)
+- [13. Membuat file](/level-2/13-membuat-file/)
+- [14. Riset web](/level-2/14-riset-web/)
+- [15. Memory](/level-2/15-memory/)
+- [16. Skill](/level-2/16-skill/)
+- [17. Tugas terjadwal](/level-2/17-tugas-terjadwal/)
+- [18. Proyek akhir Level 2](/level-2/18-proyek-akhir-level-2/)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda menyambungkan Google Drive ke Claude. File mana yang bisa dibaca Claude lewat connector itu?',
+			pilihan: [
+				'Hanya file yang memang bisa Anda buka sendiri di Google Drive',
+				'Semua file di Google Drive kantor, termasuk milik orang lain yang tidak dibagikan ke Anda',
+				'Tidak ada; connector hanya untuk menyimpan file',
+			],
+			jawaban: 0,
+			pembahasan: 'Hak akses connector sama dengan hak akses Anda di aplikasi aslinya.',
+		},
+		{
+			tanya: 'Claude menyiapkan balasan email lewat connector Gmail dan meminta persetujuan untuk mengirim. Apa yang sebaiknya Anda lakukan?',
+			pilihan: [
+				'Langsung menyetujui agar cepat',
+				'Membaca isi balasannya dulu, baru menyetujui bila sudah sesuai',
+				'Menolak semua permintaan persetujuan',
+			],
+			jawaban: 1,
+			pembahasan: 'Persetujuan adalah rem terakhir sebelum tindakan terjadi. Baca rinciannya sebelum menyetujui.',
+		},
+		{
+			tanya: 'Rekan kerja meminta rekap iuran yang bisa ia olah lagi di Excel. Permintaan mana yang paling tepat?',
+			pilihan: [
+				'"Buatkan file Excel rekap iuran dengan kolom Nama, Iuran, Status, dan baris total memakai rumus"',
+				'"Buatkan rekap iuran"',
+				'"Ceritakan tentang iuran"',
+			],
+			jawaban: 0,
+			pembahasan: 'Sebutkan format file dan strukturnya, termasuk rumus, agar hasilnya siap diolah dan bisa diperiksa.',
+		},
+		{
+			tanya: 'Anda meminta "buatkan spreadsheet anggaran" lalu kecewa karena hasilnya bukan file Google Sheets. Apa penyebabnya?',
+			pilihan: [
+				'Claude tidak bisa membuat file Google',
+				'Permintaan tidak menyebut Google secara eksplisit, atau connector Google Sheets belum aktif',
+				'Spreadsheet hanya bisa dibuat di paket Enterprise',
+			],
+			jawaban: 1,
+			pembahasan: 'File Google dibuat bila Anda menyebut Google (misalnya "Google Sheets") dan connector-nya aktif.',
+		},
+		{
+			tanya: 'Anda butuh perbandingan menyeluruh lima pemasok dari banyak sumber untuk rapat pengurus. Fitur mana yang paling cocok bila paket Anda mendukung?',
+			pilihan: [
+				'Research',
+				'Incognito',
+				'Memory',
+			],
+			jawaban: 0,
+			pembahasan: 'Research menjalankan banyak pencarian yang saling melengkapi dan menyusun laporan panjang beserta sumbernya.',
+		},
+		{
+			tanya: 'Jawaban hasil web search mencantumkan harga sebuah barang beserta link sumber. Langkah yang tepat sebelum membeli?',
+			pilihan: [
+				'Percaya sepenuhnya karena sudah ada link',
+				'Membuka sumbernya dan mengecek ulang harga ke penjual, karena harga cepat berubah',
+				'Meminta Claude menebak harga minggu depan',
+			],
+			jawaban: 1,
+			pembahasan: 'Kutipan sumber adalah alat untuk memeriksa. Informasi yang cepat berubah, seperti harga, perlu dikonfirmasi ke sumber aslinya.',
+		},
+		{
+			tanya: 'Claude terus menyebut Anda bendahara, padahal sekarang Anda sekretaris. Apa langkah yang paling tepat?',
+			pilihan: [
+				'Menghapus semua percakapan lama',
+				'Memperbaiki atau menghapus topik itu di pengaturan memory, atau memberi tahu Claude di percakapan',
+				'Berhenti memakai Claude',
+			],
+			jawaban: 1,
+			pembahasan: 'Menghapus percakapan tidak menghapus memory. Koreksi topiknya di pengaturan memory atau minta Claude memperbaruinya.',
+		},
+		{
+			tanya: 'Anda ingin satu percakapan tidak memakai dan tidak menambah memory, tetapi tetap tersimpan di riwayat. Pilihan yang tepat?',
+			pilihan: [
+				'Mematikan Memory lewat menu + sebelum mengirim pesan pertama',
+				'Memakai incognito',
+				'Mematikan internet',
+			],
+			jawaban: 0,
+			pembahasan: 'Memory yang dimatikan untuk satu percakapan tetap membuat percakapan masuk riwayat. Incognito tidak masuk riwayat.',
+		},
+		{
+			tanya: 'Anda sudah empat kali menjelaskan format notulen yang sama ke Claude. Fitur mana yang paling cocok agar tidak perlu menjelaskan lagi di percakapan mana pun?',
+			pilihan: [
+				'Skill',
+				'Incognito',
+				'Web search',
+			],
+			jawaban: 0,
+			pembahasan: 'Skill mengemas format, nada, dan contoh hasil yang baik, lalu dipakai Claude otomatis saat tugasnya cocok.',
+		},
+		{
+			tanya: 'Skill buatan Anda tidak pernah dipakai Claude secara otomatis. Apa yang paling mungkin perlu diperbaiki?',
+			pilihan: [
+				'Deskripsi skill yang terlalu umum, atau skill belum aktif',
+				'Warna tema Claude',
+				'Jumlah karakter nama Anda',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude memutuskan memakai skill berdasarkan deskripsinya. Pastikan deskripsi spesifik dan skill dalam keadaan aktif.',
+		},
+		{
+			tanya: 'Instruksi tugas terjadwal berbunyi "Lanjutkan pekerjaan kemarin". Kenapa hasilnya kacau?',
+			pilihan: [
+				'Karena setiap kali jalan, tugas mulai dari nol dan hanya memakai instruksi yang tersimpan',
+				'Karena tugas terjadwal tidak bisa membaca teks',
+				'Karena jadwalnya terlalu sering',
+			],
+			jawaban: 0,
+			pembahasan: 'Instruksi tugas terjadwal harus lengkap dan bisa berdiri sendiri, tanpa bergantung pada percakapan sebelumnya.',
+		},
+		{
+			tanya: 'Di proyek akhir, laporan otomatis menunjukkan selisih minggu ini positif, padahal hitungan Anda negatif. Apa yang sebaiknya dilakukan?',
+			pilihan: [
+				'Memakai angka dari Claude karena lebih cepat',
+				'Mencari baris yang tidak cocok, memperbaiki skill atau instruksinya, lalu menguji ulang sebelum dijadwalkan',
+				'Menghapus tugas terjadwal dan berhenti',
+			],
+			jawaban: 1,
+			pembahasan: 'Hasil otomatisasi selalu diperiksa terhadap kunci jawaban. Perbaiki penyebabnya dan uji ulang sebelum mengandalkan jadwal.',
+		},
+	]}
+/>
+
+<TandaSelesai />
