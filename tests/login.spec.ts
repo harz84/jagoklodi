@@ -181,3 +181,22 @@ test('login, sinkron antarperangkat, batal selesai, dan hapus progres', async ({
 	await hp.close();
 	await laptop.close();
 });
+
+test('tautan email yang dibuka di browser lain memberi penjelasan', async ({ browser }, info) => {
+	test.skip(info.project.name !== 'desktop', 'cukup sekali, di desktop');
+	const server = new SupabaseTiruan();
+	const ctx = await browser.newContext({ baseURL: info.project.use.baseURL });
+	await pasangHeaderProduksi(ctx);
+	await server.pasang(ctx);
+	const page = await ctx.newPage();
+	await page.goto('/akun/');
+	await expect(page.locator('.akun__memuat')).toBeHidden();
+	test.skip(await page.locator('[data-langkah="nonaktif"]').isVisible(), 'situs di-build tanpa login aktif');
+
+	// Browser ini tidak pernah meminta kode, jadi tidak punya pasangan pengaman PKCE.
+	await page.goto('/akun/?code=kode-dari-browser-lain');
+	await expect(page.locator('#akun-email')).toBeVisible();
+	await expect(page.locator('.akun__pesan')).toContainText('browser yang berbeda');
+	expect(new URL(page.url()).search).toBe('');
+	await ctx.close();
+});

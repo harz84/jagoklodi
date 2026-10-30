@@ -113,12 +113,20 @@
 			if (!loginAktif) return tampilkan('nonaktif');
 			const sb = await klien()!;
 			// Bila pengguna datang dari tautan di email, Supabase menyelesaikan login di sini.
+			const params = new URLSearchParams(location.search + location.hash.replace(/^#/, '&'));
+			const dariTautan = params.has('code') || params.has('error');
 			const { data } = await sb.auth.getSession();
-			if (data.session) {
-				if (location.search.includes('code=')) history.replaceState(null, '', location.pathname);
-				return tampilkanMasuk();
-			}
+			if (dariTautan) history.replaceState(null, '', location.pathname);
+			if (data.session) return tampilkanMasuk();
 			tampilkan('email');
+			if (dariTautan) {
+				// Tautan login hanya berlaku di browser tempat kode diminta (pengamanan PKCE),
+				// atau tautannya sudah kedaluwarsa/terpakai.
+				beriPesan(
+					'Tautan dari email tidak bisa dipakai di browser ini. Biasanya karena tautan dibuka di browser yang berbeda dengan tempat Anda meminta kode, atau tautannya sudah kedaluwarsa. Minta kode lagi di sini, lalu masukkan kode 6 digit dari email.',
+					'galat',
+				);
+			}
 		};
 
 		root.querySelector<HTMLFormElement>('[data-form="email"]')!.addEventListener('submit', async (e) => {
