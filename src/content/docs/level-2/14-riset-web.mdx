@@ -1,0 +1,159 @@
+---
+title: "Riset web: web search dan Research"
+description: Meminta Claude mencari informasi terbaru di internet, membaca halaman tertentu, dan menyusun laporan riset mendalam lengkap dengan sumbernya.
+jenis: pelajaran
+level: 2
+durasi: 30 menit
+prasyarat: Pelajaran 1 (kenalan dengan Claude) dan Pelajaran 4 (prompt yang jelas).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 14
+  label: 14. Riset web
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Membedakan kapan cukup memakai **web search** dan kapan perlu **Research**.
+2. Meminta Claude membaca halaman web tertentu dari sebuah link.
+3. Memeriksa sumber yang dikutip Claude sebelum memakai hasilnya.
+
+## Kenapa perlu riset web
+
+Ingat Pelajaran 1: pengetahuan bawaan Claude punya batas waktu. Untuk hal yang bisa berubah, misalnya aturan terbaru, harga, jadwal, atau berita, Claude perlu mencari di internet. Ada dua fitur dengan kedalaman berbeda:
+
+| | **Web search** | **Research** |
+| --- | --- | --- |
+| Untuk | Pertanyaan faktual yang cepat terjawab | Pengumpulan informasi menyeluruh dari banyak sumber |
+| Contoh | "Kapan batas lapor SPT tahun ini?" | "Bandingkan tiga aplikasi kasir untuk UMKM dari sisi harga, fitur, dan ulasan" |
+| Hasil | Jawaban singkat dengan kutipan sumber | Laporan panjang yang disusun dari banyak pencarian |
+| Waktu | Beberapa detik | Beberapa menit |
+| Paket | Semua paket | Paket berbayar (Pro, Max, Team, Enterprise) |
+
+Setiap jawaban yang memakai web search menyertakan **kutipan sumber** berupa link. Itulah alat Anda untuk memeriksa kebenarannya.
+
+<Aside type="note" title="Tampilan berbeda di akun Anda?">
+Claude sedang beralih ke tampilan baru yang menggabungkan chat dan Cowork.
+- **Tampilan lama:** web search dinyalakan lewat tombol **+** di kotak pesan, lalu **Web search**. Research ada di menu yang sama.
+- **Tampilan baru:** tidak ada tombol web search; Claude mencari di web bila membantu. Research dimulai dengan mengetik `/deep-research` atau lewat **+ → Research**.
+
+Di paket Team dan Enterprise, owner organisasi harus mengaktifkan web search lebih dulu.
+</Aside>
+
+## Langkah praktik
+
+<Steps>
+
+1. Pastikan web search bisa dipakai: di tampilan lama, nyalakan lewat **+ → Web search** (muncul tanda centang). Di tampilan baru, lewati langkah ini.
+
+2. Ajukan pertanyaan yang jawabannya bisa berubah, dan minta Claude mencari:
+
+    ```text
+    Cari di web: apa saja syarat terbaru membuat NIB
+    untuk usaha mikro di Indonesia?
+    Jawab dalam 5 poin dan sertakan sumber resmi.
+    ```
+
+3. Buka **minimal dua link sumber** yang dikutip. Pastikan isi halaman memang mendukung kalimat yang dikutip Claude, dan utamakan situs resmi pemerintah.
+
+4. Minta Claude membaca satu halaman tertentu dengan menempelkan link-nya (fitur ini disebut **web fetch**):
+
+    ```text
+    Baca halaman ini dan ringkas dalam 3 poin
+    apa yang berubah dibanding aturan sebelumnya: [tempel link]
+    ```
+
+5. Bila Anda memakai paket berbayar, coba **Research** untuk pertanyaan yang lebih besar. Tunggu sampai laporannya selesai, lalu periksa sumbernya seperti di langkah 3.
+
+</Steps>
+
+## Contoh nyata
+
+Pengurus DKM ingin membeli pengeras suara baru dan meminta Research:
+
+```text
+Saya pengurus masjid dengan ruang utama sekitar 300 jamaah.
+Bandingkan 3 pilihan sistem pengeras suara di kisaran
+Rp5–15 juta yang dijual di Indonesia.
+Kriteria: kejernihan suara, kemudahan perawatan,
+ketersediaan servis di Bekasi, dan ulasan pembeli.
+Sajikan tabel perbandingan, lalu rekomendasi dengan alasannya.
+Cantumkan sumber untuk setiap klaim harga.
+```
+
+Hasilnya laporan dengan tabel dan sumber. Pengurus tetap mengecek harga ke toko sebelum memutuskan, karena harga di internet cepat berubah.
+
+## Latihan
+
+Pilih satu keputusan kecil yang sedang Anda hadapi di kantor, usaha, atau organisasi. Minta Claude mencari informasinya dengan web search (atau Research bila tersedia), dengan minimal tiga sumber.
+
+**Kriteria berhasil:** jawaban menyertakan minimal tiga sumber; tiga sumber itu sudah Anda buka dan cocok dengan klaim Claude; dan Anda bisa menyebut satu klaim yang **tidak** didukung sumbernya, atau menyatakan semuanya didukung.
+
+## Kesalahan umum
+
+- **Tidak membuka sumbernya.** Ringkasan Claude bisa keliru menafsirkan isi halaman. Untuk keputusan penting, baca sumber aslinya.
+- **Memakai Research untuk pertanyaan sederhana.** Research memakai jatah lebih banyak. Untuk satu fakta cepat, web search sudah cukup.
+- **Menempelkan link artikel yang sangat panjang di paket Free.** Seluruh isinya dibaca dan menghabiskan jatah pemakaian dengan cepat. Minta poin tertentu saja bila memungkinkan.
+- **Membiarkan connector yang tidak perlu tetap aktif saat Research.** Research bisa memakai connector yang aktif tanpa meminta persetujuan setiap kali. Matikan yang tidak dibutuhkan.
+- **Menganggap hasil riset sebagai nasihat hukum atau keuangan.** Pakai sebagai bahan awal, lalu konfirmasi ke pihak yang berwenang.
+
+## Rujukan
+
+- [Enable and use web search](https://support.claude.com/en/articles/10684626-enable-and-use-web-search): cara menyalakan web search, web fetch, dan pengaruhnya pada batas pemakaian.
+- [Use research on Claude](https://support.claude.com/en/articles/11088861-use-research-on-claude): cara memakai Research, paket yang mendukung, dan pemakaian connector.
+- [When should I use web search, extended thinking, and research?](https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research): panduan memilih fitur.
+- [Claude Cowork and chat are one Claude](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude): letak web search dan Research di tampilan baru.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda hanya ingin tahu jam buka kantor pajak terdekat hari ini. Fitur mana yang paling tepat?',
+			pilihan: [
+				'Web search, karena pertanyaannya faktual dan cepat terjawab',
+				'Research, karena butuh laporan panjang',
+				'Tidak perlu internet, Claude pasti sudah tahu',
+			],
+			jawaban: 0,
+			pembahasan: 'Web search cocok untuk fakta cepat. Research lebih cocok untuk pengumpulan informasi menyeluruh dan memakai jatah lebih banyak.',
+		},
+		{
+			tanya: 'Claude menjawab dengan tiga kutipan sumber. Apa yang sebaiknya Anda lakukan sebelum memakai jawabannya untuk keputusan penting?',
+			pilihan: [
+				'Langsung memakai jawabannya karena sudah ada sumbernya',
+				'Membuka sumbernya dan memastikan isinya mendukung klaim Claude',
+				'Menghapus percakapan',
+			],
+			jawaban: 1,
+			pembahasan: 'Kutipan adalah alat untuk memeriksa. Halaman asli bisa memuat konteks yang tidak ikut dalam ringkasan Claude.',
+		},
+		{
+			tanya: 'Siapa yang bisa memakai fitur Research?',
+			pilihan: [
+				'Semua pengguna, termasuk Free',
+				'Pengguna paket berbayar: Pro, Max, Team, dan Enterprise',
+				'Hanya pengguna Claude Code',
+			],
+			jawaban: 1,
+			pembahasan: 'Research tersedia di paket berbayar dan membutuhkan web search agar bisa berjalan.',
+		},
+		{
+			tanya: 'Di akun Anda tidak ada tombol "Web search" di menu +, dan kotak pesan tidak lagi menampilkan pilihan Chat dan Cowork. Apa artinya?',
+			pilihan: [
+				'Web search tidak tersedia untuk akun Anda',
+				'Anda memakai tampilan baru; Claude mencari di web sendiri bila membantu',
+				'Anda harus memasang aplikasi tambahan',
+			],
+			jawaban: 1,
+			pembahasan: 'Di tampilan baru tidak ada tombol web search. Claude mencari di web bila diperlukan, dan Research dimulai dengan /deep-research atau lewat + → Research.',
+		},
+	]}
+/>
+
+<TandaSelesai />

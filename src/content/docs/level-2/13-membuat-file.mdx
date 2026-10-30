@@ -1,0 +1,175 @@
+---
+title: "Membuat file: Word, Excel, PowerPoint, dan Google"
+description: Meminta Claude membuat dokumen, spreadsheet dengan rumus yang berfungsi, dan slide presentasi, lalu memilih format yang tepat untuk setiap kebutuhan.
+jenis: pelajaran
+level: 2
+durasi: 40 menit
+prasyarat: Pelajaran 7 (membaca dokumen) dan Pelajaran 9 (artifact).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 13
+  label: 13. Membuat file
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Meminta Claude membuat file Word, Excel, PowerPoint, atau PDF yang siap diunduh.
+2. Memilih antara file unduhan, artifact (Pelajaran 9), dan file Google sesuai kebutuhan.
+3. Memeriksa rumus dan angka di spreadsheet buatan Claude sebelum dipakai.
+
+## Bagaimana Claude membuat file
+
+Claude punya **lingkungan komputasi pribadi** di dalam claude.ai. Di sana Claude menulis dan menjalankan kode untuk menyusun file sungguhan. Hasilnya bukan sekadar teks yang mirip tabel, melainkan file yang bisa dibuka di aplikasinya:
+
+| Format | Contoh pemakaian |
+| --- | --- |
+| **Excel (.xlsx)** | Anggaran dengan rumus yang berfungsi, rekap data, grafik |
+| **Word (.docx)** | Laporan, surat, notulen yang rapi |
+| **PowerPoint (.pptx)** | Slide presentasi dari catatan atau laporan |
+| **PDF** | Dokumen siap cetak atau siap kirim |
+
+File bisa diunduh langsung dari percakapan, atau disimpan ke Google Drive bila connector Drive sudah tersambung (Pelajaran 12).
+
+<Aside type="note" title="Sebelum mulai">
+- Fitur ini membutuhkan pengaturan **Code execution and file creation** yang aktif di **Settings > Capabilities**. Di tata letak Settings yang baru, namanya **Create and edit files**.
+- Tersedia di semua paket. Di Free, Pro, dan Max, pengaturan ini aktif secara bawaan. Di Team dan Enterprise, owner organisasi bisa mematikannya.
+- Ukuran maksimal **30 MB per file**, baik untuk unggahan maupun unduhan.
+- Membuat file memakai jatah pemakaian lebih banyak daripada percakapan biasa.
+</Aside>
+
+## Tiga jalur, pilih sesuai tujuan
+
+| Jalur | Cocok untuk | Cara memintanya |
+| --- | --- | --- |
+| **File unduhan** (Word, Excel, PowerPoint, PDF) | Dikirim sebagai lampiran, dicetak, atau diolah lagi di Office | Sebut formatnya: "buatkan file Excel…", "dalam bentuk Word" |
+| **Artifact Docs atau Slides** (Pelajaran 9) | Disunting bersama di Claude dan dibagikan lewat link; bisa diekspor nanti | Minta "doc" atau "deck" tanpa menyebut format file; untuk Docs, awali dengan `/docs` |
+| **File Google** (Docs, Sheets, Slides) | Tim Anda bekerja di Google Workspace | Sebut Google secara eksplisit: "buatkan **Google Sheets**…" |
+
+Untuk jalur Google, connector Google Docs, Sheets, atau Slides harus aktif. Bila Anda hanya meminta "dokumen" atau "deck" tanpa menyebut Google, hasilnya **bukan** file Google.
+
+## Langkah praktik
+
+<Steps>
+
+1. Pastikan **Code execution and file creation** (atau **Create and edit files**) aktif di **Settings > Capabilities**.
+
+2. Tempelkan data fiktif berikut ke percakapan baru, lalu minta spreadsheet:
+
+    ```text
+    Data iuran anggota Koperasi Maju Bersama (fiktif), Oktober:
+    Nama, Simpanan Wajib, Simpanan Sukarela, Status
+    Andi, 50000, 100000, Lunas
+    Bunga, 50000, 0, Lunas
+    Cahyo, 50000, 250000, Belum
+    Dewi, 50000, 75000, Lunas
+    Eko, 50000, 0, Belum
+
+    Buatkan file Excel dengan:
+    - Kolom Total per anggota memakai RUMUS (bukan angka ketik)
+    - Baris jumlah keseluruhan di bawah, juga dengan rumus
+    - Format Rupiah untuk semua angka
+    - Satu grafik batang Total per anggota
+    ```
+
+3. Unduh filenya dan buka di Excel atau Google Sheets. Klik beberapa sel Total: yang tampil di bilah rumus harus **rumus**, misalnya `=B2+C2`, bukan angka mati.
+
+4. Ubah satu angka simpanan, lalu pastikan Total dan jumlah keseluruhan ikut berubah.
+
+5. Di percakapan yang sama, minta format lain dari data yang sama:
+
+    ```text
+    Dari data tadi, buatkan:
+    1. Ringkasan 1 halaman dalam file Word untuk rapat pengurus
+    2. Tiga slide PowerPoint: ringkasan, grafik, dan tindak lanjut
+       untuk anggota yang belum lunas
+    ```
+
+</Steps>
+
+## Contoh nyata
+
+Seorang bendahara organisasi menerima rekap transaksi dalam bentuk PDF dari bank (data sudah disamarkan). Ia mengunggahnya dan menulis:
+
+```text
+Ambil semua transaksi dari PDF ini ke file Excel.
+Kolom: Tanggal, Keterangan, Masuk, Keluar, Saldo.
+Saldo dihitung dengan rumus dari baris sebelumnya.
+Tambahkan sheet kedua berisi total masuk dan keluar per minggu.
+```
+
+Hasilnya satu file Excel dengan dua sheet. Sebelum dipakai, ia mencocokkan saldo akhir di Excel dengan saldo akhir di PDF. Bila berbeda, ia meminta Claude menunjukkan baris yang tidak cocok.
+
+## Latihan
+
+Ambil satu laporan rutin Anda (dengan data fiktif atau yang sudah disamarkan) dan minta Claude membuatnya dalam **dua format**: spreadsheet dengan rumus, dan dokumen ringkasan atau slide.
+
+**Kriteria berhasil:** spreadsheet memakai rumus yang berfungsi (sudah Anda uji dengan mengubah satu angka); angka di dokumen atau slide sama dengan angka di spreadsheet; dan tidak ada data golongan merah di file mana pun.
+
+## Kesalahan umum
+
+- **Tidak memeriksa rumus.** Spreadsheet yang terlihat rapi belum tentu benar. Ubah satu angka dan lihat apakah totalnya ikut berubah.
+- **Permintaan tanpa struktur.** "Buatkan Excel keuangan" menghasilkan tebakan. Sebut kolom, rumus, dan format yang Anda inginkan.
+- **Mengharapkan file Google tanpa menyebut Google.** Sebut "Google Sheets" atau "Google Docs" secara eksplisit, dan pastikan connector-nya aktif.
+- **Lupa mengaktifkan pengaturan** Code execution and file creation, lalu mengira fiturnya tidak ada.
+- **Mengunggah dokumen berisi data merah**, misalnya mutasi rekening lengkap dengan nomor rekening. Samarkan dulu.
+
+## Rujukan
+
+- [Create and edit files with Claude](https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude): format yang didukung, pengaturan, batas ukuran, dan contoh alur kerja.
+- [Use Google Workspace connectors](https://support.claude.com/en/articles/10166901-use-google-workspace-connectors): membuat dan menyunting Google Docs, Sheets, dan Slides dari Claude.
+- [What are artifacts and how do I use them?](https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them): artifact Docs dan Slides beserta pilihan ekspornya.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda membuka file Excel buatan Claude. Bagaimana cara tercepat memastikan kolom Total memakai rumus, bukan angka ketik?',
+			pilihan: [
+				'Mengubah satu angka sumber dan melihat apakah Total ikut berubah',
+				'Melihat apakah tabelnya berwarna',
+				'Menanyakan ke Claude apakah filenya sudah benar',
+			],
+			jawaban: 0,
+			pembahasan: 'Rumus yang berfungsi akan menghitung ulang saat angka sumber berubah. Klik selnya juga untuk melihat rumus di bilah rumus.',
+		},
+		{
+			tanya: 'Tim Anda bekerja di Google Workspace dan ingin menyunting hasilnya bersama di Google Sheets. Prompt mana yang paling tepat?',
+			pilihan: [
+				'"Buatkan spreadsheet anggaran" saja',
+				'"Buatkan Google Sheets anggaran…" dengan connector Google Sheets aktif',
+				'"Buatkan PDF anggaran"',
+			],
+			jawaban: 1,
+			pembahasan: 'File Google hanya dibuat bila Anda menyebut Google secara eksplisit dan connector-nya aktif. Tanpa itu, hasilnya bukan file Google.',
+		},
+		{
+			tanya: 'Claude menjawab tidak bisa membuat file Excel. Pengaturan apa yang pertama kali perlu dicek?',
+			pilihan: [
+				'Bahasa antarmuka',
+				'Code execution and file creation (Create and edit files) di Settings > Capabilities',
+				'Tema terang atau gelap',
+			],
+			jawaban: 1,
+			pembahasan: 'Pembuatan file berjalan di lingkungan komputasi Claude, yang hanya aktif bila pengaturan Code execution and file creation menyala.',
+		},
+		{
+			tanya: 'Mana yang benar tentang pembuatan file di Claude?',
+			pilihan: [
+				'Membuat file memakai jatah pemakaian lebih banyak daripada percakapan biasa',
+				'Membuat file tidak dihitung dalam batas pemakaian',
+				'File hanya bisa dibuat di paket Enterprise',
+			],
+			jawaban: 0,
+			pembahasan: 'Pembuatan file tersedia di semua paket, tetapi memakai jatah lebih banyak daripada percakapan biasa.',
+		},
+	]}
+/>
+
+<TandaSelesai />

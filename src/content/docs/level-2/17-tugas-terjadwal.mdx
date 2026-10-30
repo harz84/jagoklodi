@@ -1,0 +1,164 @@
+---
+title: "Tugas terjadwal: Claude bekerja sesuai jadwal"
+description: Membuat tugas yang dijalankan Claude otomatis setiap hari atau setiap minggu, misalnya ringkasan email pagi atau rekap mingguan, lalu mengelola dan menghentikannya.
+jenis: pelajaran
+level: 2
+durasi: 30 menit
+prasyarat: Pelajaran 12 (connector) dan Pelajaran 16 (skill).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 17
+  label: 17. Tugas terjadwal
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan cara kerja tugas terjadwal dan batasannya.
+2. Menulis instruksi tugas yang lengkap dan bisa berdiri sendiri.
+3. Membuat, menguji, menjeda, dan menghapus tugas terjadwal.
+
+## Cara kerja tugas terjadwal
+
+Sejauh ini Claude baru bekerja setelah Anda mengetik. **Tugas terjadwal** (scheduled task) membalik urutannya: Anda menjelaskan tugasnya **sekali**, memilih jadwal, lalu Claude menjalankannya sendiri. Contohnya setiap pagi pada hari kerja, setiap Senin pukul 08.00, atau hanya saat Anda menekan tombol.
+
+Hal penting tentang cara kerjanya:
+
+- **Berjalan di cloud.** Tugas tetap jalan sesuai jadwal walau komputer Anda mati atau aplikasi Claude tertutup.
+- **Setiap kali jalan, tugas mulai dari nol.** Claude memakai instruksi yang tersimpan, bukan isi percakapan tempat tugas dibuat. Karena itu instruksinya harus lengkap.
+- **Bisa memakai alat yang sama** dengan tugas biasa: connector (Pelajaran 12), skill (Pelajaran 16), dan plugin yang terpasang.
+- **Memakai jatah pemakaian.** Setiap kali tugas berjalan, jatah paket Anda ikut terpakai.
+
+<Aside type="caution" title="Hanya untuk paket berbayar">
+Tugas terjadwal tersedia di paket **Pro, Max, Team, dan Enterprise**. Bila Anda memakai Free, baca pelajaran ini sebagai persiapan, lalu kerjakan latihan versi manual di bagian Latihan.
+</Aside>
+
+## Instruksi yang bisa berdiri sendiri
+
+Karena setiap kali jalan tugas mulai dari nol, tulis instruksinya seolah untuk orang baru yang tidak ikut percakapan sebelumnya:
+
+| Kurang baik | Lebih baik |
+| --- | --- |
+| "Ringkas seperti tadi" | "Ringkas email 24 jam terakhir yang menyebut 'koperasi' atau 'rapat'. Kelompokkan: perlu dibalas, informasi saja." |
+| "Kirim ke grup" | "Buat **draf** email ke diri saya sendiri berisi ringkasan itu. Jangan kirim ke orang lain." |
+| "Cek data penjualan" | "Buka spreadsheet 'Rekap Mingguan (fiktif)' di Drive, hitung total minggu ini, bandingkan dengan minggu lalu." |
+
+Tetapkan juga **batas tindakan**. Tugas berjalan saat Anda tidak mengawasi, jadi lebih aman meminta **draf** daripada mengirim, menghapus, atau membagikan secara otomatis.
+
+## Langkah praktik
+
+<Steps>
+
+1. Pastikan connector yang dibutuhkan sudah tersambung, misalnya Gmail atau Google Calendar (Pelajaran 12).
+
+2. Buat tugasnya. Caranya tergantung tampilan akun Anda:
+    - **Tampilan baru** (kotak pesan tidak lagi menampilkan pilihan Chat dan Cowork): tulis di percakapan apa saja, misalnya kalimat di langkah 3, jawab pertanyaan Claude, periksa nama, jadwal, dan instruksi yang diusulkan, lalu klik **Schedule**.
+    - **Claude Cowork:** klik **Scheduled** di sidebar, lalu **New task**. Pilih **Create with Claude** agar dibantu, atau **Set up manually** untuk mengisi nama, instruksi, mode persetujuan, dan frekuensi sendiri.
+
+3. Contoh permintaan (fiktif):
+
+    ```text
+    Setiap hari kerja pukul 07.30, lihat kalender saya hari itu
+    dan email 24 jam terakhir yang belum saya balas.
+    Susun ringkasan pagi:
+    1. Jadwal hari ini, urut jam
+    2. Maksimal 5 email yang perlu dibalas, dengan alasan singkat
+    3. Satu saran prioritas untuk pagi ini
+    Jangan mengirim atau menghapus apa pun. Hasilnya cukup ringkasan.
+    ```
+
+4. Sebelum menunggu jadwal, **jalankan sekali secara manual** dari halaman **Scheduled** untuk menguji. Baca hasilnya dan perbaiki instruksinya bila perlu.
+
+5. Kelola tugas dari halaman **Scheduled**: lihat hasil yang sudah jalan, ubah instruksi atau jadwal, **jeda**, lanjutkan, atau **hapus**.
+
+</Steps>
+
+## Contoh nyata
+
+Bendahara organisasi membuat tugas setiap Jumat sore:
+
+```text
+Setiap Jumat pukul 16.00, buka spreadsheet "Kas Mingguan (fiktif)"
+di Google Drive. Hitung pemasukan dan pengeluaran minggu ini,
+bandingkan dengan minggu lalu, lalu buat file Word satu halaman
+berjudul "Laporan Kas Minggu Ini" dengan format skill
+"Laporan pengurus". Simpan file ke folder "Laporan Kas" di Drive.
+Jangan membagikan file ke siapa pun.
+```
+
+Setiap Jumat, laporan sudah tersedia di Drive. Bendahara cukup memeriksa angkanya sebelum membagikannya sendiri ke pengurus.
+
+## Latihan
+
+Buat satu tugas terjadwal yang **hanya membaca dan meringkas**, misalnya ringkasan pagi atau rekap mingguan, lalu jalankan sekali secara manual untuk menguji.
+
+**Kriteria berhasil:** instruksinya bisa dipahami tanpa membaca percakapan lain; ada kalimat batas tindakan (misalnya "jangan kirim"); uji manual berhasil dan hasilnya sudah Anda periksa; dan Anda tahu cara menjeda atau menghapusnya.
+
+**Versi paket Free:** tulis instruksi yang sama sebagai template (Pelajaran 10) atau skill (Pelajaran 16), lalu jalankan manual setiap minggu. Kriteria berhasilnya sama, kecuali penjadwalan.
+
+## Kesalahan umum
+
+- **Instruksi bergantung pada percakapan sebelumnya**, misalnya "seperti tadi". Setiap kali jalan, tugas tidak ingat percakapan itu.
+- **Membiarkan tugas mengirim email atau membagikan file otomatis.** Mulailah dengan draf; tugas berjalan saat Anda tidak mengawasi.
+- **Lupa tugas yang masih berjalan.** Tugas tetap jalan dan memakai jatah sampai dijeda atau dihapus dari halaman **Scheduled**. Menutup percakapan tempat tugas dibuat tidak menghentikannya.
+- **Tidak menguji dulu.** Jalankan manual sekali sebelum mengandalkan jadwal.
+
+## Rujukan
+
+- [Schedule recurring tasks in Claude Cowork](https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork): ketersediaan, cara membuat di tampilan baru dan di Cowork, serta cara mengelola tugas.
+- [Claude Cowork and chat are one Claude](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude): tampilan baru yang menggabungkan chat dan Cowork.
+- [Use Claude Cowork safely](https://support.claude.com/en/articles/13364135-use-claude-cowork-safely): risiko tugas otomatis dan cara mengaturnya dengan aman.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Tugas terjadwal Anda berjalan setiap Senin pukul 08.00. Pada Senin pagi laptop Anda mati. Apa yang terjadi?',
+			pilihan: [
+				'Tugas tetap berjalan karena tugas terjadwal berjalan di cloud',
+				'Tugas gagal dan harus dibuat ulang',
+				'Tugas menunggu sampai laptop dinyalakan',
+			],
+			jawaban: 0,
+			pembahasan: 'Tugas terjadwal berjalan di cloud, sehingga tidak membutuhkan komputer Anda menyala atau aplikasi Claude terbuka.',
+		},
+		{
+			tanya: 'Instruksi tugas berbunyi "Ringkas seperti yang kita bahas tadi". Kenapa ini bermasalah?',
+			pilihan: [
+				'Karena terlalu pendek untuk disimpan',
+				'Karena setiap kali jalan, tugas mulai dari nol dan tidak ingat percakapan tempat tugas dibuat',
+				'Karena Claude tidak bisa meringkas',
+			],
+			jawaban: 1,
+			pembahasan: 'Claude memakai instruksi yang tersimpan, bukan isi percakapan sebelumnya. Instruksi harus lengkap dan bisa berdiri sendiri.',
+		},
+		{
+			tanya: 'Untuk tugas yang memakai Gmail dan berjalan saat Anda tidak mengawasi, batas tindakan mana yang paling aman di awal?',
+			pilihan: [
+				'Mengirim balasan otomatis ke semua email',
+				'Membuat draf atau ringkasan saja, tanpa mengirim',
+				'Menghapus email yang dianggap tidak penting',
+			],
+			jawaban: 1,
+			pembahasan: 'Mulailah dengan draf atau ringkasan. Anda tetap memeriksa sebelum ada yang terkirim, terhapus, atau dibagikan.',
+		},
+		{
+			tanya: 'Pengguna paket Free ingin laporan mingguan otomatis. Mana yang benar?',
+			pilihan: [
+				'Paket Free bisa membuat tugas terjadwal tanpa batas',
+				'Tugas terjadwal hanya untuk paket berbayar; di Free, simpan instruksinya sebagai template atau skill lalu jalankan manual',
+				'Paket Free bisa memakainya asal komputer selalu menyala',
+			],
+			jawaban: 1,
+			pembahasan: 'Tugas terjadwal tersedia di Pro, Max, Team, dan Enterprise. Di Free, instruksi yang sama tetap berguna sebagai template atau skill.',
+		},
+	]}
+/>
+
+<TandaSelesai />

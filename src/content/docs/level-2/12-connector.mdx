@@ -1,0 +1,165 @@
+---
+title: "Connector: menghubungkan Gmail, Kalender, dan Drive"
+description: Menghubungkan Claude dengan aplikasi yang Anda pakai setiap hari agar Claude bisa mencari email, membaca jadwal, dan mengambil dokumen tanpa salin-tempel.
+jenis: pelajaran
+level: 2
+durasi: 35 menit
+prasyarat: Pelajaran 3 (privasi dan keamanan) dan Pelajaran 4 (prompt yang jelas).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 12
+  label: 12. Connector
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan apa itu connector dan batas akses yang dimilikinya.
+2. Menghubungkan satu aplikasi Google (Gmail, Google Calendar, atau Google Drive) ke Claude.
+3. Meminta Claude mencari dan meringkas data dari aplikasi itu, lalu memeriksa setiap tindakan sebelum disetujui.
+
+## Apa itu connector
+
+Di Level 1, Claude hanya tahu apa yang Anda ketik atau unggah. **Connector** adalah sambungan resmi antara Claude dan aplikasi lain, sehingga Claude bisa **mengambil data** dan **melakukan tindakan** di aplikasi itu atas nama Anda. Contohnya mencari email, membaca jadwal, mengambil dokumen dari Drive, atau membuat draf balasan.
+
+Dua prinsip yang perlu diingat:
+
+- **Hak akses Claude sama dengan hak akses Anda.** Connector hanya bisa membuka file, email, atau jadwal yang memang bisa Anda buka di aplikasi aslinya. Tidak lebih.
+- **Tindakan penting meminta persetujuan.** Secara bawaan, Claude meminta izin Anda sebelum mengirim, membalas, atau meneruskan email, dan sebelum membagikan, memindahkan, atau membuang file ke sampah di Drive.
+
+Connector Google yang paling sering dipakai:
+
+| Connector | Yang bisa dilakukan Claude |
+| --- | --- |
+| **Gmail** | Mencari dan membaca email, membuat draf, mengirim atau membalas (dengan persetujuan Anda) |
+| **Google Calendar** | Melihat jadwal, mencari waktu kosong bersama, membuat atau mengubah acara |
+| **Google Drive** | Mencari dan membaca dokumen, menambahkan file Drive ke percakapan atau Project, menyimpan file buatan Claude ke Drive |
+
+Selain Google, ada banyak connector lain di **Connectors Directory**, misalnya Slack, Notion, dan Microsoft 365.
+
+<Aside type="note" title="Yang perlu diketahui">
+- Connector Gmail, Google Calendar, dan Google Drive tersedia untuk **semua pengguna** di Claude versi web dan Claude Desktop.
+- Di paket **Team dan Enterprise**, owner organisasi harus mengaktifkan connector lebih dulu sebelum anggota bisa menyambungkannya.
+- Claude **tidak bisa membaca isi lampiran** email lewat connector Gmail, hanya informasi dasarnya (nama file dan sejenisnya).
+- Menu **Customize** di sidebar sedang diganti nama menjadi **Plugins** secara bertahap sejak akhir Oktober 2026. Isinya sama; bila Anda tidak menemukan Customize, cari Plugins.
+</Aside>
+
+## Data dan privasi
+
+Aturan lampu lalu lintas data dari Pelajaran 3 tetap berlaku, bahkan lebih penting. Dengan connector, Claude bisa membaca kotak masuk Anda tanpa Anda salin satu per satu.
+
+- Data yang diambil lewat connector disimpan bersama percakapannya. Menghapus percakapan berarti menghapus data yang diambil di percakapan itu.
+- Anthropic menyatakan tidak melatih model dengan data connector Gmail, Drive, dan Calendar. Namun di paket Free, Pro, dan Max, bila Anda mengizinkan percakapan dipakai untuk pelatihan, isi yang Anda **salin-tempel** dari aplikasi itu, atau jawaban Claude yang memuat isinya, bisa ikut terpakai.
+- Untuk akun kantor, ikuti kebijakan TI kantor Anda. Bila admin Google Workspace belum mengizinkan, Anda akan melihat pesan bahwa akses diblokir.
+
+## Langkah praktik
+
+<Steps>
+
+1. Di sidebar Claude, buka **Customize** (atau **Plugins**), lalu pilih **Connectors**.
+
+2. Cari **Google Calendar**, klik **Connect**, lalu masuk dengan akun Google Anda dan setujui izin yang diminta. Mulailah dari Kalender karena risikonya paling kecil.
+
+3. Kembali ke percakapan baru. Klik tombol **+** di kotak pesan, arahkan ke **Connectors**, dan pastikan Google Calendar dalam keadaan aktif.
+
+4. Coba prompt yang hanya membaca:
+
+    ```text
+    Lihat kalender saya untuk 7 hari ke depan.
+    Buat ringkasan per hari: acara apa saja dan jam berapa.
+    Tandai hari yang jadwalnya paling padat dan sarankan
+    satu slot kosong 1 jam untuk menyiapkan laporan.
+    ```
+
+5. Periksa jawabannya: Claude menyertakan rujukan ke acara yang dipakai. Cocokkan dua atau tiga acara dengan kalender asli Anda.
+
+6. (Opsional) Sambungkan **Gmail** dengan cara yang sama, lalu minta **draf**, bukan kiriman langsung. Saat Claude meminta persetujuan, baca dulu isi drafnya.
+
+</Steps>
+
+## Contoh nyata
+
+Prompt berikut menggabungkan dua connector. Semua nama dan acara fiktif.
+
+```text
+Cari email 7 hari terakhir dari panitia Rapat Akbar Koperasi
+yang membahas perubahan jadwal.
+Ringkas apa yang berubah, lalu cek kalender saya:
+apakah jadwal baru bentrok dengan acara lain?
+Buatkan DRAF balasan singkat untuk panitia. Jangan kirim.
+```
+
+Hasil yang baik berisi ringkasan perubahan dengan rujukan ke email aslinya, daftar bentrok (bila ada), dan satu draf balasan yang menunggu Anda periksa. Kalimat "Jangan kirim" membuat batasnya jelas sejak awal.
+
+## Latihan
+
+Sambungkan minimal satu connector Google, lalu gunakan untuk satu pekerjaan nyata yang hanya **membaca**: ringkasan jadwal minggu depan, daftar email penting yang belum dibalas, atau pencarian dokumen di Drive.
+
+**Kriteria berhasil:** connector tersambung dan aktif di percakapan; jawaban Claude menyertakan rujukan; minimal dua rujukan sudah Anda cocokkan dengan aplikasi aslinya; dan tidak ada tindakan kirim, hapus, atau bagikan yang Anda setujui tanpa membaca isinya.
+
+## Kesalahan umum
+
+- **Menyetujui tindakan tanpa membaca.** Persetujuan adalah rem terakhir Anda; baca draf atau rincian tindakannya dulu.
+- **Mengira Claude bisa membuka lampiran email.** Lewat Gmail, Claude hanya melihat informasi dasar lampiran. Simpan lampirannya ke Drive atau unggah langsung bila perlu dibaca.
+- **Lupa mengaktifkan connector di percakapan.** Connector yang sudah tersambung tetap perlu aktif di menu **+ → Connectors**.
+- **Menyambungkan akun kantor tanpa izin.** Pastikan kebijakan kantor membolehkan, dan ingat aturan data merah tetap berlaku.
+
+## Rujukan
+
+- [Use connectors to extend Claude's capabilities](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities): cara menyambungkan, mengaktifkan, dan mengelola connector.
+- [Use Google Workspace connectors](https://support.claude.com/en/articles/10166901-use-google-workspace-connectors): kemampuan Gmail, Calendar, dan Drive, beserta batasan dan penanganan data.
+- [Manage plugins, skills, and connectors from one Plugins page](https://support.claude.com/en/articles/17740565-manage-plugins-skills-and-connectors-from-one-plugins-page): perubahan nama menu Customize menjadi Plugins.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Rekan Anda tidak punya akses ke folder "Keuangan" di Google Drive. Bila ia menyambungkan Drive ke Claude, apakah Claude bisa membaca folder itu untuknya?',
+			pilihan: [
+				'Tidak; hak akses Claude lewat connector sama dengan hak akses pemilik akun',
+				'Ya, karena connector memakai akses khusus milik Anthropic',
+				'Ya, asal ia memakai paket berbayar',
+			],
+			jawaban: 0,
+			pembahasan: 'Connector meniru hak akses Anda di aplikasi aslinya. Bila Anda tidak bisa membukanya di Drive, Claude juga tidak bisa.',
+		},
+		{
+			tanya: 'Anda meminta Claude membalas email lewat connector Gmail. Apa yang terjadi secara bawaan sebelum email terkirim?',
+			pilihan: [
+				'Email langsung terkirim tanpa konfirmasi',
+				'Claude meminta persetujuan Anda lebih dulu',
+				'Claude menolak karena Gmail hanya bisa dibaca',
+			],
+			jawaban: 1,
+			pembahasan: 'Secara bawaan, Claude meminta persetujuan sebelum mengirim, membalas, atau meneruskan email. Baca isinya sebelum menyetujui.',
+		},
+		{
+			tanya: 'Anda meminta Claude meringkas lampiran PDF dari sebuah email lewat connector Gmail. Apa yang paling mungkin terjadi?',
+			pilihan: [
+				'Claude meringkas isi PDF dengan lengkap',
+				'Claude hanya melihat informasi dasar lampiran, bukan isinya; PDF perlu diunggah atau disimpan ke Drive dulu',
+				'Claude otomatis mengunduh lampiran ke komputer Anda',
+			],
+			jawaban: 1,
+			pembahasan: 'Connector Gmail hanya mengakses metadata lampiran. Untuk membaca isinya, unggah file ke percakapan atau simpan ke Drive lalu pakai connector Drive.',
+		},
+		{
+			tanya: 'Connector Google Calendar sudah tersambung, tetapi Claude menjawab tidak bisa melihat jadwal Anda. Langkah pertama yang paling masuk akal?',
+			pilihan: [
+				'Membuat akun Google baru',
+				'Memeriksa menu + → Connectors di percakapan itu dan memastikan Google Calendar aktif',
+				'Menghapus semua percakapan lama',
+			],
+			jawaban: 1,
+			pembahasan: 'Connector yang sudah tersambung tetap perlu aktif di percakapan yang sedang dipakai, lewat menu + → Connectors.',
+		},
+	]}
+/>
+
+<TandaSelesai />
