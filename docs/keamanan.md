@@ -32,8 +32,19 @@ Risikonya kecil untuk situs ini, karena tidak ada konten dari pengguna dan tidak
 - Tabel `progres` dilindungi Row Level Security: setiap pengguna hanya bisa membaca dan mengubah barisnya sendiri (`supabase/migrations/0001_progres.sql`).
 - Data pribadi yang tersimpan hanya email. Rincian untuk pengguna ada di halaman `/privasi/`; panduan aktivasi di `docs/login.md`.
 
+## Formulir laporan kesalahan (Netlify Forms)
+
+- Formulir ada di `src/components/FormLapor.astro` (halaman `/lapor/`). Netlify mendeteksinya dari HTML hasil build saat deploy; tidak ada server, function, atau API key milik kita.
+- Dikirim dengan POST ke domain sendiri, jadi CSP tetap `form-action 'self'` dan tidak perlu domain tambahan.
+- Spam disaring dua lapis: kolom jebakan (honeypot) `situs-web` dan Akismet bawaan Netlify. reCAPTCHA sengaja tidak dipakai karena memuat skrip dari domain Google dan butuh pelonggaran CSP.
+- Tidak ada kolom email atau nama. Netlify tetap mencatat IP, user agent, dan referrer setiap kiriman; ini sudah dijelaskan di halaman `/privasi/`.
+- Prefill kolom halaman dari `?halaman=` hanya menerima path internal (diawali `/`), dan nilainya diisi lewat `.value`, bukan HTML, sehingga tidak bisa disisipi skrip.
+- Kiriman hanya diterima bila **form detection** aktif di Netlify (Forms → Enable form detection) dan baru berlaku setelah deploy berikutnya.
+
 ## Pengaturan akun (dilakukan pemilik)
 
 - [ ] 2FA aktif di GitHub, Netlify, Sumopod, dan Supabase.
 - [ ] Branch `main` dilindungi: wajib pull request dan wajib lolos pemeriksaan **CI / Build dan uji**.
 - [ ] Dependabot alerts dan security updates aktif (GitHub → Settings → Code security).
+- [ ] Netlify Forms: notifikasi email kiriman `laporan-kesalahan` diarahkan ke email pengelola (Project configuration → Notifications → Emails and webhooks → Form submission notifications).
+- [ ] Laporan yang sudah ditindaklanjuti dihapus dari Netlify, sesuai janji di halaman `/privasi/`.

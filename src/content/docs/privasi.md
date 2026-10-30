@@ -25,9 +25,20 @@ Kami **tidak** mengumpulkan nama, nomor telepon, lokasi, atau jawaban kuis satu 
 
 Setiap baris progres dilindungi aturan database (Row Level Security): hanya akun Anda sendiri yang bisa membaca dan mengubahnya.
 
+## Bila Anda mengirim laporan kesalahan
+
+Formulir [Laporkan kesalahan](/lapor/) tidak meminta nama atau email.
+
+| Data | Untuk apa | Disimpan di |
+| --- | --- | --- |
+| Isi formulir: halaman, jenis masalah, dan penjelasan | Memperbaiki materi | Netlify Forms |
+| Alamat IP, jenis browser (user agent), dan halaman asal (referrer), dicatat otomatis oleh Netlify | Menyaring spam | Netlify Forms |
+
+Mohon jangan menulis data pribadi di kolom penjelasan. Laporan dihapus dari Netlify setelah ditindaklanjuti.
+
 ## Penyedia layanan
 
-- **Netlify**: hosting situs. Seperti semua server web, Netlify mencatat data teknis kunjungan (misalnya alamat IP) untuk operasional dan keamanan.
+- **Netlify**: hosting situs dan penampung laporan kesalahan (Netlify Forms). Seperti semua server web, Netlify mencatat data teknis kunjungan (misalnya alamat IP) untuk operasional dan keamanan.
 - **Supabase**: layanan login dan database untuk pengguna yang masuk.
 
 Situs ini belum memakai analytics, cookie pelacak, atau skrip pihak ketiga.

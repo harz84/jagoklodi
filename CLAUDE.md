@@ -16,7 +16,8 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - `src/components/PageTitle.astro`: info pelajaran dan penjaga kelengkapan frontmatter (build gagal bila kurang).
 - `src/components/TandaSelesai.astro`: tombol progres (localStorage), dipasang di akhir setiap pelajaran; terkunci sampai kuis lulus.
 - `src/components/Kuis.astro`: kuis pilihan ganda dengan validasi saat build.
-- `src/components/Footer.astro`: disclaimer dan centang progres di sidebar.
+- `src/components/Footer.astro`: tautan "Laporkan kesalahan", disclaimer, dan centang progres di sidebar.
+- `src/components/FormLapor.astro` + halaman `/lapor/` dan `/lapor/terima/`: formulir laporan kesalahan via Netlify Forms (tanpa email, dengan honeypot). Jangan ganti nama formulir atau nama field tanpa alasan: dashboard Netlify hanya menampilkan field dari versi terakhir.
 - `src/lib/progres.ts`: progres di localStorage (local-first). `src/lib/gabung.ts`: penggabungan progres browser dan server (fungsi murni, diuji di `tests/gabung.spec.ts`).
 - `src/lib/sinkron.ts` + `src/components/Akun.astro` + halaman `/akun/`: login email (Supabase) dan sinkron progres. Nonaktif bila `PUBLIC_SUPABASE_URL` dan `PUBLIC_SUPABASE_PUBLISHABLE_KEY` kosong. Panduan aktivasi: `docs/login.md`.
 - `supabase/migrations/`: skema database dan Row Level Security. Setiap perubahan skema = file migrasi baru, jangan ubah file lama.
@@ -46,7 +47,7 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - Jangan pernah menyimpan rahasia (API key, token, password) di repo; repo ini publik.
 - Hanya publishable key Supabase (`sb_publishable_...`) yang boleh dipakai di situs. Secret key (`sb_secret_...`) tidak boleh ada di kode, repo, atau environment variable Netlify.
 - Setiap tabel baru di Supabase wajib mengaktifkan Row Level Security dengan policy yang membatasi akses ke baris milik pengguna itu sendiri.
-- Data pribadi yang disimpan hanya email (di Supabase Auth). Menambah jenis data pribadi baru wajib memperbarui halaman `/privasi/`.
+- Data pribadi yang disimpan hanya email (di Supabase Auth) dan metadata teknis kiriman laporan yang dicatat Netlify Forms (IP, user agent, referrer). Menambah jenis data pribadi baru, termasuk kolom baru di formulir, wajib memperbarui halaman `/privasi/`.
 - Uji login memakai Supabase tiruan (`tests/login.spec.ts`); jalankan dengan build yang mengisi PUBLIC_SUPABASE_* dengan nilai uji.
 - Jangan menambah skrip, font, atau layanan dari domain luar tanpa memperbarui CSP di `netlify.toml` dan `docs/keamanan.md`.
 

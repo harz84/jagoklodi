@@ -59,6 +59,13 @@ nav.sidebar a[data-selesai]::after {
 	font-weight: 700;
 }
 
+/* Tautan "Laporkan kesalahan" di footer */
+.lapor-tautan {
+	margin-top: 1.5rem;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-2);
+}
+
 /* Disclaimer di footer */
 .disclaimer {
 	margin-top: 1.5rem;

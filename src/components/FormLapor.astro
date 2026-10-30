@@ -1,0 +1,161 @@
+---
+/**
+ * Formulir "Laporkan kesalahan" yang ditangani Netlify Forms.
+ *
+ * Cara kerjanya:
+ * - Saat deploy, Netlify membaca HTML hasil build, menemukan <form data-netlify="true">,
+ *   lalu menyiapkan penampung kiriman bernama sesuai atribut `name`. Tidak ada server atau API key milik kita.
+ * - Formulir dikirim dengan POST biasa ke domain sendiri, jadi tetap jalan tanpa JavaScript
+ *   dan cocok dengan CSP `form-action 'self'`.
+ * - `netlify-honeypot`: kolom jebakan yang tidak terlihat manusia. Bila terisi (biasanya oleh bot),
+ *   kiriman ditolak diam-diam. Selain itu, setiap kiriman disaring Akismet (filter spam Netlify).
+ * - Tidak ada kolom email: data pribadi yang dikumpulkan dibuat sesedikit mungkin.
+ *
+ * Nama field dan nama formulir jangan diubah sembarangan: dashboard Netlify hanya menampilkan
+ * field dari versi formulir yang terakhir di-deploy.
+ */
+const NAMA_FORM = 'laporan-kesalahan';
+
+const JENIS = [
+	'Menu atau tampilan Claude berbeda dari materi',
+	'Informasi salah atau sudah usang',
+	'Tautan rusak',
+	'Soal atau kunci kuis keliru',
+	'Salah ketik atau kalimat membingungkan',
+	'Lainnya',
+];
+---
+
+<form
+	class="lapor not-content"
+	name={NAMA_FORM}
+	method="POST"
+	action="/lapor/terima/"
+	data-netlify="true"
+	netlify-honeypot="situs-web"
+	data-form-lapor
+>
+	<input type="hidden" name="form-name" value={NAMA_FORM} />
+
+	<p class="lapor__jebakan" aria-hidden="true">
+		<label>Jangan diisi: <input name="situs-web" tabindex="-1" autocomplete="off" /></label>
+	</p>
+
+	<label for="lapor-halaman">Halaman yang bermasalah</label>
+	<input
+		id="lapor-halaman"
+		name="halaman"
+		type="text"
+		required
+		maxlength="200"
+		placeholder="/level-1/04-prompt-jelas/"
+		autocomplete="off"
+	/>
+	<p class="lapor__catatan">Terisi otomatis bila Anda datang dari tautan di bawah halaman pelajaran.</p>
+
+	<label for="lapor-jenis">Jenis masalah</label>
+	<select id="lapor-jenis" name="jenis" required>
+		<option value="" disabled selected>Pilih salah satu</option>
+		{JENIS.map((j) => <option value={j}>{j}</option>)}
+	</select>
+
+	<label for="lapor-penjelasan">Penjelasan</label>
+	<textarea
+		id="lapor-penjelasan"
+		name="penjelasan"
+		required
+		minlength="10"
+		maxlength="2000"
+		rows="6"
+		placeholder="Contoh: Di langkah 3, menu Settings sekarang bernama Pengaturan dan letaknya di kiri bawah."></textarea>
+	<p class="lapor__catatan">
+		Jangan menulis data pribadi seperti nama, email, atau nomor telepon. Laporan dikirim tanpa nama dan tidak
+		dibalas satu per satu.
+	</p>
+
+	<button type="submit">Kirim laporan</button>
+</form>
+
+<script>
+	// Isi kolom "halaman" dari parameter ?halaman=... yang dibawa tautan di footer.
+	// Hanya path internal yang diterima (diawali "/"), agar kolom tidak bisa diisi alamat situs lain lewat tautan.
+	const form = document.querySelector<HTMLFormElement>('[data-form-lapor]');
+	const kolom = form?.querySelector<HTMLInputElement>('input[name="halaman"]');
+	const nilai = new URLSearchParams(location.search).get('halaman') ?? '';
+	if (kolom && !kolom.value && /^\/[a-z0-9\-/]*$/i.test(nilai) && !nilai.startsWith('//') && nilai.length <= 200) {
+		kolom.value = nilai;
+	}
+	// Cegah kiriman ganda bila tombol diklik berkali-kali.
+	form?.addEventListener('submit', () => {
+		const tombol = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+		if (tombol) {
+			// Ditunda satu tick: tombol yang dinonaktifkan sebelum kiriman berjalan bisa membatalkan kiriman.
+			setTimeout(() => {
+				tombol.disabled = true;
+				tombol.textContent = 'Mengirim…';
+			});
+		}
+	});
+</script>
+
+<style>
+	.lapor {
+		display: grid;
+		gap: 0.4rem;
+		max-width: 36rem;
+		margin-top: 1.5rem;
+		padding: 1.25rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+	}
+	.lapor label {
+		font-weight: 600;
+		margin-top: 0.6rem;
+	}
+	.lapor label:first-of-type {
+		margin-top: 0;
+	}
+	.lapor input,
+	.lapor select,
+	.lapor textarea {
+		font: inherit;
+		width: 100%;
+		padding: 0.6rem 0.75rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-gray-4);
+		background: var(--sl-color-bg);
+		color: var(--sl-color-white);
+	}
+	.lapor textarea {
+		resize: vertical;
+	}
+	.lapor__catatan {
+		margin: 0;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+	.lapor button {
+		margin-top: 1rem;
+		justify-self: start;
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+		padding: 0.6rem 1.1rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-accent);
+		background: var(--sl-color-accent);
+		color: var(--sl-color-black);
+	}
+	.lapor button:disabled {
+		opacity: 0.6;
+		cursor: progress;
+	}
+	/* Kolom jebakan disembunyikan dari manusia, tetapi tetap ada di HTML untuk bot. */
+	.lapor__jebakan {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+</style>

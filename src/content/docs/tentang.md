@@ -14,6 +14,8 @@ jagoklodi adalah catatan belajar Claude yang ditulis sambil dipraktikkan, lalu d
 
 Fitur Claude berubah cepat. Karena itu setiap pelajaran mencantumkan tanggal **terakhir diverifikasi**. Pelajaran yang belum diperiksa ulang lebih dari 90 hari diberi tanda _perlu ditinjau_.
 
+Menemukan menu yang berbeda, informasi usang, atau tautan rusak? Pakai tautan **Laporkan kesalahan** di bagian bawah setiap halaman, atau buka formulir [Laporkan kesalahan](/lapor/).
+
 Untuk informasi resmi dan terbaru, selalu rujuk:
 
 - [Pusat bantuan Claude](https://support.claude.com)
