@@ -31,6 +31,7 @@ export default defineConfig({
 				},
 				{ label: 'Level 0 · Orientasi', items: [{ autogenerate: { directory: 'level-0' } }] },
 				{ label: 'Level 1 · Dasar pemakaian', items: [{ autogenerate: { directory: 'level-1' } }] },
+				{ label: 'Level 2 · Produktivitas', items: [{ autogenerate: { directory: 'level-2' } }] },
 				// Tambahkan grup level berikutnya setelah folder-nya berisi minimal satu pelajaran.
 			],
 		}),
