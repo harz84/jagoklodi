@@ -33,7 +33,7 @@ Buka **Authentication → URL Configuration**:
 
 Kode 6 digit membuat login berhasil walaupun email dibuka di perangkat lain (misalnya email di HP, belajar di laptop).
 
-Buka **Authentication → Emails → Templates**, lalu ubah template **Magic Link** dan **Confirm signup** menjadi:
+Buka **Authentication → Emails → Templates**, lalu ubah **kedua** template berikut. **Confirm signup** dipakai saat seseorang masuk untuk pertama kali; **Magic Link** dipakai untuk login berikutnya. Tanpa `{{ .Token }}`, email hanya berisi tautan, dan tautan itu hanya berfungsi di browser yang sama dengan tempat kode diminta.
 
 ```html
 <h2>Masuk ke jagoklodi</h2>
