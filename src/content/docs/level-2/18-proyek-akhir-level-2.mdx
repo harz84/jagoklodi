@@ -1,0 +1,174 @@
+---
+title: "Proyek akhir Level 2: laporan mingguan otomatis"
+description: Menggabungkan connector, pembuatan file, skill, dan tugas terjadwal menjadi laporan mingguan yang tersusun sendiri dari data di Google Drive.
+jenis: pelajaran
+level: 2
+durasi: 90 menit
+prasyarat: Pelajaran 12 sampai 17.
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 18
+  label: 18. Proyek akhir Level 2
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Di proyek ini Anda membangun **laporan mingguan otomatis**: setiap minggu Claude membaca data di Google Drive, menyusun laporan dengan format tetap, menyimpannya sebagai file, dan menyiapkan draf email untuk Anda periksa. Setelah selesai, Anda bisa:
+
+1. Menggabungkan connector, pembuatan file, skill, dan tugas terjadwal dalam satu alur kerja.
+2. Memeriksa angka hasil otomatisasi terhadap data sumber.
+3. Menetapkan batas tindakan yang aman untuk pekerjaan yang berjalan tanpa diawasi.
+
+<Aside type="note" title="Bahan yang dibutuhkan">
+- Akun Google dengan connector **Google Drive** dan **Gmail** tersambung (Pelajaran 12), serta connector **Google Sheets** untuk membuat spreadsheet.
+- Pengaturan **Code execution and file creation** aktif (Pelajaran 13).
+- Proyek ini memakai **data fiktif** di bawah. Jangan memakai data keuangan asli organisasi Anda untuk latihan.
+- Pengguna paket Free bisa mengerjakan semua langkah kecuali langkah 6 (penjadwalan); jalankan langkah 5 secara manual setiap minggu.
+</Aside>
+
+## Data fiktif
+
+Transaksi kas Koperasi Maju Bersama (fiktif) selama dua minggu:
+
+```text
+Tanggal,Jenis,Kategori,Jumlah
+2026-10-19,Masuk,Simpanan wajib,500000
+2026-10-20,Masuk,Simpanan sukarela,750000
+2026-10-21,Keluar,Alat tulis kantor,120000
+2026-10-22,Masuk,Angsuran pinjaman,1200000
+2026-10-23,Keluar,Konsumsi rapat,350000
+2026-10-26,Masuk,Simpanan wajib,550000
+2026-10-27,Masuk,Simpanan sukarela,400000
+2026-10-28,Keluar,Pencairan pinjaman,2000000
+2026-10-29,Masuk,Angsuran pinjaman,1350000
+2026-10-30,Keluar,Listrik dan internet,450000
+```
+
+## Langkah proyek
+
+<Steps>
+
+1. **Simpan data ke Google Drive.** Di percakapan baru dengan connector Google Sheets aktif, tempel data di atas dan minta:
+
+    ```text
+    Buatkan Google Sheets bernama "Kas Koperasi (fiktif)"
+    dari data ini. Satu baris per transaksi, kolom sesuai header.
+    ```
+
+    Buka spreadsheet-nya di Google dan pastikan kesepuluh baris masuk dengan benar.
+
+2. **Hitung sendiri kunci jawabannya.** Sebelum mengotomatiskan apa pun, hitung total minggu 26–30 Oktober secara manual atau dengan kalkulator: total masuk, total keluar, dan selisihnya. Angka ini dipakai untuk memeriksa hasil Claude nanti.
+
+3. **Buat skill "Laporan mingguan kas koperasi"** (Pelajaran 16) dengan format:
+    - Ringkasan maksimal 3 kalimat
+    - Tabel: total masuk, total keluar, dan selisih, untuk minggu ini dan minggu lalu, beserta perubahannya
+    - Maksimal 3 catatan yang perlu diperhatikan pengurus, misalnya pengeluaran besar atau selisih negatif
+    - Nada formal, ringkas, untuk rapat pengurus
+
+4. **Tulis instruksi tugas yang bisa berdiri sendiri** (Pelajaran 17):
+
+    ```text
+    Buka Google Sheets "Kas Koperasi (fiktif)" di Drive saya.
+    Ambil transaksi minggu terakhir (Senin–Jumat) dan minggu sebelumnya.
+    Susun laporan memakai skill "Laporan mingguan kas koperasi".
+    Simpan laporan sebagai file Word ke folder "Laporan Kas" di Drive.
+    Buat DRAF email ke alamat saya sendiri berisi ringkasan
+    dan tabel laporan. Jangan mengirim email, jangan membagikan file,
+    dan jangan mengubah isi spreadsheet.
+    ```
+
+5. **Jalankan sekali secara manual** dengan menempelkan instruksi di atas ke percakapan baru. Periksa tiga hal:
+    - Angka di laporan sama dengan kunci jawaban Anda di langkah 2.
+    - File Word tersimpan di folder yang benar.
+    - Draf email ada di Gmail dan **belum terkirim**.
+
+    Bila ada yang salah, perbaiki skill atau instruksinya, lalu ulangi sampai benar.
+
+6. **Jadikan tugas terjadwal** (paket berbayar), misalnya setiap Jumat pukul 16.00, dengan instruksi dari langkah 4. Jalankan sekali dari halaman **Scheduled** untuk memastikan hasilnya sama dengan uji manual.
+
+7. **Uji dengan data baru.** Tambahkan tiga transaksi fiktif bertanggal minggu berikutnya ke spreadsheet, jalankan tugasnya lagi, dan pastikan laporan memakai minggu yang baru.
+
+</Steps>
+
+<details>
+<summary>Kunci jawaban langkah 2 (buka setelah menghitung sendiri)</summary>
+
+| Minggu | Masuk | Keluar | Selisih |
+| --- | --- | --- | --- |
+| 19–23 Okt | Rp2.450.000 | Rp470.000 | Rp1.980.000 |
+| 26–30 Okt | Rp2.300.000 | Rp2.450.000 | **−Rp150.000** |
+
+Pemasukan turun sekitar 6,1%, sedangkan pengeluaran naik sekitar 421% karena pencairan pinjaman Rp2.000.000. Laporan yang baik menandai selisih negatif ini sebagai catatan untuk pengurus.
+
+</details>
+
+## Penilaian mandiri
+
+Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya terpenuhi.
+
+| Kriteria | Pertanyaan pemeriksa |
+| --- | --- |
+| Connector | Apakah Claude membaca data langsung dari Google Drive, tanpa Anda salin-tempel ulang? |
+| Ketepatan angka | Apakah semua angka di laporan sama dengan kunci jawaban yang Anda hitung sendiri? |
+| Skill | Apakah format laporan konsisten di dua kali percobaan tanpa Anda jelaskan ulang? |
+| File | Apakah file Word tersimpan di folder yang benar dan bisa dibuka? |
+| Batas tindakan | Apakah email masih berupa draf, file tidak dibagikan, dan spreadsheet tidak berubah? |
+| Instruksi mandiri | Apakah instruksi tugas bisa dipahami tanpa membaca percakapan lain? |
+| Penjadwalan (paket berbayar) | Apakah tugas terjadwal sudah diuji sekali dan Anda tahu cara menjeda serta menghapusnya? |
+
+## Kesalahan umum
+
+- **Langsung menjadwalkan tanpa uji manual.** Kesalahan instruksi baru ketahuan setelah laporan salah terkirim ke banyak orang.
+- **Tidak punya kunci jawaban.** Tanpa hitungan sendiri, Anda tidak bisa tahu apakah angka laporan benar.
+- **Instruksi tanpa batas tindakan.** Selalu tulis apa yang **tidak boleh** dilakukan: kirim, bagikan, hapus, atau ubah data.
+- **Memakai data asli untuk latihan.** Pindahkan ke data asli hanya setelah alurnya terbukti benar, dan sesuai kebijakan organisasi Anda.
+
+## Rujukan
+
+- [Use Google Workspace connectors](https://support.claude.com/en/articles/10166901-use-google-workspace-connectors)
+- [Create and edit files with Claude](https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude)
+- [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude)
+- [Schedule recurring tasks in Claude Cowork](https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Kenapa Anda menghitung sendiri total mingguan sebelum mengotomatiskan laporan?',
+			pilihan: [
+				'Sebagai kunci jawaban untuk memeriksa angka hasil Claude',
+				'Karena Claude tidak bisa berhitung sama sekali',
+				'Supaya tugas terjadwal berjalan lebih cepat',
+			],
+			jawaban: 0,
+			pembahasan: 'Hasil otomatis tetap harus diperiksa. Hitungan sendiri adalah patokan untuk memastikan angka laporan benar.',
+		},
+		{
+			tanya: 'Kalimat mana yang paling penting ada di instruksi tugas yang memakai Gmail dan Drive?',
+			pilihan: [
+				'"Kerjakan sebaik mungkin"',
+				'"Buat draf email; jangan mengirim, jangan membagikan file, dan jangan mengubah spreadsheet"',
+				'"Gunakan bahasa yang menarik"',
+			],
+			jawaban: 1,
+			pembahasan: 'Batas tindakan mencegah otomatisasi melakukan hal yang tidak bisa dibatalkan saat Anda tidak mengawasi.',
+		},
+		{
+			tanya: 'Apa urutan yang paling aman untuk membangun laporan otomatis?',
+			pilihan: [
+				'Jadwalkan dulu, lalu periksa hasilnya bulan depan',
+				'Uji manual dengan data fiktif sampai benar, baru jadwalkan, lalu uji lagi dengan data baru',
+				'Langsung pakai data asli agar hasilnya realistis',
+			],
+			jawaban: 1,
+			pembahasan: 'Uji manual memastikan instruksi dan skill benar. Penjadwalan baru dilakukan setelah alurnya terbukti, lalu diuji lagi dengan data baru.',
+		},
+	]}
+/>
+
+<TandaSelesai />
