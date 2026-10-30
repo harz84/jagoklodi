@@ -1,0 +1,165 @@
+---
+title: "Memory: Claude yang mengingat konteks Anda"
+description: Memahami apa yang diingat Claude dari percakapan Anda, cara melihat dan mengoreksinya, serta kapan sebaiknya memory dimatikan.
+jenis: pelajaran
+level: 2
+durasi: 25 menit
+prasyarat: Pelajaran 3 (privasi dan keamanan) dan Pelajaran 8 (Projects).
+terakhirDiverifikasi: 2026-10-30
+sidebar:
+  order: 15
+  label: 15. Memory
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Membedakan **memory** dan **pencarian percakapan lama**.
+2. Melihat, mengoreksi, dan menghapus apa yang diingat Claude.
+3. Memilih kapan memakai percakapan biasa, memory dimatikan, atau incognito.
+
+## Dua cara Claude memakai konteks lama
+
+Di Pelajaran 1 Anda belajar bahwa setiap percakapan dimulai dari awal. Dua fitur ini mengubahnya:
+
+| | **Memory** | **Pencarian percakapan lama** |
+| --- | --- | --- |
+| Cara kerja | Claude menyimpan hal penting tentang Anda sebagai **topik** selama Anda bercakap | Claude mencari di riwayat percakapan saat Anda memintanya |
+| Contoh | Peran Anda, proyek yang sedang berjalan, gaya tulisan yang Anda suka | "Kita pernah bahas anggaran kegiatan, apa keputusannya?" |
+| Paket | Semua paket. Aktif secara bawaan di Free, Pro, dan Max | Paket berbayar (Pro, Max, Team, Enterprise) |
+
+Di paket **Team dan Enterprise**, owner organisasi menentukan apakah memory tersedia, dan memory tetap mati sampai setiap anggota menyalakannya sendiri.
+
+## Apa yang diingat dan tidak
+
+Claude mengingat konteks sehari-hari yang membantu pekerjaan, misalnya peran dan proyek Anda, orang yang sering Anda sebut, serta preferensi gaya komunikasi.
+
+<Aside type="caution" title="Batas yang perlu diketahui">
+- Secara bawaan, Claude **tidak** menyimpan topik sensitif seperti kesehatan, agama, ras, etnis, atau politik, kecuali Anda menyalakan **Include sensitive topics in memory**.
+- Beberapa data **tidak pernah** disimpan meski Anda memintanya, misalnya nomor identitas resmi, nomor rekening, catatan kriminal, dan status imigrasi.
+- **Menghapus percakapan tidak menghapus memory** yang sudah tercatat dari percakapan itu. Hapus topiknya secara terpisah di pengaturan memory.
+</Aside>
+
+Aturan data merah dari Pelajaran 3 tetap berlaku: jangan mengandalkan penyaring otomatis. Data yang tidak boleh diunggah tetap tidak boleh diketik.
+
+## Tiga pilihan saat memulai percakapan
+
+| Pilihan | Memakai memory? | Menambah memory? | Masuk riwayat? |
+| --- | --- | --- | --- |
+| **Percakapan biasa** | Ya | Ya | Ya |
+| **Memory dimatikan untuk satu percakapan** (**+ → Memory** sebelum pesan pertama) | Tidak | Tidak | Ya |
+| **Incognito** (ikon hantu di kanan atas, di luar Project) | Tidak | Tidak | Tidak, tetapi tetap disimpan sementara (bawaan 30 hari) demi keamanan |
+
+Pilihan memory untuk satu percakapan harus diatur **sebelum** pesan pertama terkirim; setelah itu tidak bisa diubah.
+
+## Memory di dalam Project
+
+Setiap Project punya memory sendiri. Di dalam Project, Claude memakai memory Project itu ditambah memory akun Anda, tetapi tidak memakai memory dari Project lain. Bila Project berisi pekerjaan yang harus benar-benar terpisah, matikan **Use account memory** di bagian **Memory** pada halaman Project.
+
+## Langkah praktik
+
+<Steps>
+
+1. Buka **Settings > Your Claude**, lalu klik **Manage** di samping **Your memory**. Di tata letak lama, buka **Settings > Memory**.
+
+2. Baca daftar **Topics**. Cari satu hal yang keliru atau sudah tidak berlaku, misalnya jabatan lama atau proyek yang sudah selesai.
+
+3. Buka topik itu, lalu perbaiki dengan ikon edit atau hapus dengan **Delete**.
+
+4. Di percakapan baru, minta Claude mengingat satu preferensi kerja:
+
+    ```text
+    Tolong ingat: untuk semua draf surat organisasi,
+    saya memakai salam pembuka "Assalamu'alaikum warahmatullahi
+    wabarakatuh" dan penutup dengan nama serta jabatan saya
+    sebagai sekretaris.
+    ```
+
+5. Buka percakapan baru lagi dan minta draf surat undangan singkat **tanpa** menyebut salam dan penutup. Periksa apakah Claude memakainya sendiri.
+
+6. Mulai satu percakapan dengan memory dimatikan (**+ → Memory**, sebelum pesan pertama) dan ulangi permintaan yang sama. Bandingkan hasilnya.
+
+</Steps>
+
+## Contoh nyata
+
+Tanpa memory, setiap kali menyusun notulen rapat RT, Anda menjelaskan ulang bahwa Anda sekretaris RT 05, notulen selalu dibuka dengan daftar hadir, dan keputusan ditulis bernomor. Dengan memory, cukup tulis:
+
+```text
+Ini catatan rapat tadi malam, tolong rapikan jadi notulen.
+[tempel catatan]
+```
+
+Bila hasilnya memakai format lama yang sudah Anda ganti, koreksi lewat percakapan ("mulai sekarang keputusan ditulis dalam tabel") atau perbaiki topiknya di pengaturan memory.
+
+## Latihan
+
+Periksa memory Anda, perbaiki minimal satu topik, dan tambahkan satu preferensi kerja yang berguna untuk pekerjaan rutin Anda.
+
+**Kriteria berhasil:** minimal satu topik sudah dikoreksi atau dihapus; preferensi baru terbukti dipakai di percakapan baru tanpa Anda sebutkan; dan tidak ada data golongan merah di daftar memory Anda.
+
+## Kesalahan umum
+
+- **Mengira menghapus percakapan juga menghapus memory.** Topik yang sudah tercatat harus dihapus terpisah.
+- **Mengandalkan memory untuk aturan yang harus selalu dipatuhi.** Untuk aturan tetap di satu jenis pekerjaan, pakai project instructions (Pelajaran 8); memory lebih cocok untuk konteks umum.
+- **Lupa incognito untuk hal sekali jalan yang tidak ingin diingat**, misalnya mencoba prompt untuk keperluan orang lain.
+- **Tidak pernah memeriksa daftar memory.** Info usang membuat jawaban melenceng tanpa Anda sadari.
+
+## Rujukan
+
+- [Use Claude's chat search and memory to build on previous context](https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context): cara kerja memory, topik sensitif, memory Project, dan pengaturannya.
+- [Use incognito chats](https://support.claude.com/en/articles/12260368-use-incognito-chats): perbedaan incognito dan percakapan dengan memory dimatikan.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda menghapus percakapan yang menyebut jabatan lama Anda. Apakah memory tentang jabatan itu ikut hilang?',
+			pilihan: [
+				'Ya, memory selalu ikut terhapus bersama percakapannya',
+				'Tidak; topik memory harus dihapus terpisah di pengaturan memory',
+				'Hanya bila memakai paket Max',
+			],
+			jawaban: 1,
+			pembahasan: 'Menghapus percakapan tidak menghapus memory yang sudah tercatat darinya. Hapus atau koreksi topiknya di Settings.',
+		},
+		{
+			tanya: 'Anda ingin mencoba prompt untuk keperluan teman tanpa disimpan ke riwayat maupun memory. Pilihan mana yang paling tepat?',
+			pilihan: [
+				'Percakapan biasa',
+				'Incognito',
+				'Membuat Project baru',
+			],
+			jawaban: 1,
+			pembahasan: 'Incognito tidak masuk riwayat dan tidak memakai atau menambah memory, walau tetap disimpan sementara demi keamanan.',
+		},
+		{
+			tanya: 'Kapan memory bisa dimatikan untuk satu percakapan saja?',
+			pilihan: [
+				'Kapan saja, bahkan di tengah percakapan',
+				'Sebelum pesan pertama dikirim, lewat menu + → Memory',
+				'Hanya setelah percakapan selesai',
+			],
+			jawaban: 1,
+			pembahasan: 'Pengaturan memory untuk satu percakapan harus dipilih sebelum pesan pertama. Setelah itu, mulai percakapan baru bila ingin mengubahnya.',
+		},
+		{
+			tanya: 'Anda punya Project untuk urusan kantor dan ingin memory-nya tidak bercampur dengan urusan pribadi. Apa yang dilakukan?',
+			pilihan: [
+				'Mematikan Use account memory di bagian Memory pada halaman Project',
+				'Mengganti nama Project',
+				'Menghapus semua percakapan pribadi',
+			],
+			jawaban: 0,
+			pembahasan: 'Setiap Project punya memory sendiri. Mematikan Use account memory membuat memory Project benar-benar terpisah dari memory akun.',
+		},
+	]}
+/>
+
+<TandaSelesai />
