@@ -116,9 +116,9 @@ Pilih satu keputusan kecil yang sedang Anda hadapi di kantor, usaha, atau organi
 		{
 			tanya: 'Anda hanya ingin tahu jam buka kantor pajak terdekat hari ini. Fitur mana yang paling tepat?',
 			pilihan: [
-				'Web search, karena pertanyaannya faktual dan cepat terjawab',
-				'Research, karena butuh laporan panjang',
-				'Tidak perlu internet, Claude pasti sudah tahu',
+				'Web search, karena faktanya cepat dicari',
+				'Research, karena hasilnya lebih lengkap dan bersumber',
+				'Tanpa pencarian; Claude sudah tahu',
 			],
 			jawaban: 0,
 			pembahasan: 'Web search cocok untuk fakta cepat. Research lebih cocok untuk pengumpulan informasi menyeluruh dan memakai jatah lebih banyak.',
@@ -126,19 +126,19 @@ Pilih satu keputusan kecil yang sedang Anda hadapi di kantor, usaha, atau organi
 		{
 			tanya: 'Claude menjawab dengan tiga kutipan sumber. Apa yang sebaiknya Anda lakukan sebelum memakai jawabannya untuk keputusan penting?',
 			pilihan: [
-				'Langsung memakai jawabannya karena sudah ada sumbernya',
-				'Membuka sumbernya dan memastikan isinya mendukung klaim Claude',
-				'Menghapus percakapan',
+				'Langsung memakainya karena sudah ada sumbernya',
+				'Membuka sumbernya dan memastikan isinya mendukung klaim',
+				'Meminta Claude memastikan sendiri bahwa sumbernya benar',
 			],
 			jawaban: 1,
-			pembahasan: 'Kutipan adalah alat untuk memeriksa. Halaman asli bisa memuat konteks yang tidak ikut dalam ringkasan Claude.',
+			pembahasan: 'Kutipan adalah alat untuk memeriksa. Halaman asli bisa memuat konteks yang tidak ikut dalam ringkasan Claude, dan Claude yang memeriksa dirinya sendiri bukan pengganti membaca sumbernya.',
 		},
 		{
 			tanya: 'Siapa yang bisa memakai fitur Research?',
 			pilihan: [
-				'Semua pengguna, termasuk Free',
-				'Pengguna paket berbayar: Pro, Max, Team, dan Enterprise',
-				'Hanya pengguna Claude Code',
+				'Semua pengguna, termasuk paket Free',
+				'Semua paket berbayar: Pro, Max, Team, Enterprise',
+				'Hanya paket organisasi: Team dan Enterprise',
 			],
 			jawaban: 1,
 			pembahasan: 'Research tersedia di paket berbayar dan membutuhkan web search agar bisa berjalan.',
@@ -146,12 +146,12 @@ Pilih satu keputusan kecil yang sedang Anda hadapi di kantor, usaha, atau organi
 		{
 			tanya: 'Di akun Anda tidak ada tombol "Web search" di menu +, dan kotak pesan tidak lagi menampilkan pilihan Chat dan Cowork. Apa artinya?',
 			pilihan: [
-				'Web search tidak tersedia untuk akun Anda',
-				'Anda memakai tampilan baru; Claude mencari di web sendiri bila membantu',
-				'Anda harus memasang aplikasi tambahan',
+				'Web search tidak tersedia untuk paket akun Anda',
+				'Claude mencari di web sendiri bila membantu',
+				'Anda harus memasang ekstensi browser untuk mencari di web',
 			],
 			jawaban: 1,
-			pembahasan: 'Di tampilan baru tidak ada tombol web search. Claude mencari di web bila diperlukan, dan Research dimulai dengan /deep-research atau lewat + → Research.',
+			pembahasan: 'Itu tampilan baru: tidak ada tombol web search, dan Claude mencari di web bila diperlukan. Research dimulai dengan /deep-research atau lewat + → Research.',
 		},
 	]}
 />

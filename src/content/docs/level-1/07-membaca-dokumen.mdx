@@ -113,9 +113,9 @@ Unggah satu dokumen publik yang relevan dengan pekerjaan atau kegiatan Anda. Min
 		{
 			tanya: 'Anda mengunggah file Word berisi diagram bergambar. Apa yang terjadi pada diagram itu?',
 			pilihan: [
-				'Claude membaca diagramnya dengan lengkap',
-				'Claude hanya membaca teks dokumen; gambar di dalam file Word tidak terbaca',
-				'File Word tidak bisa diunggah sama sekali',
+				'Claude membaca teks dan diagramnya dengan lengkap',
+				'Hanya teksnya yang terbaca; diagramnya tidak',
+				'File Word bergambar ditolak dan harus diubah ke PDF',
 			],
 			jawaban: 1,
 			pembahasan: 'Untuk dokumen non-PDF, Claude hanya membaca teksnya. Jika gambarnya penting, unggah sebagai PDF (hingga 100 halaman) atau sebagai gambar terpisah.',
@@ -123,9 +123,9 @@ Unggah satu dokumen publik yang relevan dengan pekerjaan atau kegiatan Anda. Min
 		{
 			tanya: 'Cara terbaik agar jawaban tentang isi dokumen mudah dicek adalah...',
 			pilihan: [
-				'Meminta Claude mengutip kalimat aslinya dan menyebut nomor halamannya',
-				'Meminta jawaban sesingkat mungkin',
-				'Mengunggah dokumen yang sama dua kali',
+				'Meminta kutipan kalimat asli beserta nomor halamannya',
+				'Meminta jawaban sesingkat mungkin agar mudah dibaca',
+				'Mengunggah dokumen yang sama dua kali untuk dibandingkan',
 			],
 			jawaban: 0,
 			pembahasan: 'Kutipan dan nomor halaman membuat Anda bisa langsung mencocokkan jawaban dengan dokumen aslinya.',
@@ -133,22 +133,22 @@ Unggah satu dokumen publik yang relevan dengan pekerjaan atau kegiatan Anda. Min
 		{
 			tanya: 'Anda mengunggah PDF setebal 400 halaman. Apa yang perlu diwaspadai?',
 			pilihan: [
-				'Claude hanya membaca teksnya, sehingga grafik dan gambar bisa terlewat',
-				'Claude hanya membaca 10 halaman pertama',
+				'Grafik dan gambarnya bisa terlewat',
+				'Hanya 10 halaman pertama dibaca',
 				'PDF di atas 100 halaman ditolak',
 			],
 			jawaban: 0,
-			pembahasan: 'PDF 101–1000 halaman hanya dibaca teksnya. Unsur visual seperti grafik dibaca untuk PDF hingga 100 halaman.',
+			pembahasan: 'PDF 101–1000 halaman hanya dibaca teksnya, sehingga grafik dan gambar bisa terlewat. Unsur visual dibaca untuk PDF hingga 100 halaman.',
 		},
 		{
 			tanya: 'Kenapa prompt "Ringkas dalam 5 poin: tujuan, isi utama, angka penting, perubahan, dan pihak terdampak" lebih baik daripada "Ringkas dokumen ini"?',
 			pilihan: [
-				'Karena lebih panjang',
-				'Karena memberi tahu Claude apa yang penting bagi Anda dan bentuk hasilnya',
-				'Karena Claude menolak prompt pendek',
+				'Karena prompt yang lebih panjang selalu menghasilkan jawaban lebih baik',
+				'Karena Claude jadi tahu apa yang penting dan bentuk hasilnya',
+				'Karena Claude menolak prompt yang terlalu pendek',
 			],
 			jawaban: 1,
-			pembahasan: 'Ini penerapan resep lima bagian: Apa dan Bentuk yang jelas menghasilkan ringkasan yang sesuai kebutuhan.',
+			pembahasan: 'Ini penerapan resep lima bagian: Apa dan Bentuk yang jelas menghasilkan ringkasan yang sesuai kebutuhan. Panjang prompt sendiri bukan ukurannya.',
 		},
 	]}
 />

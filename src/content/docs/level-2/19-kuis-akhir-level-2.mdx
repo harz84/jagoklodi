@@ -36,9 +36,9 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Anda menyambungkan Google Drive ke Claude. File mana yang bisa dibaca Claude lewat connector itu?',
 			pilihan: [
-				'Hanya file yang memang bisa Anda buka sendiri di Google Drive',
-				'Semua file di Google Drive kantor, termasuk milik orang lain yang tidak dibagikan ke Anda',
-				'Tidak ada; connector hanya untuk menyimpan file',
+				'Hanya file yang bisa Anda buka sendiri di Drive',
+				'Semua file di Drive kantor, termasuk yang tidak dibagikan',
+				'Tidak ada; connector hanya untuk menyimpan file baru',
 			],
 			jawaban: 0,
 			pembahasan: 'Hak akses connector sama dengan hak akses Anda di aplikasi aslinya.',
@@ -46,9 +46,9 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Claude menyiapkan balasan email lewat connector Gmail dan meminta persetujuan untuk mengirim. Apa yang sebaiknya Anda lakukan?',
 			pilihan: [
-				'Langsung menyetujui agar cepat',
-				'Membaca isi balasannya dulu, baru menyetujui bila sudah sesuai',
-				'Menolak semua permintaan persetujuan',
+				'Langsung menyetujui agar pekerjaan cepat selesai',
+				'Membaca isi balasannya dulu, baru menyetujui',
+				'Menolak semua permintaan persetujuan demi keamanan',
 			],
 			jawaban: 1,
 			pembahasan: 'Persetujuan adalah rem terakhir sebelum tindakan terjadi. Baca rinciannya sebelum menyetujui.',
@@ -56,19 +56,19 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Rekan kerja meminta rekap iuran yang bisa ia olah lagi di Excel. Permintaan mana yang paling tepat?',
 			pilihan: [
-				'"Buatkan file Excel rekap iuran dengan kolom Nama, Iuran, Status, dan baris total memakai rumus"',
-				'"Buatkan rekap iuran"',
-				'"Ceritakan tentang iuran"',
+				'"Buatkan file Excel rekap iuran dengan total memakai rumus"',
+				'"Buatkan tabel rekap iuran di chat"',
+				'"Buatkan rekap iuran yang rapi, lengkap, dan mudah dibaca semua orang"',
 			],
 			jawaban: 0,
-			pembahasan: 'Sebutkan format file dan strukturnya, termasuk rumus, agar hasilnya siap diolah dan bisa diperiksa.',
+			pembahasan: 'Sebutkan format file dan strukturnya, misalnya kolom Nama, Iuran, Status, dan baris total memakai rumus, agar hasilnya siap diolah dan bisa diperiksa.',
 		},
 		{
 			tanya: 'Anda meminta "buatkan spreadsheet anggaran" lalu kecewa karena hasilnya bukan file Google Sheets. Apa penyebabnya?',
 			pilihan: [
-				'Claude tidak bisa membuat file Google',
-				'Permintaan tidak menyebut Google secara eksplisit, atau connector Google Sheets belum aktif',
-				'Spreadsheet hanya bisa dibuat di paket Enterprise',
+				'Claude memang tidak bisa membuat file Google',
+				'Google tidak disebut, atau connector-nya belum aktif',
+				'Google Sheets hanya untuk paket Enterprise',
 			],
 			jawaban: 1,
 			pembahasan: 'File Google dibuat bila Anda menyebut Google (misalnya "Google Sheets") dan connector-nya aktif.',
@@ -77,18 +77,18 @@ Kalau ragu, buka lagi pelajarannya:
 			tanya: 'Anda butuh perbandingan menyeluruh lima pemasok dari banyak sumber untuk rapat pengurus. Fitur mana yang paling cocok bila paket Anda mendukung?',
 			pilihan: [
 				'Research',
-				'Incognito',
+				'Web search biasa',
 				'Memory',
 			],
 			jawaban: 0,
-			pembahasan: 'Research menjalankan banyak pencarian yang saling melengkapi dan menyusun laporan panjang beserta sumbernya.',
+			pembahasan: 'Research menjalankan banyak pencarian yang saling melengkapi dan menyusun laporan panjang beserta sumbernya. Web search biasa lebih cocok untuk fakta cepat.',
 		},
 		{
 			tanya: 'Jawaban hasil web search mencantumkan harga sebuah barang beserta link sumber. Langkah yang tepat sebelum membeli?',
 			pilihan: [
-				'Percaya sepenuhnya karena sudah ada link',
-				'Membuka sumbernya dan mengecek ulang harga ke penjual, karena harga cepat berubah',
-				'Meminta Claude menebak harga minggu depan',
+				'Percaya sepenuhnya karena sudah ada link sumber',
+				'Membuka sumbernya dan mengecek ulang ke penjual',
+				'Meminta Claude mencari ulang sampai harganya sama',
 			],
 			jawaban: 1,
 			pembahasan: 'Kutipan sumber adalah alat untuk memeriksa. Informasi yang cepat berubah, seperti harga, perlu dikonfirmasi ke sumber aslinya.',
@@ -96,39 +96,39 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Claude terus menyebut Anda bendahara, padahal sekarang Anda sekretaris. Apa langkah yang paling tepat?',
 			pilihan: [
-				'Menghapus semua percakapan lama',
-				'Memperbaiki atau menghapus topik itu di pengaturan memory, atau memberi tahu Claude di percakapan',
-				'Berhenti memakai Claude',
+				'Menghapus percakapan lama',
+				'Mengoreksi topik itu di pengaturan memory',
+				'Mematikan memory lalu menyalakannya lagi',
 			],
 			jawaban: 1,
-			pembahasan: 'Menghapus percakapan tidak menghapus memory. Koreksi topiknya di pengaturan memory atau minta Claude memperbaruinya.',
+			pembahasan: 'Menghapus percakapan tidak menghapus memory. Perbaiki atau hapus topiknya di pengaturan memory, atau minta Claude memperbaruinya di percakapan.',
 		},
 		{
 			tanya: 'Anda ingin satu percakapan tidak memakai dan tidak menambah memory, tetapi tetap tersimpan di riwayat. Pilihan yang tepat?',
 			pilihan: [
-				'Mematikan Memory lewat menu + sebelum mengirim pesan pertama',
+				'Mematikan Memory lewat menu + sebelum pesan pertama',
 				'Memakai incognito',
-				'Mematikan internet',
+				'Mematikan memory di tengah percakapan saat dibutuhkan',
 			],
 			jawaban: 0,
-			pembahasan: 'Memory yang dimatikan untuk satu percakapan tetap membuat percakapan masuk riwayat. Incognito tidak masuk riwayat.',
+			pembahasan: 'Memory yang dimatikan untuk satu percakapan tetap membuat percakapan masuk riwayat, dan pilihannya harus diatur sebelum pesan pertama. Incognito tidak masuk riwayat.',
 		},
 		{
 			tanya: 'Anda sudah empat kali menjelaskan format notulen yang sama ke Claude. Fitur mana yang paling cocok agar tidak perlu menjelaskan lagi di percakapan mana pun?',
 			pilihan: [
-				'Skill',
+				'Skill notulen',
 				'Incognito',
-				'Web search',
+				'Project khusus notulen',
 			],
 			jawaban: 0,
-			pembahasan: 'Skill mengemas format, nada, dan contoh hasil yang baik, lalu dipakai Claude otomatis saat tugasnya cocok.',
+			pembahasan: 'Skill mengemas format, nada, dan contoh hasil yang baik, lalu dipakai Claude otomatis saat tugasnya cocok, di percakapan mana pun. Project hanya berlaku di dalam Project itu.',
 		},
 		{
 			tanya: 'Skill buatan Anda tidak pernah dipakai Claude secara otomatis. Apa yang paling mungkin perlu diperbaiki?',
 			pilihan: [
-				'Deskripsi skill yang terlalu umum, atau skill belum aktif',
-				'Warna tema Claude',
-				'Jumlah karakter nama Anda',
+				'Deskripsinya terlalu umum, atau skill belum aktif',
+				'Nama file skill memakai huruf kapital',
+				'Skill hanya dipakai bila dipanggil di setiap pesan',
 			],
 			jawaban: 0,
 			pembahasan: 'Claude memutuskan memakai skill berdasarkan deskripsinya. Pastikan deskripsi spesifik dan skill dalam keadaan aktif.',
@@ -136,9 +136,9 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Instruksi tugas terjadwal berbunyi "Lanjutkan pekerjaan kemarin". Kenapa hasilnya kacau?',
 			pilihan: [
-				'Karena setiap kali jalan, tugas mulai dari nol dan hanya memakai instruksi yang tersimpan',
-				'Karena tugas terjadwal tidak bisa membaca teks',
-				'Karena jadwalnya terlalu sering',
+				'Tugas mulai dari nol dan hanya memakai instruksi tersimpan',
+				'Tugas tidak bisa membaca instruksi berbahasa Indonesia',
+				'Jadwalnya terlalu sering sehingga hasilnya bertumpuk',
 			],
 			jawaban: 0,
 			pembahasan: 'Instruksi tugas terjadwal harus lengkap dan bisa berdiri sendiri, tanpa bergantung pada percakapan sebelumnya.',
@@ -146,12 +146,12 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Di proyek akhir, laporan otomatis menunjukkan selisih minggu ini positif, padahal hitungan Anda negatif. Apa yang sebaiknya dilakukan?',
 			pilihan: [
-				'Memakai angka dari Claude karena lebih cepat',
-				'Mencari baris yang tidak cocok, memperbaiki skill atau instruksinya, lalu menguji ulang sebelum dijadwalkan',
-				'Menghapus tugas terjadwal dan berhenti',
+				'Memakai angka dari Claude karena dihitung otomatis',
+				'Mencari penyebab selisih, memperbaiki, lalu menguji ulang',
+				'Menghapus tugas terjadwal dan menghitung manual selamanya',
 			],
 			jawaban: 1,
-			pembahasan: 'Hasil otomatisasi selalu diperiksa terhadap kunci jawaban. Perbaiki penyebabnya dan uji ulang sebelum mengandalkan jadwal.',
+			pembahasan: 'Hasil otomatisasi selalu diperiksa terhadap kunci jawaban. Cari baris yang tidak cocok, perbaiki skill atau instruksinya, dan uji ulang sebelum mengandalkan jadwal.',
 		},
 	]}
 />
