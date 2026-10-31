@@ -1,0 +1,154 @@
+---
+title: "Proyek akhir Level 3: web profil Anda sendiri"
+description: Membangun dan menayangkan web profil untuk usaha atau organisasi fiktif pilihan Anda, dengan alur lengkap dari brief, CLAUDE.md, plan mode, pull request, sampai Netlify.
+jenis: pelajaran
+level: 3
+durasi: 120 menit
+prasyarat: Pelajaran 20 sampai 25.
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 26
+  label: 26. Proyek akhir Level 3
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Di proyek ini Anda membangun **web profil sendiri** dari nol sampai tayang, tanpa mengikuti contoh toko kue. Anda memilih subjeknya, menulis brief dan aturan proyek, lalu bekerja dengan Claude Code memakai alur yang sama seperti situs jagoklodi. Setelah selesai, Anda bisa:
+
+1. Menjalankan alur lengkap: brief, CLAUDE.md, plan mode, branch, pull request, Deploy Preview, dan merge.
+2. Memeriksa hasil kerja Claude dengan daftar periksa yang jelas sebelum menayangkannya.
+3. Mencatat apa yang berhasil dan apa yang perlu diperbaiki untuk proyek berikutnya.
+
+<Aside type="note" title="Bahan yang dibutuhkan">
+- Claude Code terpasang dengan paket Claude berbayar (Pelajaran 20).
+- Akun GitHub dengan git dan GitHub CLI siap (Pelajaran 21), serta akun Netlify (Pelajaran 25).
+- Subjek **fiktif**: usaha, organisasi, atau acara rekaan. Semua nama, alamat, dan nomor kontak fiktif. Jangan memasang data pribadi atau data kantor asli.
+</Aside>
+
+## Langkah proyek
+
+<Steps>
+
+1. **Pilih subjek dan tulis brief.** Contoh: bengkel sepeda, les mengaji anak, kelompok tani, atau lomba 17 Agustus tingkat RT, semuanya fiktif. Tulis brief dengan lima bagian dari Pelajaran 24 (tujuan, pembaca, isi, gaya, batasan teknis) di file `BRIEF.md`.
+
+2. **Siapkan repository baru.** Buat folder proyek, masuk, jalankan `claude`, lalu minta:
+
+    ```text
+    Jadikan folder ini repository git. Buat README.md singkat,
+    .gitignore, CLAUDE.md, dan netlify.toml yang menetapkan
+    folder publish ke "situs". Isi CLAUDE.md paling banyak 30 baris:
+    bahasa, data fiktif, struktur folder situs/, tanpa skrip atau
+    font dari luar, dan alur branch serta pull request.
+    Buat commit pertama, lalu buat repository privat di GitHub
+    dan push main.
+    ```
+
+    Baca CLAUDE.md yang dihasilkan dan ringkas bila perlu (Pelajaran 22).
+
+3. **Bangun versi pertama dengan plan mode.** Masuk plan mode, lalu minta Claude membuat branch `fitur/versi-1` dan menyusun rencana berdasarkan `BRIEF.md`. Revisi rencananya minimal sekali sebelum disetujui (Pelajaran 23).
+
+4. **Periksa di komputer.** Buka `situs/index.html` di browser, cek di jendela selebar HP, dan minta pemeriksaan akhir seperti di Pelajaran 24 langkah 8. Commit setiap perbaikan dengan pesan yang jelas.
+
+5. **Pull request dan merge versi pertama.** Push, buka pull request, review di tab **Files changed**, lalu merge.
+
+6. **Sambungkan ke Netlify** mengikuti Pelajaran 25 langkah 2 sampai 4. Tunggu production deploy pertama, lalu buka alamat `.netlify.app` Anda. Jangan pilih **Make public** dulu sebelum daftar periksa di bawah terpenuhi.
+
+7. **Satu putaran perbaikan.** Kumpulkan minimal dua perbaikan dalam satu branch `fitur/perbaikan-1`, misalnya dari masukan teman atau dari daftar periksa. Buka pull request, periksa lewat Deploy Preview di HP, lalu merge sekali.
+
+8. **Tulis catatan proyek** di README:
+
+    ```text
+    Tambahkan bagian "Catatan proyek" di README.md berisi:
+    alamat web, ringkasan isi situs, tiga prompt yang paling membantu,
+    satu hal yang ternyata keliru dan cara memperbaikinya,
+    serta jumlah production deploy selama proyek ini.
+    Buat lewat branch dan pull request.
+    ```
+
+    Tiga prompt dan satu kekeliruan itu Anda yang memilih; Claude cukup merapikan tulisannya.
+
+9. **Tayangkan untuk umum** dengan **Make public** setelah semua kriteria di bawah terpenuhi.
+
+</Steps>
+
+## Penilaian mandiri
+
+Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya terpenuhi.
+
+| Kriteria | Pertanyaan pemeriksa |
+| --- | --- |
+| Brief | Apakah `BRIEF.md` memuat tujuan, pembaca, isi, gaya, dan batasan teknis? |
+| CLAUDE.md | Apakah panjangnya paling banyak 30 baris dan setiap aturannya bisa dicek? |
+| Alur git | Apakah semua perubahan setelah commit pertama masuk lewat pull request, dengan pesan commit yang jelas? |
+| Tampilan | Apakah halaman nyaman dibaca di layar HP tanpa perlu digeser ke samping? |
+| Isi | Apakah semua nama, alamat, dan kontak fiktif, tanpa foto atau logo pihak lain? |
+| Keamanan | Apakah tidak ada password, token, atau data pribadi di repository, dan email commit memakai alamat noreply? |
+| Tayang | Apakah hanya folder `situs/` yang tayang, sehingga `/CLAUDE.md` tidak bisa dibuka lewat alamat web? |
+| Hemat kredit | Apakah putaran perbaikan dikumpulkan dalam satu pull request dan diperiksa lewat Deploy Preview? |
+| Catatan | Apakah README memuat catatan proyek dengan prompt dan pelajaran yang Anda pilih sendiri? |
+
+## Tantangan tambahan
+
+Bila ingin lebih jauh, coba salah satu, tetap lewat branch dan pull request:
+
+- Tambahkan halaman kedua, misalnya jadwal kegiatan, dan tautkan kedua halaman.
+- Sebelum membuka pull request, ketik `/code-review` di Claude Code untuk meminta pemeriksaan bug pada perubahan di branch Anda. Baca laporannya dan putuskan sendiri mana yang diperbaiki.
+- Pasang domain sendiri lewat **Domain management** di Netlify.
+
+## Kesalahan umum
+
+- **Menyambungkan Netlify sebelum ada isi di main.** Folder `situs/` belum ada, sehingga deploy pertama gagal. Merge versi pertama dulu.
+- **Melewatkan plan mode untuk versi pertama.** Rencana yang direvisi di awal jauh lebih murah daripada membongkar hasil yang salah arah.
+- **Make public sebelum daftar periksa terpenuhi.** Begitu publik, siapa pun bisa membuka web Anda.
+- **Catatan proyek ditulis seluruhnya oleh Claude.** Nilai catatan itu ada pada pilihan Anda sendiri: prompt mana yang benar-benar membantu dan kesalahan apa yang Anda alami.
+- **Merge setiap perbaikan kecil.** Kumpulkan dalam satu pull request agar kredit Netlify tidak cepat habis.
+
+## Rujukan
+
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices): menulis permintaan yang spesifik, merencanakan dulu, dan memberi Claude cara memeriksa hasil.
+- [Commands](https://code.claude.com/docs/en/commands): daftar perintah, termasuk `/code-review` sebelum membuka pull request.
+- [Deploy Previews](https://docs.netlify.com/deploy/deploy-types/deploy-previews/): meninjau perubahan sebelum merge.
+- [Project visibility](https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/): kapan dan bagaimana proyek dibuat publik.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Di proyek ini, kapan Netlify sebaiknya disambungkan ke repository?',
+			pilihan: [
+				'Setelah versi pertama situs di-merge ke main',
+				'Sebelum ada file apa pun, agar deploy berjalan sejak awal',
+				'Setelah semua perbaikan selesai dan web sudah sempurna',
+			],
+			jawaban: 0,
+			pembahasan: 'Sebelum versi pertama di-merge, folder situs/ belum ada di main sehingga deploy gagal. Menunggu sampai semuanya sempurna juga kurang tepat, karena Anda kehilangan Deploy Preview untuk putaran perbaikan.',
+		},
+		{
+			tanya: 'Anda punya tiga perbaikan kecil untuk web yang sudah tayang. Cara yang paling hemat kredit?',
+			pilihan: [
+				'Kumpulkan dalam satu pull request, lalu merge sekali',
+				'Merge setiap perbaikan langsung agar cepat tayang',
+				'Push langsung ke main tanpa pull request',
+			],
+			jawaban: 0,
+			pembahasan: 'Setiap merge ke main adalah satu production deploy yang memakai 15 kredit. Satu pull request berisi tiga perbaikan berarti satu production deploy, dan Deploy Preview-nya gratis.',
+		},
+		{
+			tanya: 'Apa gunanya bagian "Catatan proyek" di README?',
+			pilihan: [
+				'Merekam prompt dan pelajaran untuk proyek berikutnya',
+				'Syarat agar Netlify mau menayangkan web',
+				'Petunjuk bagi Claude yang menggantikan CLAUDE.md sepenuhnya',
+			],
+			jawaban: 0,
+			pembahasan: 'Catatan proyek merekam prompt yang benar-benar membantu dan kesalahan yang Anda alami, sehingga proyek berikutnya lebih cepat. Netlify tidak memerlukannya, dan aturan untuk Claude tetap di CLAUDE.md.',
+		},
+	]}
+/>
+
+<TandaSelesai />
