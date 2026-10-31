@@ -1,0 +1,200 @@
+---
+title: "Kenalan dengan Claude Code: Claude yang bekerja di folder Anda"
+description: Memahami bedanya Claude Code dengan chat, memasangnya di terminal, lalu menjalankan sesi pertama untuk membuat dan mengubah file di folder latihan.
+jenis: pelajaran
+level: 3
+durasi: 40 menit
+prasyarat: Level 1, terutama Pelajaran 4 (prompt yang jelas) dan Pelajaran 5 (memperbaiki jawaban). Paket Claude berbayar.
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 20
+  label: 20. Kenalan dengan Claude Code
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan bedanya Claude Code dengan percakapan biasa di claude.ai.
+2. Memasang Claude Code di terminal dan masuk dengan akun Claude Anda.
+3. Menjalankan sesi pertama: meminta Claude membuat file, mengubahnya, lalu keluar dengan rapi.
+
+## Apa itu Claude Code
+
+Di Level 1 dan 2, Claude **menjawab**: Anda bertanya, Claude menulis, lalu Anda yang menyalin hasilnya ke tempat lain. **Claude Code** bekerja dengan cara lain. Ia berjalan di sebuah folder di komputer Anda dan **bertindak langsung** di sana: membaca file, membuat dan mengubah file, menjalankan perintah, dan memakai git. Alat seperti ini disebut **agen** (agent): ia menyusun langkah sendiri untuk menyelesaikan tugas, lalu memeriksa hasilnya.
+
+Dokumentasi resminya menggambarkan cara kerjanya dalam tiga tahap yang saling menyambung: **mengumpulkan konteks** (membaca file yang relevan), **bertindak** (mengubah atau menjalankan sesuatu), lalu **memeriksa hasil**.
+
+Claude Code tersedia di beberapa tempat: terminal, aplikasi desktop (tab **Code**), web (claude.ai/code), serta ekstensi VS Code dan JetBrains. Level ini memakai **terminal**, yaitu jendela tempat Anda mengetik perintah teks. Di macOS namanya **Terminal**; di Windows, pakai **PowerShell**. Konsep yang Anda pelajari di sini, seperti CLAUDE.md, mode izin, dan alur git, juga berlaku di tampilan lain, walau letak tombol dan pintasannya berbeda.
+
+<Aside type="caution" title="Butuh paket berbayar">
+Claude Code membutuhkan paket **Pro, Max, Ultra, Team, atau Enterprise**, atau akun Claude Console. Pemakaiannya mengambil dari **kuota yang sama** dengan claude.ai (Pelajaran 2). Paket Free belum bisa memakai Claude Code.
+</Aside>
+
+**Syarat komputer:** macOS 13 atau lebih baru, Windows 10 versi 1809 atau lebih baru, atau Linux seperti Ubuntu 20.04+ dan Debian 10+. Minimal RAM 4 GB dan koneksi internet.
+
+## Langkah
+
+<Steps>
+
+1. **Buka terminal.** Di macOS, buka aplikasi **Terminal**. Di Windows, tekan **Win + X** lalu pilih **Windows PowerShell** (bukan Command Prompt).
+
+2. **Windows saja: pasang Git for Windows.** Unduh dari [git-scm.com/downloads/win](https://git-scm.com/downloads/win), jalankan, dan terima semua pilihan bawaan. Untuk Claude Code ini opsional, tetapi Anda akan membutuhkannya di Pelajaran 21.
+
+3. **Pasang Claude Code.** Salin satu baris sesuai sistem Anda, tempel di terminal, lalu tekan Enter. Tidak perlu hak administrator.
+
+    macOS, Linux, atau WSL:
+
+    ```bash
+    curl -fsSL https://claude.ai/install.sh | bash
+    ```
+
+    Windows PowerShell:
+
+    ```powershell
+    irm https://claude.ai/install.ps1 | iex
+    ```
+
+    Pemasang tidak menampilkan kemajuan selama mengunduh. Tunggu sampai muncul pesan bahwa pemasangan berhasil.
+
+4. **Periksa pemasangan.** Tutup terminal, buka lagi, lalu ketik:
+
+    ```bash
+    claude --version
+    ```
+
+    Hasilnya berupa nomor versi diikuti `(Claude Code)`.
+
+5. **Buat folder latihan** dan masuk ke dalamnya. Perintah `mkdir` membuat folder, `cd` berpindah ke folder itu.
+
+    ```bash
+    mkdir latihan-claude-code
+    cd latihan-claude-code
+    ```
+
+6. **Mulai sesi** dengan mengetik `claude`. Pada pemakaian pertama, Claude Code meminta Anda masuk lewat browser. Pilih akun Claude langganan Anda. Setelah itu muncul pertanyaan apakah Anda memercayai folder ini; karena folder ini buatan Anda sendiri, pilih percaya.
+
+7. **Pindah ke mode Manual selama belajar.** Lihat baris status di bawah kotak ketik. Tekan **Shift+Tab** sampai tertulis **manual mode on**. Dalam mode ini Claude meminta izin sebelum mengubah file atau menjalankan perintah, sehingga Anda bisa melihat setiap langkahnya. Mode lain dibahas di Pelajaran 23.
+
+8. **Beri tugas pertama.** Ketik, lalu tekan Enter:
+
+    ```text
+    Buatkan file catatan.md berisi 5 tips menyiapkan rapat bulanan
+    pengurus koperasi. Pakai bahasa Indonesia yang ringkas.
+    ```
+
+    Claude menunjukkan file yang akan dibuat beserta isinya. Baca dulu, lalu pilih **Yes** untuk menyetujui.
+
+9. **Minta perubahan**, sama seperti memperbaiki jawaban di Pelajaran 5:
+
+    ```text
+    Tambahkan satu tips tentang menyiapkan notulen,
+    dan urutkan tips dari yang paling awal dikerjakan.
+    ```
+
+10. **Keluar** dengan mengetik `/exit`. File `catatan.md` tetap ada di folder Anda dan bisa dibuka dengan aplikasi teks apa pun.
+
+</Steps>
+
+### Perintah yang paling sering dipakai
+
+| Perintah | Kegunaan |
+| --- | --- |
+| `claude` | Memulai sesi di folder tempat Anda berada |
+| `claude -c` | Melanjutkan sesi terakhir di folder ini |
+| `/help` | Melihat daftar perintah |
+| `/clear` | Memulai percakapan baru untuk tugas lain |
+| `/exit` | Keluar dari Claude Code |
+| **Esc** | Menghentikan Claude di tengah pekerjaan |
+| **Shift+Tab** | Berganti mode izin |
+
+Ketik `/` di dalam sesi untuk melihat semua perintah yang tersedia.
+
+## Contoh nyata
+
+Bu Lina, sekretaris koperasi (fiktif), menyimpan bahan rapat di satu folder. Ia membuka terminal di folder itu, menjalankan `claude`, lalu menulis:
+
+```text
+Di folder ini ada tiga file notulen rapat bulan lalu.
+Buatkan file agenda-rapat-november.md yang memuat
+hal-hal yang belum selesai dari ketiga notulen itu.
+Sebutkan dari notulen mana setiap butir berasal.
+```
+
+Claude membaca ketiga notulen, menyusun agenda, lalu meminta izin sebelum membuat file baru. Bu Lina mencocokkan setiap butir dengan notulen aslinya sebelum membagikannya, seperti kebiasaan memeriksa hasil di Pelajaran 1.
+
+## Latihan
+
+Di folder `latihan-claude-code`, minta Claude membuat file `jadwal-piket.md` berisi jadwal piket kebersihan sekretariat selama 4 minggu untuk 6 pengurus (pakai nama fiktif). Lalu minta satu perubahan, misalnya "tukar jadwal Andi dan Sari di minggu ketiga".
+
+**Kriteria berhasil:** `claude --version` menampilkan nomor versi; file `jadwal-piket.md` ada di folder dan isinya sesuai permintaan; perubahan kedua diterapkan tanpa mengubah bagian lain; dan Anda menyetujui setiap perubahan dalam mode Manual setelah membacanya.
+
+## Kesalahan umum
+
+- **Menjalankan `claude` di folder utama pengguna** (home directory). Biasakan selalu masuk ke folder proyek dulu dengan `cd`. Claude Code bekerja di folder tempat ia dijalankan, dan dokumentasi resmi menyarankan memulai dari folder proyek, bukan folder utama.
+- **Memakai perintah pemasangan yang salah di Windows.** Bila muncul pesan `irm is not recognized`, Anda sedang di Command Prompt, bukan PowerShell.
+- **`claude` tidak dikenali setelah dipasang.** Tutup terminal dan buka yang baru. Bila masih gagal, ikuti panduan pemecahan masalah di rujukan.
+- **Ada `ANTHROPIC_API_KEY` di komputer Anda.** Bila variabel lingkungan ini terpasang, Claude Code memakai API key itu dan tagihannya mengikuti tarif API, bukan kuota langganan. Hapus variabel itu bila Anda ingin memakai paket langganan.
+- **Menyetujui tanpa membaca.** Tujuan mode Manual adalah agar Anda melihat apa yang akan diubah. Baca dulu, baru pilih **Yes**.
+
+## Rujukan
+
+- [Quickstart](https://code.claude.com/docs/en/quickstart): pemasangan, sesi pertama, dan perintah dasar.
+- [Terminal guide for new users](https://code.claude.com/docs/en/terminal-guide): panduan untuk yang belum pernah memakai terminal, termasuk pemecahan masalah di Windows.
+- [Advanced setup](https://code.claude.com/docs/en/setup): syarat sistem dan cara pemasangan lain.
+- [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works): cara kerja agen dan alat yang dipakainya.
+- [Use Claude Code with your Pro, Max, or Ultra plan](https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan): paket yang didukung dan catatan soal API key.
+- [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action): kursus gratis dari Anthropic Academy (bahasa Inggris).
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa beda utama Claude Code dengan percakapan biasa di claude.ai?',
+			pilihan: [
+				'Claude Code bertindak langsung di folder Anda',
+				'Claude Code memakai model yang tidak tersedia di claude.ai',
+				'Claude Code hanya bisa menjawab pertanyaan tentang kode program',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude Code berjalan di sebuah folder dan bisa membaca file, membuat dan mengubah file, menjalankan perintah, serta memakai git. Ia juga bisa membantu pekerjaan non-kode, seperti menyusun catatan atau agenda.',
+		},
+		{
+			tanya: 'Pak Hadi memakai paket Free dan ingin mencoba Claude Code. Mana pernyataan yang benar?',
+			pilihan: [
+				'Bisa, asal Claude Code dipasang lewat terminal',
+				'Bisa, karena Claude Code punya kuota terpisah dari claude.ai',
+				'Belum bisa; Claude Code butuh paket berbayar atau akun Console',
+			],
+			jawaban: 2,
+			pembahasan: 'Claude Code membutuhkan paket Pro, Max, Ultra, Team, atau Enterprise, atau akun Claude Console. Pemakaiannya mengambil dari kuota yang sama dengan claude.ai.',
+		},
+		{
+			tanya: 'Kenapa pemula disarankan memakai mode Manual saat belajar?',
+			pilihan: [
+				'Agar Claude bekerja lebih cepat',
+				'Agar Anda melihat dan menyetujui setiap perubahan',
+				'Agar pemakaian kuota tidak dihitung selama sesi berjalan',
+			],
+			jawaban: 1,
+			pembahasan: 'Dalam mode Manual, Claude meminta izin sebelum mengubah file atau menjalankan perintah. Anda jadi melihat setiap langkah dan belajar dari situ. Mode ini tidak memengaruhi cara kuota dihitung.',
+		},
+		{
+			tanya: 'Setelah memasang Claude Code, Anda ingin bekerja di folder "laporan-koperasi". Urutan yang tepat adalah...',
+			pilihan: [
+				'Masuk ke folder dengan cd, lalu jalankan claude',
+				'Jalankan claude di mana saja, lalu sebut foldernya',
+				'Unggah foldernya ke claude.ai dulu',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude Code bekerja di folder tempat ia dijalankan. Masuk dulu ke folder proyek dengan cd, lalu jalankan claude. Hindari menjalankannya di folder utama pengguna.',
+		},
+	]}
+/>
+
+<TandaSelesai />
