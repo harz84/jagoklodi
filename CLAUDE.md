@@ -53,5 +53,7 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 
 ## Alur git
 
-- Jangan pernah push langsung ke `main`. Selalu buat branch (`pelajaran/NN-judul` atau `fitur/nama`) lalu buka pull request.
+- Jangan pernah push langsung ke `main` atau `rilis`. Selalu buat branch (`pelajaran/NN-judul` atau `fitur/nama`) lalu buka pull request ke `main`.
 - Deploy preview Netlify dipakai untuk review sebelum merge.
+- Production branch Netlify adalah `rilis`, bukan `main`. Merge ke `main` gratis (branch deploy di `main--jagoklodi.netlify.app`); setiap merge ke `rilis` adalah deploy produksi yang memakai 15 kredit dari kuota 300 kredit per bulan.
+- Rilis hanya lewat PR dari `main` ke `rilis`, sekitar seminggu sekali atau saat pemilik meminta "rilis". Pengecualian: perbaikan keamanan dan kesalahan materi yang merugikan pembaca dirilis segera. Detail di `docs/rilis.md`.
