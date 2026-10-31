@@ -28,6 +28,10 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - Setiap pelajaran mengikuti format baku, dengan contoh di `src/content/docs/level-0/01-kenalan-dengan-claude.mdx`:
   Tujuan → Penjelasan singkat → Langkah (komponen Steps) → Contoh nyata → Latihan dengan kriteria berhasil → Kesalahan umum → Rujukan → `## Kuis` + `<Kuis />` → `<TandaSelesai />`.
 - Kuis (`src/components/Kuis.astro`): pelajaran wajib 3–5 soal pilihan ganda; halaman kuis akhir level (`jenis: kuis`) minimal 10 soal. Setiap soal wajib punya pembahasan. Urutan pilihan diacak otomatis, jadi jangan pakai pilihan "Semua benar" atau "A dan B". Soal hanya boleh menguji isi pelajaran itu sendiri.
+- Jawaban benar tidak boleh bisa ditebak tanpa membaca pelajaran. Build gagal bila jawaban benar lebih dari 1,2 kali pengecoh terpanjang, atau bila satu posisi panjang (terpanjang, terpendek, di tengah) terlalu sering menjadi jawaban benar dalam satu kuis (`src/lib/kuis.ts`). Cara menulisnya:
+  - Jawaban benar ringkas; penjelasan dan rinciannya taruh di `pembahasan`.
+  - Pengecoh berupa salah paham yang masuk akal, serinci jawaban benar, dan bila perlu memakai istilah dari pelajaran. Hindari pengecoh konyol yang bisa dieliminasi tanpa membaca (misalnya "Supaya Claude merasa senang").
+  - Jangan hanya memberi kata mutlak ("selalu", "pasti", "tidak pernah") di pengecoh, atau hanya memberi kata bersyarat ("biasanya", "kecuali") di jawaban benar.
 - Tombol "Tandai selesai" terkunci sampai kuis lulus (skor minimal 70%). Skor terbaik disimpan di localStorage.
 - `scripts/cek-konten.mjs` berjalan sebelum build dan gagal bila ada pelajaran tanpa `<Kuis>` atau `<TandaSelesai />`.
 - Frontmatter wajib untuk pelajaran: `jenis: pelajaran`, `level`, `durasi`, `prasyarat`, `terakhirDiverifikasi` (YYYY-MM-DD), `sidebar.order`.
