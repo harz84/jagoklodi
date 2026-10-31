@@ -44,7 +44,7 @@ Risikonya kecil untuk situs ini, karena tidak ada konten dari pengguna dan tidak
 ## Pengaturan akun (dilakukan pemilik)
 
 - [ ] 2FA aktif di GitHub, Netlify, Sumopod, dan Supabase.
-- [ ] Branch `main` dilindungi: wajib pull request dan wajib lolos pemeriksaan **CI / Build dan uji**.
+- [ ] Branch `main` dan `rilis` dilindungi: wajib pull request dan wajib lolos pemeriksaan **CI / Build dan uji**. Alur rilis ada di `docs/rilis.md`.
 - [ ] Dependabot alerts dan security updates aktif (GitHub → Settings → Code security).
 - [ ] Netlify Forms: notifikasi email kiriman `laporan-kesalahan` diarahkan ke email pengelola (Project configuration → Notifications → Emails and webhooks → Form submission notifications).
 - [ ] Laporan yang sudah ditindaklanjuti dihapus dari Netlify, sesuai janji di halaman `/privasi/`.
