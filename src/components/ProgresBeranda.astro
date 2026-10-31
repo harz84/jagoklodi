@@ -1,0 +1,117 @@
+---
+/**
+ * Kartu "Progres Anda" di beranda: total, per level, dan tombol lanjutkan ke pelajaran berikutnya.
+ * Hanya tampil bila pengunjung sudah menyelesaikan minimal satu pelajaran; pengunjung baru cukup
+ * melihat tombol "Mulai dari Pelajaran 1" di hero.
+ */
+import { daftarPelajaran } from '../lib/daftar-pelajaran';
+
+const daftar = await daftarPelajaran();
+---
+
+<section class="progres-beranda not-content" data-progres-beranda data-daftar={JSON.stringify(daftar)} aria-labelledby="judul-progres-beranda" hidden>
+	<h2 id="judul-progres-beranda">Progres Anda</h2>
+	<p class="progres-beranda__total" data-isi="total"></p>
+	<div class="progres-bar" role="progressbar" aria-label="Progres belajar keseluruhan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+		<span class="progres-bar__isi"></span>
+	</div>
+	<ul class="progres-beranda__level" data-isi="level"></ul>
+	<a class="progres-beranda__lanjut" data-isi="lanjut" href="/"></a>
+</section>
+
+<script>
+	import { bacaSelesai, EVENT_PROGRES_BERUBAH, EVENT_PROGRES_DIMUAT } from '../lib/progres';
+	import { ringkas, type ItemPelajaran } from '../lib/ringkasan';
+
+	const wadah = document.querySelector<HTMLElement>('[data-progres-beranda]');
+	if (wadah) {
+		const daftar = JSON.parse(wadah.dataset.daftar ?? '[]') as ItemPelajaran[];
+		const total = wadah.querySelector<HTMLElement>('[data-isi="total"]')!;
+		const bar = wadah.querySelector<HTMLElement>('.progres-bar')!;
+		const isi = wadah.querySelector<HTMLElement>('.progres-bar__isi')!;
+		const daftarLevel = wadah.querySelector<HTMLElement>('[data-isi="level"]')!;
+		const lanjut = wadah.querySelector<HTMLAnchorElement>('[data-isi="lanjut"]')!;
+
+		const perbarui = () => {
+			const r = ringkas(daftar, bacaSelesai());
+			wadah.hidden = r.selesai === 0;
+			if (wadah.hidden) return;
+			total.textContent = `${r.selesai} dari ${r.total} pelajaran selesai (${r.persen}%)`;
+			bar.setAttribute('aria-valuenow', String(r.persen));
+			bar.setAttribute('aria-valuetext', `${r.selesai} dari ${r.total} pelajaran selesai`);
+			isi.style.width = `${r.persen}%`;
+			daftarLevel.replaceChildren(
+				...r.perLevel.map((lv) => {
+					// Setiap baris: "Level N" di kiri, "selesai/total" di kanan.
+					const li = document.createElement('li');
+					const nama = document.createElement('span');
+					nama.textContent = `Level ${lv.level}`;
+					const angka = document.createElement('span');
+					angka.textContent = `${lv.selesai}/${lv.total}${lv.selesai === lv.total ? ' ✓' : ''}`;
+					li.append(nama, angka);
+					return li;
+				}),
+			);
+			if (r.berikutnya) {
+				lanjut.href = r.berikutnya.path;
+				lanjut.textContent = `Lanjutkan: ${r.berikutnya.judul} →`;
+				lanjut.hidden = false;
+			} else {
+				lanjut.hidden = true;
+				total.textContent += ' Semua pelajaran yang tersedia sudah Anda selesaikan.';
+			}
+		};
+
+		perbarui();
+		window.addEventListener(EVENT_PROGRES_BERUBAH, perbarui);
+		window.addEventListener(EVENT_PROGRES_DIMUAT, perbarui);
+	}
+</script>
+
+<style>
+	.progres-beranda {
+		display: grid;
+		gap: 0.6rem;
+		max-width: 28rem;
+		margin-inline: auto;
+		padding: 1.25rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+	}
+	.progres-beranda[hidden],
+	.progres-beranda [hidden] {
+		display: none;
+	}
+	.progres-beranda h2 {
+		margin: 0;
+		font-size: var(--sl-text-h4);
+	}
+	.progres-beranda__total {
+		margin: 0;
+		color: var(--sl-color-gray-2);
+	}
+	.progres-beranda__level {
+		display: grid;
+		gap: 0.25rem;
+		margin: 0.25rem 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: var(--sl-text-sm);
+	}
+	/* Baris dibuat oleh JavaScript, jadi perlu :global agar gaya ber-scope Astro tetap berlaku. */
+	.progres-beranda__level :global(li) {
+		display: flex;
+		justify-content: space-between;
+		font-variant-numeric: tabular-nums;
+	}
+	.progres-beranda__lanjut {
+		justify-self: start;
+		margin-top: 0.5rem;
+		padding: 0.55rem 1rem;
+		border-radius: 0.5rem;
+		background: var(--sl-color-accent);
+		color: var(--sl-color-black);
+		font-weight: 600;
+		text-decoration: none;
+	}
+</style>

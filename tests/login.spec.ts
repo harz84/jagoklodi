@@ -116,6 +116,12 @@ test('login, sinkron antarperangkat, batal selesai, dan hapus progres', async ({
 	await pHp.goto(L1);
 	await expect(pHp.locator('.tanda-selesai__ajak')).toBeVisible();
 
+	// Indikator di header: belum masuk.
+	const indikatorHp = pHp.locator('[data-indikator-akun]');
+	await expect(indikatorHp).toBeVisible();
+	await expect(indikatorHp).toHaveText('Masuk');
+	await expect(indikatorHp).toHaveAttribute('data-status', 'keluar');
+
 	// Kode salah ditolak dengan pesan yang jelas.
 	await pHp.goto('/akun/');
 	await pHp.locator('#akun-email').fill('uji@contoh.com');
@@ -125,6 +131,12 @@ test('login, sinkron antarperangkat, batal selesai, dan hapus progres', async ({
 	await expect(pHp.locator('.akun__pesan')).toContainText('Kode salah');
 
 	await masuk(pHp);
+	// Indikator langsung berubah tanpa memuat ulang halaman, dan tetap begitu di halaman lain.
+	await expect(indikatorHp).toHaveText('Akun');
+	await expect(indikatorHp).toHaveAttribute('data-status', 'masuk');
+	await expect(indikatorHp).toHaveAttribute('title', /uji@contoh\.com/);
+	await pHp.goto(L1);
+	await expect(indikatorHp).toHaveText('Akun');
 	expect(server.baris?.selesai).toEqual([L1]);
 	expect(server.baris?.kuis[L1]).toEqual({ terbaik: 100, lulus: true });
 
@@ -175,6 +187,7 @@ test('login, sinkron antarperangkat, batal selesai, dan hapus progres', async ({
 	await pHp.goto('/akun/');
 	await pHp.getByRole('button', { name: 'Keluar' }).click();
 	await expect(pHp.locator('#akun-email')).toBeVisible();
+	await expect(indikatorHp).toHaveText('Masuk');
 
 	expect(await cekHp()).toEqual([]);
 	expect(await cekLaptop()).toEqual([]);

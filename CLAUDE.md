@@ -18,6 +18,9 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - `src/components/Kuis.astro`: kuis pilihan ganda dengan validasi saat build.
 - `src/components/Footer.astro`: tautan "Laporkan kesalahan", disclaimer, dan centang progres di sidebar.
 - `src/components/FormLapor.astro` + halaman `/lapor/` dan `/lapor/terima/`: formulir laporan kesalahan via Netlify Forms (tanpa email, dengan honeypot). Jangan ganti nama formulir atau nama field tanpa alasan: dashboard Netlify hanya menampilkan field dari versi terakhir.
+- `src/components/Header.astro` (salinan Header bawaan Starlight; bandingkan saat memperbarui Starlight) memuat `TombolMenu.astro` (sembunyikan/tampilkan menu kiri di layar lebar, diingat di localStorage) dan `IndikatorAkun.astro` (status login: Masuk/Akun).
+- `src/components/Sidebar.astro` + `ProgresSidebar.astro`: bilah progres keseluruhan di atas menu dan angka selesai/total per grup Level. `ProgresBeranda.astro`: kartu "Progres Anda" di beranda. Daftar pelajaran dibuat saat build oleh `src/lib/daftar-pelajaran.ts`; perhitungannya di `src/lib/ringkasan.ts` (fungsi murni, diuji di `tests/ringkasan.spec.ts`).
+- Grup sidebar memakai `collapsed: true`: hanya grup Level yang sedang dibaca yang terbuka otomatis. Grup Level baru juga wajib diberi `collapsed: true`.
 - `src/lib/progres.ts`: progres di localStorage (local-first). `src/lib/gabung.ts`: penggabungan progres browser dan server (fungsi murni, diuji di `tests/gabung.spec.ts`).
 - `src/lib/sinkron.ts` + `src/components/Akun.astro` + halaman `/akun/`: login email (Supabase) dan sinkron progres. Nonaktif bila `PUBLIC_SUPABASE_URL` dan `PUBLIC_SUPABASE_PUBLISHABLE_KEY` kosong. Panduan aktivasi: `docs/login.md`.
 - `supabase/migrations/`: skema database dan Row Level Security. Setiap perubahan skema = file migrasi baru, jangan ubah file lama.
