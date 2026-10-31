@@ -121,9 +121,9 @@ Buat satu tugas terjadwal yang **hanya membaca dan meringkas**, misalnya ringkas
 		{
 			tanya: 'Tugas terjadwal Anda berjalan setiap Senin pukul 08.00. Pada Senin pagi laptop Anda mati. Apa yang terjadi?',
 			pilihan: [
-				'Tugas tetap berjalan karena tugas terjadwal berjalan di cloud',
-				'Tugas gagal dan harus dibuat ulang',
-				'Tugas menunggu sampai laptop dinyalakan',
+				'Tetap berjalan, karena tugasnya berjalan di cloud',
+				'Gagal dan harus dibuat ulang',
+				'Menunggu sampai laptop Anda dinyalakan kembali',
 			],
 			jawaban: 0,
 			pembahasan: 'Tugas terjadwal berjalan di cloud, sehingga tidak membutuhkan komputer Anda menyala atau aplikasi Claude terbuka.',
@@ -131,19 +131,19 @@ Buat satu tugas terjadwal yang **hanya membaca dan meringkas**, misalnya ringkas
 		{
 			tanya: 'Instruksi tugas berbunyi "Ringkas seperti yang kita bahas tadi". Kenapa ini bermasalah?',
 			pilihan: [
-				'Karena terlalu pendek untuk disimpan',
-				'Karena setiap kali jalan, tugas mulai dari nol dan tidak ingat percakapan tempat tugas dibuat',
-				'Karena Claude tidak bisa meringkas',
+				'Karena instruksinya terlalu pendek untuk disimpan',
+				'Karena tugas tidak ingat percakapan tempat ia dibuat',
+				'Karena tugas terjadwal hanya bisa membaca email, bukan percakapan',
 			],
 			jawaban: 1,
-			pembahasan: 'Claude memakai instruksi yang tersimpan, bukan isi percakapan sebelumnya. Instruksi harus lengkap dan bisa berdiri sendiri.',
+			pembahasan: 'Setiap kali jalan, tugas mulai dari nol dan memakai instruksi yang tersimpan, bukan isi percakapan sebelumnya. Instruksi harus lengkap dan bisa berdiri sendiri.',
 		},
 		{
 			tanya: 'Untuk tugas yang memakai Gmail dan berjalan saat Anda tidak mengawasi, batas tindakan mana yang paling aman di awal?',
 			pilihan: [
-				'Mengirim balasan otomatis ke semua email',
+				'Mengirim balasan otomatis ke semua email yang masuk',
 				'Membuat draf atau ringkasan saja, tanpa mengirim',
-				'Menghapus email yang dianggap tidak penting',
+				'Mengirim balasan hanya ke email yang dianggap penting',
 			],
 			jawaban: 1,
 			pembahasan: 'Mulailah dengan draf atau ringkasan. Anda tetap memeriksa sebelum ada yang terkirim, terhapus, atau dibagikan.',
@@ -152,11 +152,11 @@ Buat satu tugas terjadwal yang **hanya membaca dan meringkas**, misalnya ringkas
 			tanya: 'Pengguna paket Free ingin laporan mingguan otomatis. Mana yang benar?',
 			pilihan: [
 				'Paket Free bisa membuat tugas terjadwal tanpa batas',
-				'Tugas terjadwal hanya untuk paket berbayar; di Free, simpan instruksinya sebagai template atau skill lalu jalankan manual',
-				'Paket Free bisa memakainya asal komputer selalu menyala',
+				'Tidak bisa; tugas terjadwal hanya untuk paket berbayar',
+				'Bisa, asal komputer dan aplikasi Claude selalu menyala',
 			],
 			jawaban: 1,
-			pembahasan: 'Tugas terjadwal tersedia di Pro, Max, Team, dan Enterprise. Di Free, instruksi yang sama tetap berguna sebagai template atau skill.',
+			pembahasan: 'Tugas terjadwal tersedia di Pro, Max, Team, dan Enterprise. Di Free, simpan instruksinya sebagai template atau skill lalu jalankan manual.',
 		},
 	]}
 />

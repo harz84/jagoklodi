@@ -132,8 +132,8 @@ Ambil satu laporan rutin Anda (dengan data fiktif atau yang sudah disamarkan) da
 		{
 			tanya: 'Anda membuka file Excel buatan Claude. Bagaimana cara tercepat memastikan kolom Total memakai rumus, bukan angka ketik?',
 			pilihan: [
-				'Mengubah satu angka sumber dan melihat apakah Total ikut berubah',
-				'Melihat apakah tabelnya berwarna',
+				'Mengubah satu angka sumber dan melihat Total ikut berubah',
+				'Melihat apakah kolom Total diberi warna atau format khusus',
 				'Menanyakan ke Claude apakah filenya sudah benar',
 			],
 			jawaban: 0,
@@ -142,29 +142,29 @@ Ambil satu laporan rutin Anda (dengan data fiktif atau yang sudah disamarkan) da
 		{
 			tanya: 'Tim Anda bekerja di Google Workspace dan ingin menyunting hasilnya bersama di Google Sheets. Prompt mana yang paling tepat?',
 			pilihan: [
-				'"Buatkan spreadsheet anggaran" saja',
-				'"Buatkan Google Sheets anggaran…" dengan connector Google Sheets aktif',
-				'"Buatkan PDF anggaran"',
+				'"Buatkan spreadsheet anggaran yang bisa disunting bersama"',
+				'"Buatkan Google Sheets anggaran…" dengan connector aktif',
+				'"Buatkan PDF anggaran untuk dibagikan ke tim"',
 			],
 			jawaban: 1,
-			pembahasan: 'File Google hanya dibuat bila Anda menyebut Google secara eksplisit dan connector-nya aktif. Tanpa itu, hasilnya bukan file Google.',
+			pembahasan: 'File Google hanya dibuat bila Anda menyebut Google secara eksplisit dan connector Google Sheets aktif. Tanpa itu, hasilnya bukan file Google.',
 		},
 		{
 			tanya: 'Claude menjawab tidak bisa membuat file Excel. Pengaturan apa yang pertama kali perlu dicek?',
 			pilihan: [
-				'Bahasa antarmuka',
-				'Code execution and file creation (Create and edit files) di Settings > Capabilities',
-				'Tema terang atau gelap',
+				'Bahasa antarmuka Claude',
+				'Code execution and file creation di Settings > Capabilities',
+				'Apakah Microsoft Excel sudah terpasang di komputer Anda',
 			],
 			jawaban: 1,
-			pembahasan: 'Pembuatan file berjalan di lingkungan komputasi Claude, yang hanya aktif bila pengaturan Code execution and file creation menyala.',
+			pembahasan: 'Pembuatan file berjalan di lingkungan komputasi Claude, yang hanya aktif bila pengaturan Code execution and file creation (Create and edit files) menyala. Excel di komputer Anda tidak diperlukan untuk membuatnya.',
 		},
 		{
 			tanya: 'Mana yang benar tentang pembuatan file di Claude?',
 			pilihan: [
-				'Membuat file memakai jatah pemakaian lebih banyak daripada percakapan biasa',
-				'Membuat file tidak dihitung dalam batas pemakaian',
-				'File hanya bisa dibuat di paket Enterprise',
+				'Membuat file memakai jatah lebih banyak dari chat biasa',
+				'Membuat file tidak dihitung dalam batas pemakaian Anda sama sekali',
+				'File hanya bisa dibuat di paket berbayar seperti Pro dan Max',
 			],
 			jawaban: 0,
 			pembahasan: 'Pembuatan file tersedia di semua paket, tetapi memakai jatah lebih banyak daripada percakapan biasa.',
