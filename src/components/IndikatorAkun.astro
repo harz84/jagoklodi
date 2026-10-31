@@ -1,0 +1,73 @@
+---
+/**
+ * Indikator login di header, tampil di HP dan desktop.
+ * - Belum login: "Masuk" (titik abu-abu).
+ * - Sudah login: "Akun" (titik hijau); email tampil di tooltip dan label untuk pembaca layar.
+ * Tersembunyi bila fitur login belum diaktifkan (PUBLIC_SUPABASE_* kosong).
+ * Status dibaca dari sesi yang tersimpan di browser, jadi Supabase tidak perlu dimuat di setiap halaman.
+ */
+---
+
+<a href="/akun/" class="indikator-akun" data-indikator-akun hidden>
+	<span class="indikator-akun__titik" aria-hidden="true"></span>
+	<span data-isi="label">Masuk</span>
+</a>
+
+<script>
+	import { loginAktif, adaSesiTersimpan, emailTersimpan, EVENT_STATUS_LOGIN, KUNCI_SESI_LOGIN } from '../lib/sinkron';
+
+	const tautan = document.querySelector<HTMLAnchorElement>('[data-indikator-akun]');
+	if (tautan && loginAktif) {
+		const label = tautan.querySelector<HTMLElement>('[data-isi="label"]')!;
+		const perbarui = () => {
+			const masuk = adaSesiTersimpan();
+			const email = masuk ? emailTersimpan() : null;
+			tautan.dataset.status = masuk ? 'masuk' : 'keluar';
+			label.textContent = masuk ? 'Akun' : 'Masuk';
+			const keterangan = masuk
+				? `Sudah masuk${email ? ` sebagai ${email}` : ''}. Progres tersinkron. Buka halaman Akun.`
+				: 'Belum masuk. Masuk dengan email agar progres tersimpan di semua perangkat.';
+			tautan.title = keterangan;
+			tautan.setAttribute('aria-label', keterangan);
+			tautan.hidden = false;
+		};
+		perbarui();
+		window.addEventListener(EVENT_STATUS_LOGIN, perbarui);
+		// Masuk atau keluar di tab lain.
+		window.addEventListener('storage', (e) => {
+			if (e.key === null || e.key === KUNCI_SESI_LOGIN) perbarui();
+		});
+	}
+</script>
+
+<style>
+	.indikator-akun {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.65rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 999px;
+		font-size: var(--sl-text-sm);
+		font-weight: 600;
+		color: var(--sl-color-white);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.indikator-akun:hover {
+		border-color: var(--sl-color-accent);
+	}
+	.indikator-akun[hidden] {
+		display: none;
+	}
+	.indikator-akun__titik {
+		width: 0.55rem;
+		height: 0.55rem;
+		border-radius: 50%;
+		background: var(--sl-color-gray-4);
+	}
+	.indikator-akun[data-status='masuk'] .indikator-akun__titik {
+		background: var(--sl-color-green, #22a55b);
+		box-shadow: 0 0 0 2px var(--sl-color-green-low, transparent);
+	}
+</style>

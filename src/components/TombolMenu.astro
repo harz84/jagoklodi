@@ -1,0 +1,68 @@
+---
+/**
+ * Tombol Sembunyikan/Tampilkan menu materi (sidebar kiri), hanya di layar lebar.
+ * Di HP, menu sudah tersembunyi di balik tombol ☰ bawaan Starlight.
+ * Pilihan diingat di localStorage. Atribut data-menu-tersembunyi di <html> dipasang sedini mungkin
+ * oleh skrip inline di Header.astro agar menu tidak sempat berkedip saat halaman dimuat.
+ * Gaya yang menyembunyikan menu ada di src/styles/custom.css.
+ */
+---
+
+<button type="button" class="tombol-menu" data-tombol-menu aria-controls="starlight__sidebar" aria-expanded="true">
+	<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+		<path d="M4 6h16M4 12h16M4 18h16"></path>
+	</svg>
+	<span data-isi="label">Sembunyikan menu</span>
+</button>
+
+<script>
+	const KUNCI = 'jagoklodi:menu-tersembunyi';
+	const tombol = document.querySelector<HTMLButtonElement>('[data-tombol-menu]');
+	if (tombol) {
+		const label = tombol.querySelector<HTMLElement>('[data-isi="label"]')!;
+		const html = document.documentElement;
+		const tampilkan = () => {
+			const tersembunyi = html.hasAttribute('data-menu-tersembunyi');
+			tombol.setAttribute('aria-expanded', String(!tersembunyi));
+			label.textContent = tersembunyi ? 'Tampilkan menu' : 'Sembunyikan menu';
+		};
+		tampilkan();
+		tombol.addEventListener('click', () => {
+			const tersembunyi = !html.hasAttribute('data-menu-tersembunyi');
+			html.toggleAttribute('data-menu-tersembunyi', tersembunyi);
+			try {
+				if (tersembunyi) localStorage.setItem(KUNCI, '1');
+				else localStorage.removeItem(KUNCI);
+			} catch {
+				/* penyimpanan diblokir: pilihan hanya berlaku sampai halaman berganti */
+			}
+			tampilkan();
+		});
+	}
+</script>
+
+<style>
+	.tombol-menu {
+		display: none;
+	}
+	@media (min-width: 50em) {
+		.tombol-menu {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4rem;
+			padding: 0.3rem 0.65rem;
+			border: 1px solid var(--sl-color-gray-5);
+			border-radius: 0.5rem;
+			background: transparent;
+			color: var(--sl-color-gray-2);
+			font: inherit;
+			font-size: var(--sl-text-sm);
+			cursor: pointer;
+			white-space: nowrap;
+		}
+		.tombol-menu:hover {
+			color: var(--sl-color-white);
+			border-color: var(--sl-color-accent);
+		}
+	}
+</style>
