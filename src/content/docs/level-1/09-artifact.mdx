@@ -109,25 +109,29 @@ Buat satu artifact yang benar-benar berguna untuk pekerjaan atau kegiatan Anda: 
 		{
 			tanya: 'Apa bedanya artifact dengan jawaban biasa?',
 			pilihan: [
-				'Artifact terbuka di panel terpisah, bisa disunting, disimpan di tab Artifacts, dan dibagikan',
-				'Artifact hanya berisi teks pendek',
-				'Artifact selalu langsung bisa dilihat publik',
+				'Terbuka di panel terpisah, bisa disunting dan dibagikan',
+				'Hanya berisi teks pendek yang bisa disalin',
+				'Langsung bisa dilihat publik dan dicari lewat Google begitu dibuat',
 			],
 			jawaban: 0,
-			pembahasan: 'Artifact adalah hasil karya yang berdiri sendiri: bisa disunting, dibuka lagi, diekspor, dan dibagikan.',
+			pembahasan: 'Artifact adalah hasil karya yang berdiri sendiri: terbuka di panel terpisah, bisa disunting, disimpan di tab Artifacts, diekspor, dan dibagikan.',
 		},
 		{
 			tanya: 'Siapa yang bisa melihat artifact yang baru Anda buat dan belum dibagikan?',
-			pilihan: ['Semua orang di internet', 'Hanya Anda', 'Semua pengguna Claude'],
+			pilihan: [
+				'Semua orang di internet',
+				'Hanya Anda',
+				'Semua pengguna Claude',
+			],
 			jawaban: 1,
 			pembahasan: 'Artifact bersifat pribadi sejak awal. Tidak ada yang bisa melihatnya sampai Anda membagikannya.',
 		},
 		{
 			tanya: 'Fitur artifact tidak muncul. Apa yang pertama kali perlu dicek?',
 			pilihan: [
-				'Apakah pengaturan code execution and file creation sudah aktif',
+				'Pengaturan code execution and file creation',
 				'Apakah Anda memakai paket Enterprise',
-				'Apakah koneksi internet memakai Wi-Fi',
+				'Apakah browser Anda versi terbaru dan mendukung JavaScript',
 			],
 			jawaban: 0,
 			pembahasan: 'Artifact membutuhkan pengaturan code execution and file creation yang aktif di Settings.',
@@ -135,12 +139,12 @@ Buat satu artifact yang benar-benar berguna untuk pekerjaan atau kegiatan Anda: 
 		{
 			tanya: 'Claude membuatkan alat hitung iuran. Apa yang sebaiknya Anda lakukan sebelum membagikannya ke pengurus lain?',
 			pilihan: [
-				'Langsung membagikan karena dibuat oleh AI',
-				'Menguji dengan beberapa angka yang hasilnya Anda ketahui',
-				'Mengubahnya menjadi gambar',
+				'Langsung membagikannya karena dibuat oleh AI',
+				'Mengujinya dengan angka yang hasilnya sudah Anda ketahui',
+				'Meminta Claude memastikan sendiri bahwa rumusnya benar',
 			],
 			jawaban: 1,
-			pembahasan: 'Alat buatan Claude bisa keliru. Uji dulu dengan angka yang hasilnya sudah Anda ketahui.',
+			pembahasan: 'Alat buatan Claude bisa keliru, dan Claude yang memeriksa dirinya sendiri bukan pengganti uji. Uji dulu dengan angka yang hasilnya sudah Anda ketahui.',
 		},
 	]}
 />
