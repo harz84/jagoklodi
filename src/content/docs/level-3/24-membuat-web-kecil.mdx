@@ -1,0 +1,199 @@
+---
+title: "Membuat web kecil: dari brief sampai halaman di browser"
+description: Menulis brief yang jelas, lalu meminta Claude Code membangun web profil satu halaman dengan HTML dan CSS, memeriksanya di layar HP, dan memperbaikinya selangkah demi selangkah.
+jenis: pelajaran
+level: 3
+durasi: 60 menit
+prasyarat: Pelajaran 4 (prompt yang jelas) dan Pelajaran 20 sampai 23.
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 24
+  label: 24. Membuat web kecil
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan apa itu web statis serta peran HTML dan CSS.
+2. Menulis brief web yang cukup jelas untuk dikerjakan Claude Code.
+3. Membangun, memeriksa, dan memperbaiki web satu halaman, dengan commit di setiap langkah.
+
+## Web statis: cara paling sederhana punya situs
+
+**Web statis** adalah kumpulan file yang langsung dibuka browser, tanpa server yang menghitung apa pun. Cocok untuk profil usaha, organisasi, atau acara. Ada tiga bahan dasarnya:
+
+- **HTML** menyusun isi dan struktur halaman: judul, paragraf, daftar, tautan.
+- **CSS** mengatur tampilan: warna, ukuran huruf, jarak, tata letak.
+- **JavaScript** menambah interaksi, misalnya tombol yang bereaksi saat diklik. Untuk web profil sederhana, Anda tidak membutuhkannya.
+
+Situs jagoklodi juga statis: kodenya diubah menjadi file HTML biasa sebelum ditayangkan.
+
+### Struktur folder
+
+```text
+web-toko-kue/
+├─ CLAUDE.md        aturan proyek (Pelajaran 22)
+├─ README.md        penjelasan singkat proyek
+└─ situs/
+   ├─ index.html    isi halaman
+   └─ style.css     tampilan halaman
+```
+
+File situs sengaja dipisah ke folder `situs/`. Di Pelajaran 25, hanya folder ini yang dipublikasikan, sehingga CLAUDE.md dan README tidak ikut tayang sebagai bagian situs.
+
+## Brief yang baik
+
+Brief adalah prompt dari Pelajaran 4 yang diterapkan ke web. Sebutkan:
+
+| Bagian | Contoh |
+| --- | --- |
+| **Tujuan** | Calon pembeli tahu menu, harga, dan cara memesan |
+| **Pembaca** | Warga sekitar yang membuka lewat HP |
+| **Isi** | Sambutan, menu dan harga, jam buka, cara memesan |
+| **Gaya** | Hangat dan sederhana, warna krem dan cokelat |
+| **Batasan teknis** | Satu halaman, HTML dan CSS saja, tanpa skrip atau font dari luar |
+
+<Aside type="caution" title="Gambar dan data">
+Jangan memakai foto, logo, atau gambar milik pihak lain tanpa izin. Untuk latihan, web tanpa foto sudah cukup. Semua nama, alamat, dan nomor kontak di latihan ini fiktif, dan jangan pernah memasang nomor HP pribadi Anda di web publik.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Siapkan proyek.** Buat folder `web-toko-kue`, masuk, lalu jalankan `claude`:
+
+    ```text
+    Jadikan folder ini repository git. Buat README.md singkat,
+    .gitignore, dan CLAUDE.md dengan isi berikut: [tempel contoh
+    CLAUDE.md dari Pelajaran 22]. Buat commit pertama, lalu buat
+    repository privat di GitHub bernama web-toko-kue dan push main.
+    ```
+
+    Ini satu-satunya commit langsung ke main, karena repository baru belum punya main. Setelah ini, semua perubahan lewat branch.
+
+2. **Buat branch kerja dan masuk plan mode** (Shift+Tab sampai **plan mode on**), lalu kirim brief:
+
+    ```text
+    Buat branch fitur/halaman-utama. Lalu buat web satu halaman
+    untuk Toko Kue Bu Sari (fiktif) di folder situs/.
+    Tujuan: calon pembeli tahu menu, harga, dan cara memesan.
+    Pembaca: warga sekitar yang membuka lewat HP.
+    Isi: sambutan singkat, menu 6 kue dengan harga, jam buka,
+    dan cara memesan lewat nomor WhatsApp fiktif 0812-0000-0000.
+    Gaya: hangat dan sederhana, warna krem dan cokelat.
+    Teknis: situs/index.html dan situs/style.css saja, tanpa
+    JavaScript, tanpa skrip atau font dari domain luar,
+    nyaman dibaca di layar selebar 360 piksel.
+    Susun rencananya dulu.
+    ```
+
+3. **Tinjau rencananya**, minta perbaikan bila perlu, lalu setujui.
+
+4. **Buka hasilnya di browser.** Minta Claude membukanya, atau ketik sendiri di terminal: `open situs/index.html` di macOS, `start situs\index.html` di Windows.
+
+5. **Periksa di layar sempit.** Perkecil jendela browser sampai seukuran HP, atau buka mode tampilan HP di alat pengembang browser (biasanya lewat tombol F12). Pastikan teks terbaca dan halaman tidak perlu digeser ke samping.
+
+6. **Commit versi pertama:**
+
+    ```text
+    Commit perubahan ini dengan pesan yang menjelaskan isinya.
+    ```
+
+7. **Perbaiki selangkah demi selangkah** dengan koreksi yang spesifik (Pelajaran 5), lalu commit setiap perbaikan:
+
+    ```text
+    Di layar sempit, daftar menu terlalu rapat. Beri jarak antarbaris
+    dan buat harga rata kanan. Bagian lain jangan diubah.
+    ```
+
+8. **Minta pemeriksaan akhir:**
+
+    ```text
+    Periksa folder situs/: apakah ada tautan rusak, gambar tanpa
+    teks alternatif, teks yang kontrasnya rendah, atau skrip dan font
+    dari domain luar? Laporkan dulu, jangan langsung diubah.
+    ```
+
+9. **Push dan buka pull request** ke main, lalu review di tab **Files changed**. Bila sudah sesuai dengan yang Anda lihat di browser, merge. Di Pelajaran 25, versi di main inilah yang pertama kali ditayangkan.
+
+</Steps>
+
+## Contoh nyata
+
+Setelah versi pertama jadi, pemilik toko kue (fiktif) melihatnya di HP dan memberi tiga koreksi, satu per satu: harga terlalu kecil, tombol pesan kurang menonjol, jam buka sebaiknya di bagian atas. Setiap koreksi menjadi satu commit, misalnya `Perbesar ukuran harga di daftar menu`. Bila koreksi ketiga ternyata kurang cocok, cukup kembalikan commit itu tanpa mengganggu dua perbaikan sebelumnya.
+
+## Latihan
+
+Bangun web Toko Kue Bu Sari (fiktif) mengikuti langkah di atas, atau ganti dengan usaha fiktif lain yang Anda suka.
+
+**Kriteria berhasil:** halaman terbuka di browser tanpa pesan galat; nyaman dibaca di jendela selebar HP tanpa perlu digeser ke samping; tidak ada skrip atau font dari domain luar; semua isi fiktif dan tanpa foto atau logo pihak lain; serta ada pull request berisi minimal tiga commit dengan pesan yang jelas.
+
+## Kesalahan umum
+
+- **Brief yang kabur**, misalnya "buatkan web yang bagus". Claude terpaksa menebak tujuan, pembaca, dan isinya.
+- **Meminta semuanya sekaligus.** Bangun versi sederhana dulu, lalu tambah dan perbaiki sedikit demi sedikit dengan commit di setiap langkah.
+- **Hanya mengecek di laptop.** Sebagian besar pembaca membuka lewat HP.
+- **Meniru situs atau merek lain.** Buat tampilan sendiri, dan jangan memakai foto atau logo tanpa izin.
+- **Langsung menerima hasil pemeriksaan otomatis.** Minta Claude melaporkan dulu, lalu putuskan sendiri mana yang diperbaiki.
+
+## Rujukan
+
+- [Your first website (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Your_first_website): merencanakan, membuat isi dengan HTML, dan mengatur tampilan dengan CSS (bahasa Inggris).
+- [Basic HTML syntax (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax): elemen, atribut, dan teks alternatif gambar.
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices): menulis permintaan yang spesifik dan memberi Claude cara memeriksa hasilnya.
+- [Common workflows](https://code.claude.com/docs/en/common-workflows): contoh permintaan untuk membangun dan memperbaiki.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa peran CSS dalam web statis?',
+			pilihan: [
+				'Mengatur tampilan, seperti warna dan jarak',
+				'Menyusun isi dan struktur halaman',
+				'Menjalankan interaksi, seperti tombol yang bereaksi saat diklik',
+			],
+			jawaban: 0,
+			pembahasan: 'CSS mengatur tampilan. Isi dan struktur adalah tugas HTML, sedangkan interaksi adalah tugas JavaScript.',
+		},
+		{
+			tanya: 'Kenapa file situs ditaruh di folder situs/, terpisah dari CLAUDE.md dan README.md?',
+			pilihan: [
+				'Agar hanya folder situs/ yang nanti dipublikasikan',
+				'Karena browser tidak bisa membuka file di akar folder',
+				'Agar Claude Code tidak membaca CLAUDE.md',
+			],
+			jawaban: 0,
+			pembahasan: 'Di Pelajaran 25 hanya folder situs/ yang dipublikasikan, sehingga file kerja seperti CLAUDE.md dan README tidak ikut tayang. Claude Code tetap membaca CLAUDE.md di akar proyek.',
+		},
+		{
+			tanya: 'Brief mana yang paling membantu Claude membuat web yang sesuai?',
+			pilihan: [
+				'"Buatkan web toko kue yang bagus dan modern."',
+				'"Web satu halaman untuk pembeli lewat HP: menu, harga, jam buka."',
+				'"Buatkan web seperti situs toko kue terkenal di Jakarta."',
+			],
+			jawaban: 1,
+			pembahasan: 'Brief yang baik menyebut tujuan, pembaca, isi, dan batasan. "Bagus dan modern" terlalu kabur, dan meniru situs lain berisiko melanggar hak pihak lain.',
+		},
+		{
+			tanya: 'Halaman sudah tampak bagus di laptop. Apa yang perlu dicek sebelum dianggap selesai?',
+			pilihan: [
+				'Tampilannya di layar sempit seperti HP',
+				'Ukuran file index.html harus di atas 100 KB',
+				'Jumlah warna di halaman tidak lebih dari tiga',
+			],
+			jawaban: 0,
+			pembahasan: 'Sebagian besar pembaca membuka lewat HP. Pastikan teks terbaca dan halaman tidak perlu digeser ke samping di layar sempit.',
+		},
+	]}
+/>
+
+<TandaSelesai />

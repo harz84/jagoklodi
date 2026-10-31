@@ -31,7 +31,7 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - Tombol "Tandai selesai" terkunci sampai kuis lulus (skor minimal 70%). Skor terbaik disimpan di localStorage.
 - `scripts/cek-konten.mjs` berjalan sebelum build dan gagal bila ada pelajaran tanpa `<Kuis>` atau `<TandaSelesai />`.
 - Frontmatter wajib untuk pelajaran: `jenis: pelajaran`, `level`, `durasi`, `prasyarat`, `terakhirDiverifikasi` (YYYY-MM-DD), `sidebar.order`.
-- Jangan mengarang fitur, harga, kuota, atau nama model. Harga dan kuota cukup ditautkan ke halaman resmi. Setiap klaim produk harus punya tautan ke sumber resmi (support.claude.com, docs.claude.com, anthropic.skilljar.com).
+- Jangan mengarang fitur, harga, kuota, atau nama model. Harga dan kuota cukup ditautkan ke halaman resmi. Setiap klaim produk harus punya tautan ke sumber resmi (support.claude.com, docs.claude.com, code.claude.com untuk Claude Code, anthropic.skilljar.com). Klaim tentang layanan lain ditautkan ke dokumentasi resmi layanan itu (misalnya docs.github.com, docs.netlify.com).
 - Saat memperbarui isi pelajaran setelah dicek ulang, perbarui juga `terakhirDiverifikasi`.
 - Semua contoh memakai data fiktif. Jangan pernah memakai data pelanggan, data kantor, atau data pribadi asli.
 - Kurangi screenshot; utamakan nama menu dan teks prompt.

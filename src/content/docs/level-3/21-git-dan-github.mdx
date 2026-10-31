@@ -1,0 +1,185 @@
+---
+title: "Git dan GitHub: menyimpan riwayat dan mengusulkan perubahan"
+description: Memahami repository, commit, branch, dan pull request, lalu meminta Claude Code menyimpan pekerjaan ke GitHub dan mengusulkan perubahan lewat pull request.
+jenis: pelajaran
+level: 3
+durasi: 50 menit
+prasyarat: Pelajaran 20 (Claude Code terpasang dan folder latihan sudah ada).
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 21
+  label: 21. Git dan GitHub
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan repository, commit, branch, dan pull request dengan bahasa sendiri.
+2. Menyiapkan git, akun GitHub, dan GitHub CLI di komputer Anda.
+3. Meminta Claude Code membuat commit, mengunggahnya ke GitHub, dan membuka pull request yang Anda review sendiri.
+
+## Git dan GitHub dalam satu menit
+
+**Git** adalah program yang mencatat riwayat perubahan sebuah folder. Bayangkan tombol "simpan" yang mengingat setiap versi, lengkap dengan catatan alasan perubahannya. **GitHub** adalah layanan untuk menyimpan folder itu secara online, sehingga aman bila laptop rusak dan bisa dikerjakan bersama orang lain.
+
+| Istilah | Artinya |
+| --- | --- |
+| **Repository** (repo) | Folder proyek yang riwayatnya dicatat git |
+| **Commit** | Titik simpan: kumpulan perubahan beserta pesan yang menjelaskannya |
+| **Branch** | Jalur kerja terpisah untuk mencoba perubahan tanpa mengganggu versi utama |
+| **main** | Branch utama, versi yang dianggap resmi |
+| **Push** | Mengunggah commit dari komputer ke GitHub |
+| **Pull request** (PR) | Usulan untuk menggabungkan perubahan dari satu branch ke branch lain, lengkap dengan tampilan perbedaannya |
+| **Merge** | Menggabungkan perubahan setelah disetujui |
+
+Alurnya selalu sama: buat **branch**, simpan perubahan sebagai **commit**, **push** ke GitHub, buka **pull request**, periksa, lalu **merge** ke main. Situs jagoklodi yang sedang Anda baca juga dibangun dengan alur ini.
+
+### Checkpoint Claude Code dan git, apa bedanya?
+
+Claude Code otomatis menyimpan **checkpoint** sebelum mengubah file, sehingga Anda bisa memutar balik perubahan di dalam sesi (Pelajaran 23). Checkpoint itu hanya catatan lokal milik sesi Claude, dan tidak mencatat perubahan yang dibuat lewat perintah terminal. **Git** menyimpan riwayat permanen yang bisa dibagikan, dibandingkan, dan dipulihkan kapan saja. Karena itu keduanya dipakai bersama.
+
+<Aside type="caution" title="Jangan pernah commit rahasia">
+Password, API key, atau token jangan pernah masuk ke repository. File yang sudah pernah di-commit tetap tersimpan di riwayat walaupun kemudian dihapus. Pakai file `.gitignore` agar file rahasia seperti `.env` tidak ikut tercatat.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Buat akun GitHub** di [github.com](https://github.com) bila belum punya. Paket gratis sudah cukup.
+
+2. **Pastikan git terpasang.** Di terminal, ketik `git --version`. Di macOS dan Linux, git biasanya sudah ada. Di Windows, git terpasang bersama Git for Windows (Pelajaran 20, langkah 2).
+
+3. **Atur identitas commit.** Setiap commit mencatat nama dan email pembuatnya, dan di repository publik keduanya bisa dilihat siapa saja. Agar email pribadi tidak tersebar, buka **Settings > Emails** di GitHub, centang **Keep my email addresses private**, lalu salin alamat **noreply** yang ditampilkan di sana. Kemudian jalankan:
+
+    ```bash
+    git config --global user.name "Nama Anda"
+    git config --global user.email "ALAMAT_NOREPLY_ANDA"
+    ```
+
+4. **Pasang GitHub CLI** (perintah `gh`) mengikuti petunjuk di [cli.github.com](https://cli.github.com). Alat ini membuat Claude Code bisa membuat repository dan pull request untuk Anda. Lalu masuk:
+
+    ```bash
+    gh auth login
+    ```
+
+    Pilih **GitHub.com**, pilih **HTTPS**, jawab **Y** saat ditanya apakah ingin memakai akun GitHub untuk git, lalu ikuti proses masuk lewat browser.
+
+5. **Jadikan folder latihan sebuah repository.** Masuk ke `latihan-claude-code`, jalankan `claude`, lalu tulis:
+
+    ```text
+    Jadikan folder ini repository git. Buat file .gitignore
+    yang mengabaikan file rahasia seperti .env. Lalu buat
+    commit pertama dengan pesan yang menjelaskan isinya.
+    ```
+
+6. **Unggah ke GitHub sebagai repository privat:**
+
+    ```text
+    Buat repository privat baru di GitHub bernama
+    latihan-claude-code memakai gh, lalu push branch main ke sana.
+    ```
+
+    Buka github.com dan pastikan repository itu ada, berlabel **Private**, dan berisi file Anda.
+
+7. **Usulkan perubahan lewat branch dan pull request:**
+
+    ```text
+    Buat branch baru bernama perbaikan/jadwal-piket.
+    Di jadwal-piket.md, tambahkan kolom "Paraf" di tabelnya.
+    Commit, push, lalu buka pull request ke main dengan judul
+    dan deskripsi yang menjelaskan perubahan ini.
+    ```
+
+8. **Review di GitHub.** Buka tautan pull request yang diberikan Claude. Di tab **Files changed**, baris hijau adalah tambahan dan baris merah adalah yang dihapus. Bila sudah sesuai, klik **Merge pull request**, **Confirm merge**, lalu **Delete branch**.
+
+9. **Perbarui salinan di komputer Anda:**
+
+    ```text
+    Pindah ke branch main dan ambil perubahan terbaru dari GitHub.
+    Lalu tampilkan 5 commit terakhir dan jelaskan isinya
+    dengan bahasa sederhana.
+    ```
+
+</Steps>
+
+## Contoh nyata
+
+Pengurus masjid (fiktif) menyimpan daftar inventaris di repository `inventaris-masjid`. Setiap kali ada barang baru, bendahara meminta Claude Code membuat branch, memperbarui daftar, lalu membuka pull request. Ketua memeriksa perubahannya di tab **Files changed**, misalnya baris merah `Kipas angin: 4` dan baris hijau `Kipas angin: 6`, lalu menekan merge bila sesuai. Setahun kemudian, riwayat commit menunjukkan kapan setiap barang dicatat dan siapa yang mengusulkannya.
+
+## Latihan
+
+Ulangi langkah 7 dan 8 untuk satu perubahan lain di repository latihan Anda, misalnya menambah satu tips di `catatan.md`.
+
+**Kriteria berhasil:** repository `latihan-claude-code` ada di GitHub dengan label **Private**; ada minimal dua pull request yang sudah di-merge; setiap commit punya pesan yang menjelaskan isi perubahannya; email di riwayat commit adalah alamat noreply; dan file `.gitignore` sudah ada.
+
+## Kesalahan umum
+
+- **Mengubah langsung di main.** Tanpa branch dan pull request, tidak ada kesempatan memeriksa perubahan sebelum menjadi versi resmi.
+- **Pesan commit yang kabur**, misalnya "update" atau "perbaikan". Setahun lagi Anda tidak akan tahu isinya. Minta Claude menulis pesan yang menjelaskan apa dan kenapa.
+- **Repository publik tanpa sengaja.** Untuk latihan dan data organisasi, pilih privat. Repository publik bisa dibaca siapa saja, termasuk seluruh riwayatnya.
+- **Commit file rahasia.** Lihat peringatan di atas. Bila terlanjur, segera ganti password atau token itu, karena menghapus file tidak menghapusnya dari riwayat.
+- **Menyetujui perintah git yang tidak dipahami**, terutama yang menghapus atau menimpa riwayat. Minta Claude menjelaskan dampaknya dulu.
+
+## Rujukan
+
+- [Hello World](https://docs.github.com/en/get-started/using-github/hello-world): tutorial GitHub tentang repository, branch, commit, dan pull request.
+- [About pull requests](https://docs.github.com/en/pull-requests/get-started/about-pull-requests): fungsi dan bagian-bagian pull request.
+- [GitHub CLI quickstart](https://docs.github.com/en/github-cli/github-cli/quickstart): memasang dan masuk dengan `gh`.
+- [Setting your commit email address](https://docs.github.com/en/account-and-profile/how-tos/email-preferences/setting-your-commit-email-address): memakai alamat noreply agar email pribadi tidak terlihat.
+- [Quickstart Claude Code, langkah 5](https://code.claude.com/docs/en/quickstart): contoh perintah git dalam bahasa sehari-hari.
+- [Common workflows: create pull requests](https://code.claude.com/docs/en/common-workflows): membuat pull request dengan Claude Code.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa yang dimaksud commit?',
+			pilihan: [
+				'Titik simpan berisi perubahan dan pesannya',
+				'Salinan proyek untuk mencoba perubahan',
+				'Usulan penggabungan perubahan yang perlu direview',
+			],
+			jawaban: 0,
+			pembahasan: 'Commit adalah titik simpan: kumpulan perubahan beserta pesan yang menjelaskannya. Salinan untuk mencoba perubahan adalah branch, sedangkan usulan penggabungan adalah pull request.',
+		},
+		{
+			tanya: 'Kenapa perubahan sebaiknya dibuat di branch lalu lewat pull request, bukan langsung di main?',
+			pilihan: [
+				'Agar perubahan bisa direview dulu sebelum masuk ke main',
+				'Agar commit tidak memakai kuota Claude',
+				'Karena branch main tidak bisa diubah setelah dibuat',
+			],
+			jawaban: 0,
+			pembahasan: 'Pull request menampilkan perbedaan sebelum dan sesudah, sehingga perubahan bisa diperiksa sebelum menjadi versi resmi. Main sebenarnya bisa diubah langsung, justru itu yang dihindari.',
+		},
+		{
+			tanya: 'Anda ingin email pribadi tidak terlihat di riwayat commit repository publik. Apa yang sebaiknya dilakukan?',
+			pilihan: [
+				'Memakai alamat noreply dari GitHub',
+				'Mengosongkan user.email di pengaturan git',
+				'Menjadikan repository publik hanya setelah selesai',
+			],
+			jawaban: 0,
+			pembahasan: 'Setiap commit mencatat email pembuatnya. GitHub menyediakan alamat noreply (Settings > Emails > Keep my email addresses private) untuk dipakai di git config. Membuka repository belakangan tidak menolong, karena riwayat lamanya ikut terlihat.',
+		},
+		{
+			tanya: 'Claude Code sudah punya checkpoint untuk memutar balik perubahan. Kenapa tetap perlu git?',
+			pilihan: [
+				'Git menyimpan riwayat permanen yang bisa dibagikan',
+				'Checkpoint hanya bekerja bila internet tersambung',
+				'Checkpoint selalu terhapus setiap kali Claude dijalankan ulang',
+			],
+			jawaban: 0,
+			pembahasan: 'Checkpoint adalah catatan lokal milik sesi Claude dan tidak mencatat perubahan lewat perintah terminal. Git menyimpan riwayat permanen yang bisa dibagikan, dibandingkan, dan dipulihkan.',
+		},
+	]}
+/>
+
+<TandaSelesai />

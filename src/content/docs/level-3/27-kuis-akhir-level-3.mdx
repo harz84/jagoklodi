@@ -1,0 +1,155 @@
+---
+title: Kuis akhir Level 3
+description: Uji pemahaman Anda tentang Claude Code, git dan GitHub, CLAUDE.md, mode izin, membuat web kecil, dan deploy ke Netlify sebelum lanjut ke Level 4.
+jenis: kuis
+level: 3
+durasi: 15 menit
+prasyarat: Pelajaran 20 sampai 26.
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 99
+  label: Kuis akhir Level 3
+  badge:
+    text: Kuis
+    variant: tip
+---
+
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+Kuis ini menggabungkan materi Level 3. Sebagian besar soal berupa kasus sehari-hari; pilih jawaban yang paling tepat menurut materi pelajaran.
+
+Kalau ragu, buka lagi pelajarannya:
+
+- [20. Kenalan dengan Claude Code](/level-3/20-kenalan-claude-code/)
+- [21. Git dan GitHub](/level-3/21-git-dan-github/)
+- [22. CLAUDE.md](/level-3/22-claude-md/)
+- [23. Izin dan bekerja aman](/level-3/23-izin-dan-aman/)
+- [24. Membuat web kecil](/level-3/24-membuat-web-kecil/)
+- [25. Deploy ke Netlify](/level-3/25-deploy-netlify/)
+- [26. Proyek akhir Level 3](/level-3/26-proyek-akhir-level-3/)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Bu Wati menjalankan claude di folder utama komputernya, bukan di folder proyek. Kenapa ini sebaiknya dihindari?',
+			pilihan: [
+				'Claude Code bekerja di folder tempat ia dijalankan',
+				'Claude Code tidak bisa berjalan di luar folder Dokumen',
+				'Kuota langganan langsung habis bila dijalankan di sana',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude Code bekerja di folder tempat ia dijalankan, jadi masuk dulu ke folder proyek dengan cd. Dokumentasi resmi juga menyarankan memulai dari folder proyek, bukan folder utama pengguna.',
+		},
+		{
+			tanya: 'Tagihan API muncul padahal Anda berlangganan Max. Penyebab yang paling mungkin?',
+			pilihan: [
+				'Ada ANTHROPIC_API_KEY terpasang di komputer Anda',
+				'Claude Code selalu ditagih terpisah dari langganan',
+				'Mode Auto memakai tarif API, bukan kuota langganan',
+			],
+			jawaban: 0,
+			pembahasan: 'Bila variabel ANTHROPIC_API_KEY terpasang, Claude Code memakai API key itu dan tagihannya mengikuti tarif API. Tanpa itu, pemakaian Claude Code mengambil dari kuota langganan yang sama dengan claude.ai.',
+		},
+		{
+			tanya: 'Anda ingin mencoba tata letak baru tanpa mengganggu versi yang sedang tayang. Apa yang dilakukan?',
+			pilihan: [
+				'Membuat branch baru, lalu pull request',
+				'Mengubah langsung di main, lalu revert bila gagal',
+				'Menyalin folder proyek dan mengerjakannya di salinan',
+			],
+			jawaban: 0,
+			pembahasan: 'Branch adalah jalur kerja terpisah. Perubahan baru masuk ke main lewat pull request setelah Anda periksa. Menyalin folder kehilangan riwayat git dan menyulitkan penggabungan.',
+		},
+		{
+			tanya: 'Rekan Anda tidak sengaja meng-commit file .env berisi password, lalu menghapusnya di commit berikutnya. Apa yang paling tepat?',
+			pilihan: [
+				'Segera ganti password itu, karena masih ada di riwayat',
+				'Tidak perlu apa-apa, karena filenya sudah dihapus',
+				'Jadikan repository privat, maka riwayatnya ikut terhapus',
+			],
+			jawaban: 0,
+			pembahasan: 'File yang pernah di-commit tetap tersimpan di riwayat walaupun kemudian dihapus. Anggap password itu sudah bocor dan ganti segera. Mengubah visibilitas repository tidak menghapus riwayat.',
+		},
+		{
+			tanya: 'CLAUDE.md Anda sepanjang 600 baris, dan aturan "jangan pakai singkatan" sering terlewat. Perbaikan yang paling tepat?',
+			pilihan: [
+				'Ringkas CLAUDE.md agar aturan penting tidak tenggelam',
+				'Tulis ulang aturannya dengan huruf kapital dan tanda seru',
+				'Pindahkan semua aturan ke prompt di setiap sesi',
+			],
+			jawaban: 0,
+			pembahasan: 'Targetkan CLAUDE.md di bawah 200 baris. File yang panjang membuat aturan penting tenggelam, dan huruf kapital tidak menolong. Memindahkan aturan ke prompt justru menghilangkan manfaat CLAUDE.md.',
+		},
+		{
+			tanya: 'Di mana menaruh aturan "semua isi web berbahasa Indonesia" agar berlaku untuk siapa pun yang mengerjakan proyek?',
+			pilihan: ['Di CLAUDE.md di akar proyek', 'Di CLAUDE.local.md proyek', 'Di ~/.claude/CLAUDE.md'],
+			jawaban: 0,
+			pembahasan: 'CLAUDE.md di akar proyek ikut ke repository, sehingga berlaku untuk semua orang. CLAUDE.local.md dan ~/.claude/CLAUDE.md hanya berlaku untuk Anda sendiri.',
+		},
+		{
+			tanya: 'Anda membuka sesi baru dan ingin melihat setiap perubahan sebelum terjadi. Apa langkah pertama?',
+			pilihan: [
+				'Cek status bar, lalu pindah ke Manual dengan Shift+Tab',
+				'Ketik /clear agar Claude meminta izin untuk semua tindakan',
+				'Tidak perlu apa-apa; sesi baru selalu dimulai di Manual',
+			],
+			jawaban: 0,
+			pembahasan: 'Versi terbaru biasanya memulai sesi terminal dalam mode Auto. Periksa status bar, lalu tekan Shift+Tab sampai tertulis manual mode on. /clear hanya memulai percakapan baru.',
+		},
+		{
+			tanya: 'Dalam mode Accept edits, apa yang masih meminta izin?',
+			pilihan: [
+				'Perintah terminal selain perintah file sederhana',
+				'Setiap perubahan file di folder proyek',
+				'Tidak ada; semua tindakan langsung dijalankan',
+			],
+			jawaban: 0,
+			pembahasan: 'Accept edits langsung menjalankan perubahan file dan perintah file sederhana seperti mkdir, mv, dan cp di folder proyek. Perintah terminal lainnya tetap meminta izin.',
+		},
+		{
+			tanya: 'Saat membaca isi sebuah repository dari internet, Claude mengusulkan perintah untuk mengirim file ke alamat yang tidak Anda kenal. Apa yang sebaiknya dilakukan?',
+			pilihan: [
+				'Tolak, karena bisa jadi prompt injection',
+				'Setujui, karena Claude hanya mengikuti isi repository',
+				'Setujui, asal mode Auto sedang aktif',
+			],
+			jawaban: 0,
+			pembahasan: 'Konten dari luar bisa berisi instruksi jahat yang membelokkan Claude (prompt injection). Baca setiap perintah yang diusulkan, dan tolak yang tidak sesuai dengan permintaan Anda.',
+		},
+		{
+			tanya: 'Kenapa brief web perlu menyebut batasan teknis seperti "tanpa skrip dari domain luar"?',
+			pilihan: [
+				'Agar Claude tidak menambah hal yang tidak Anda kehendaki',
+				'Karena tanpa itu browser menolak membuka halaman',
+				'Agar web otomatis tampil bagus di layar HP',
+			],
+			jawaban: 0,
+			pembahasan: 'Batasan teknis memberi tahu Claude apa yang tidak boleh ditambahkan. Tanpa batasan, Claude bisa memilih cara yang tidak Anda inginkan. Tampilan di HP perlu diminta dan diperiksa tersendiri.',
+		},
+		{
+			tanya: 'Pull request sudah dibuka. Di mana Anda melihat hasil perubahannya sebelum merge?',
+			pilihan: [
+				'Di tautan Deploy Preview dari Netlify',
+				'Di alamat utama web',
+				'Tidak bisa; hasilnya baru terlihat setelah merge',
+			],
+			jawaban: 0,
+			pembahasan: 'Netlify membangun Deploy Preview untuk setiap pull request di alamat terpisah. Alamat utama baru berubah setelah merge.',
+		},
+		{
+			tanya: 'Dalam sebulan Anda merge 25 kali ke main untuk web di paket Free Netlify. Apa risikonya?',
+			pilihan: [
+				'Kredit habis dan proyek dijeda sampai bulan berikutnya',
+				'Netlify otomatis menagih kartu kredit Anda',
+				'Deploy Preview berhenti dibuat untuk pull request',
+			],
+			jawaban: 0,
+			pembahasan: '25 production deploy × 15 kredit = 375 kredit, melebihi 300 kredit bulanan paket Free. Paket Free tidak pernah ditagih; proyek dijeda sampai siklus berikutnya. Kumpulkan perubahan dalam lebih sedikit pull request.',
+		},
+	]}
+/>
+
+<TandaSelesai />
