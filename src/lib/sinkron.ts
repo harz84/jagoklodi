@@ -44,6 +44,26 @@ export function klien(): Promise<SupabaseClient> | null {
 	return klienPromise;
 }
 
+/** Dikirim setiap kali status login di halaman ini berubah (masuk atau keluar). */
+export const EVENT_STATUS_LOGIN = 'jagoklodi:status-login';
+
+export function kabarkanStatusLogin() {
+	window.dispatchEvent(new CustomEvent(EVENT_STATUS_LOGIN));
+}
+
+/** Email dari sesi yang tersimpan di browser, tanpa memuat Supabase. Hanya untuk tampilan. */
+export function emailTersimpan(): string | null {
+	try {
+		const sesi = JSON.parse(localStorage.getItem(KUNCI_SESI) ?? 'null') as { user?: { email?: unknown } } | null;
+		return typeof sesi?.user?.email === 'string' ? sesi.user.email : null;
+	} catch {
+		return null;
+	}
+}
+
+/** Kunci localStorage sesi login, untuk mendeteksi masuk atau keluar dari tab lain (event "storage"). */
+export const KUNCI_SESI_LOGIN = KUNCI_SESI;
+
 /** Cek murah tanpa memuat Supabase: apakah browser ini menyimpan sesi login. */
 export function adaSesiTersimpan(): boolean {
 	try {
@@ -147,7 +167,9 @@ export async function masukDenganKode(email: string, kode: string): Promise<stri
 	if (!k) return 'Fitur login belum diaktifkan.';
 	const sb = await k;
 	const { error } = await sb.auth.verifyOtp({ email, token: kode, type: 'email' });
-	return error ? pesanGalat(error.message, error.status) : null;
+	if (error) return pesanGalat(error.message, error.status);
+	kabarkanStatusLogin();
+	return null;
 }
 
 export async function emailPengguna(): Promise<string | null> {
@@ -171,6 +193,7 @@ export async function keluar(): Promise<void> {
 	} catch {
 		/* abaikan */
 	}
+	kabarkanStatusLogin();
 }
 
 /** Hapus progres di server dan di browser ini. */
