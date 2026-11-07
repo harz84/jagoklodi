@@ -1,11 +1,11 @@
-# Pemeriksaan otomatis untuk setiap pull request dan setiap perubahan di main.
+# Pemeriksaan otomatis untuk setiap pull request dan setiap perubahan di main dan rilis.
 # Build (pemeriksaan konten, skema, kuis, tautan) lalu uji di browser desktop dan HP.
 name: CI
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, rilis]
 
 permissions:
   contents: read

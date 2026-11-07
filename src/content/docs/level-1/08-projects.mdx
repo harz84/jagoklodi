@@ -115,9 +115,9 @@ Buat satu Project untuk pekerjaan berulang Anda sendiri, lengkap dengan minimal 
 		{
 			tanya: 'Apa perbedaan project knowledge dan project instructions?',
 			pilihan: [
-				'Knowledge berisi dokumen rujukan; instructions berisi aturan tetap cara Claude menjawab',
-				'Keduanya sama saja',
-				'Knowledge hanya untuk gambar; instructions hanya untuk PDF',
+				'Knowledge: dokumen rujukan; instructions: aturan cara menjawab',
+				'Knowledge: aturan cara menjawab; instructions: dokumen rujukan',
+				'Keduanya sama; hanya letak menunya yang berbeda',
 			],
 			jawaban: 0,
 			pembahasan: 'Project knowledge adalah bahan rujukan, sedangkan project instructions mengatur gaya dan aturan jawaban di semua percakapan dalam Project.',
@@ -125,29 +125,29 @@ Buat satu Project untuk pekerjaan berulang Anda sendiri, lengkap dengan minimal 
 		{
 			tanya: 'Anda menulis "Laporan untuk direktur, bahasa formal" di deskripsi Project. Apakah Claude memakainya?',
 			pilihan: [
-				'Ya, deskripsi selalu dibaca',
-				'Tidak; nama dan deskripsi Project tidak dibaca Claude, jadi aturan itu harus ditaruh di instructions',
-				'Hanya bila memakai paket Max',
+				'Ya, deskripsi Project selalu dibaca di awal percakapan',
+				'Tidak; aturan itu harus ditaruh di instructions',
+				'Ya, tetapi hanya di percakapan pertama Project',
 			],
 			jawaban: 1,
-			pembahasan: 'Nama dan deskripsi hanya untuk Anda. Konteks dan aturan harus ditaruh di project knowledge atau project instructions.',
+			pembahasan: 'Nama dan deskripsi Project tidak dibaca Claude; keduanya hanya untuk Anda. Konteks dan aturan harus ditaruh di project knowledge atau project instructions.',
 		},
 		{
 			tanya: 'Kapan Project paling bermanfaat?',
 			pilihan: [
 				'Untuk pertanyaan sekali jalan seperti "apa ibu kota Jepang"',
-				'Untuk pekerjaan berulang dengan konteks dan dokumen yang sama',
-				'Untuk menyimpan password',
+				'Untuk pekerjaan berulang dengan konteks yang sama',
+				'Untuk percakapan pribadi yang tidak ingin masuk riwayat',
 			],
 			jawaban: 1,
-			pembahasan: 'Project menghemat waktu untuk pekerjaan berulang karena konteks dan aturan tidak perlu dijelaskan ulang.',
+			pembahasan: 'Project menghemat waktu untuk pekerjaan berulang karena konteks, dokumen, dan aturan tidak perlu dijelaskan ulang.',
 		},
 		{
 			tanya: 'Di percakapan A dalam sebuah Project, Anda menyebut target penjualan baru. Apakah percakapan B dalam Project yang sama otomatis tahu?',
 			pilihan: [
 				'Ya, semua percakapan dalam Project saling berbagi isi',
-				'Tidak, kecuali informasi itu Anda tambahkan ke project knowledge',
-				'Ya, tetapi hanya di paket Free',
+				'Tidak, kecuali Anda menambahkannya ke project knowledge',
+				'Ya, asalkan percakapan B dibuat setelah percakapan A',
 			],
 			jawaban: 1,
 			pembahasan: 'Yang dibagikan antarpercakapan hanya project knowledge dan instructions. Informasi penting perlu ditambahkan ke knowledge.',

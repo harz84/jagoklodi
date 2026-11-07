@@ -32,19 +32,19 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Claude memberi kutipan pasal undang-undang lengkap dengan nomor pasalnya untuk laporan Anda. Apa langkah yang paling tepat?',
 			pilihan: [
-				'Langsung memakainya karena ada nomor pasalnya',
-				'Mencocokkan kutipan itu dengan teks undang-undang resmi sebelum dipakai',
-				'Meminta Claude mengulang jawabannya sampai yakin',
+				'Langsung memakainya, karena nomor pasal menunjukkan sumbernya jelas',
+				'Mencocokkannya dengan teks undang-undang resmi',
+				'Meminta Claude mengulang jawabannya sampai hasilnya konsisten',
 			],
 			jawaban: 1,
-			pembahasan: 'Claude bisa menyampaikan kutipan, angka, atau nomor pasal yang keliru dengan nada yakin. Untuk hal penting, periksa sumber resminya.',
+			pembahasan: 'Claude bisa menyampaikan kutipan, angka, atau nomor pasal yang keliru dengan nada yakin. Untuk hal penting, periksa sumber resminya sebelum dipakai.',
 		},
 		{
 			tanya: 'Kenapa sebaiknya Anda menyebut jabatan dan konteks kerja saat meminta bantuan Claude?',
 			pilihan: [
-				'Karena Claude tidak otomatis tahu siapa Anda dan apa kebutuhan Anda',
-				'Karena tanpa itu Claude menolak menjawab',
-				'Karena konteks membuat kuota bertambah',
+				'Karena Claude tidak tahu siapa Anda kecuali Anda ceritakan',
+				'Karena tanpa jabatan, Claude menolak pertanyaan seputar pekerjaan',
+				'Karena konteks yang panjang menambah kuota pemakaian Anda',
 			],
 			jawaban: 0,
 			pembahasan: 'Claude hanya tahu apa yang Anda ceritakan. Konteks yang jelas membuat jawaban lebih sesuai dengan situasi Anda.',
@@ -53,8 +53,8 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 			tanya: 'Mana tugas yang paling tepat diserahkan ke Claude?',
 			pilihan: [
 				'Menyusun kerangka presentasi yang lalu Anda sesuaikan',
-				'Memutuskan sendiri apakah karyawan layak diberhentikan',
-				'Mengirim laporan keuangan final tanpa diperiksa',
+				'Memutuskan apakah karyawan layak diberhentikan',
+				'Mengirim laporan keuangan final ke direksi tanpa diperiksa ulang',
 			],
 			jawaban: 0,
 			pembahasan: 'Claude kuat untuk draf, kerangka, dan ide yang kemudian Anda periksa. Keputusan penting dan dokumen final tetap tanggung jawab Anda.',
@@ -62,8 +62,8 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Setiap kali memulai percakapan baru, apa yang Claude ingat dari percakapan sebelumnya (tanpa Projects atau memory)?',
 			pilihan: [
-				'Semua percakapan sebelumnya',
-				'Hanya percakapan kemarin',
+				'Semua percakapan yang masih ada di riwayat',
+				'Hanya percakapan terakhir yang Anda buka',
 				'Tidak ada; percakapan baru dimulai dari awal',
 			],
 			jawaban: 2,
@@ -72,9 +72,9 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Bu Rina hanya memakai Claude seminggu dua kali untuk merapikan surat. Apa saran yang paling masuk akal?',
 			pilihan: [
-				'Langsung berlangganan Max agar tidak pernah terkena batas',
-				'Mulai dari paket Free, lalu naik paket bila berulang kali terkena batas',
-				'Membuat paket organisasi untuk dirinya sendiri',
+				'Langsung berlangganan Max agar tidak pernah terkena batas pemakaian',
+				'Mulai dari Free, naik paket bila sering terkena batas',
+				'Memakai paket organisasi agar data suratnya lebih terlindungi',
 			],
 			jawaban: 1,
 			pembahasan: 'Mulailah dari paket termurah yang mencukupi. Naikkan paket hanya bila Anda berulang kali terkena batas pemakaian.',
@@ -82,17 +82,17 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Kuota sesi Anda di paket berbayar habis siang ini. Apa yang terjadi?',
 			pilihan: [
-				'Akun dinonaktifkan selama sebulan',
-				'Kuota sesi pulih setelah jendela lima jam berakhir, atau Anda bisa naik paket',
-				'Kuota hanya pulih bila Anda menghapus percakapan lama',
+				'Akun dibatasi sampai awal bulan berikutnya',
+				'Kuota pulih setelah jendela lima jam berakhir',
+				'Kuota hanya pulih bila percakapan lama dihapus',
 			],
 			jawaban: 1,
-			pembahasan: 'Paket berbayar punya kuota sesi yang pulih setiap lima jam dan kuota mingguan yang pulih sekali seminggu.',
+			pembahasan: 'Paket berbayar punya kuota sesi yang pulih setiap lima jam dan kuota mingguan yang pulih sekali seminggu. Bila sering habis, Anda bisa naik paket.',
 		},
 		{
 			tanya: 'Satu percakapan sudah sangat panjang karena dipakai untuk banyak topik sejak minggu lalu. Apa yang sebaiknya dilakukan?',
 			pilihan: [
-				'Meneruskannya, karena makin panjang makin pintar',
+				'Meneruskannya, karena Claude makin paham bila percakapannya makin panjang',
 				'Memulai percakapan baru untuk topik baru',
 				'Menyalakan semua connector',
 			],
@@ -102,9 +102,9 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Anda menghapus sebuah percakapan hari ini. Kapan percakapan itu terhapus dari server (paket perorangan)?',
 			pilihan: [
-				'Tidak pernah terhapus',
-				'Langsung hilang dari riwayat, dan terhapus dari server dalam 30 hari',
-				'Setelah 5 tahun',
+				'Tidak pernah; hanya disembunyikan',
+				'Hilang dari riwayat, terhapus dari server dalam 30 hari',
+				'Setelah 5 tahun, sama seperti percakapan yang diberi feedback',
 			],
 			jawaban: 1,
 			pembahasan: 'Percakapan yang dihapus langsung hilang dari riwayat Anda dan terhapus dari server dalam 30 hari, kecuali ada pengecualian seperti pelanggaran kebijakan atau kewajiban hukum.',
@@ -112,9 +112,9 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Rekan kerja meminta Anda mengunggah file berisi nama, alamat, dan nomor HP 500 pelanggan ke akun Claude pribadi untuk dirapikan. Apa sikap yang tepat?',
 			pilihan: [
-				'Mengunggahnya memakai mode incognito',
-				'Menolak mengunggah data itu; tanyakan dulu kebijakan kantor, dan bila diizinkan pakai data yang sudah disamarkan',
-				'Mengunggahnya karena hanya untuk merapikan format',
+				'Mengunggahnya memakai mode incognito agar tidak masuk riwayat',
+				'Menolak, cek kebijakan kantor, dan pakai data samaran',
+				'Mengunggahnya, karena tugasnya hanya merapikan format tanpa mengubah isi',
 			],
 			jawaban: 1,
 			pembahasan: 'Data pelanggan termasuk merah. Incognito tidak membuatnya aman. Ikuti kebijakan kantor, dan bila memang perlu bantuan AI, gunakan data yang sudah disamarkan atau contoh fiktif.',
@@ -122,9 +122,9 @@ Kalau ada soal yang membuat Anda ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Di paket organisasi (Team atau Enterprise), apakah percakapan dipakai untuk melatih model?',
 			pilihan: [
-				'Ya, selalu',
-				'Tidak secara bawaan, kecuali misalnya percakapan yang Anda kirimi feedback (jempol)',
-				'Hanya percakapan di hari kerja',
+				'Ya, kecuali admin mematikannya untuk seluruh organisasi',
+				'Tidak secara bawaan, kecuali misalnya yang diberi feedback',
+				'Hanya percakapan yang memuat file unggahan',
 			],
 			jawaban: 1,
 			pembahasan: 'Paket organisasi tidak dipakai untuk pelatihan secara bawaan. Pengecualiannya antara lain feedback: percakapan yang diberi jempol bisa disimpan dan dipakai.',

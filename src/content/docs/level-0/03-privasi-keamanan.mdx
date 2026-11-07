@@ -126,9 +126,9 @@ Golongkan enam data berikut ke merah, kuning, atau hijau, beserta alasannya:
 		{
 			tanya: 'Anda baru mendapat jawaban bagus dari Claude dalam percakapan yang memuat data pelanggan. Bolehkah Anda memberi jempol (feedback)?',
 			pilihan: [
-				'Boleh, jempol hanya penilaian dan tidak menyimpan apa pun',
-				'Sebaiknya tidak, karena feedback membuat seluruh percakapan disimpan hingga 5 tahun dan bisa dipakai pelatihan',
-				'Boleh, asalkan memakai paket Pro',
+				'Boleh, jempol hanya penilaian dan tidak menyimpan isi percakapan',
+				'Sebaiknya tidak; feedback menyimpan percakapan itu hingga 5 tahun',
+				'Boleh, asalkan memakai paket berbayar seperti Pro atau Max',
 			],
 			jawaban: 1,
 			pembahasan: 'Feedback menyimpan seluruh percakapan terkait hingga 5 tahun dan bisa dipakai untuk pelatihan, di paket perorangan maupun organisasi. Lagi pula, data pelanggan sejak awal tidak boleh diunggah.',
@@ -137,17 +137,17 @@ Golongkan enam data berikut ke merah, kuning, atau hijau, beserta alasannya:
 			tanya: 'Mana pernyataan yang benar tentang percakapan incognito?',
 			pilihan: [
 				'Tidak tersimpan di mana pun, jadi aman untuk password',
-				'Tidak masuk riwayat dan tidak dipakai pelatihan, tetapi tetap disimpan sementara (secara bawaan 30 hari)',
-				'Hanya tersedia untuk paket Enterprise',
+				'Tidak masuk riwayat, tetapi tetap disimpan sementara',
+				'Hanya tersedia untuk akun di paket Team dan Enterprise',
 			],
 			jawaban: 1,
-			pembahasan: 'Incognito mengurangi jejak, tetapi percakapannya tetap disimpan sementara. Password dan data merah lainnya tetap tidak boleh diunggah.',
+			pembahasan: 'Incognito tidak masuk riwayat dan tidak dipakai pelatihan, tetapi tetap disimpan sementara (secara bawaan 30 hari). Password dan data merah lainnya tetap tidak boleh diunggah.',
 		},
 		{
 			tanya: 'Data mana yang termasuk golongan merah (jangan diunggah)?',
 			pilihan: [
-				'Kode OTP dari bank',
-				'Draf pengumuman yang Anda tulis sendiri',
+				'Kode OTP yang dikirim bank ke HP Anda',
+				'Draf pengumuman buatan sendiri',
 				'Jadwal libur nasional dari situs pemerintah',
 			],
 			jawaban: 0,
@@ -157,8 +157,8 @@ Golongkan enam data berikut ke merah, kuning, atau hijau, beserta alasannya:
 			tanya: 'Cara paling tepat meminta Claude meringkas keluhan pelanggan adalah...',
 			pilihan: [
 				'Menempelkan keluhan lengkap beserta NIK dan nomor HP agar ringkasannya akurat',
-				'Mengganti identitas dengan penanda seperti [PELANGGAN_1] dan menghapus NIK serta nomor HP',
-				'Memakai mode incognito supaya data pelanggan boleh disertakan',
+				'Mengganti identitas dengan penanda seperti [PELANGGAN_1]',
+				'Memakai mode incognito agar data boleh disertakan',
 			],
 			jawaban: 1,
 			pembahasan: 'Claude butuh isi masalahnya, bukan identitas pelanggan. Samarkan semua penanda identitas: nama, alamat, nomor HP, NIK, dan nomor pelanggan.',
@@ -166,12 +166,12 @@ Golongkan enam data berikut ke merah, kuning, atau hijau, beserta alasannya:
 		{
 			tanya: 'Anda mematikan pengaturan "Help improve our AI models" hari ini. Apa dampaknya?',
 			pilihan: [
-				'Semua data lama langsung terhapus dari model yang sudah dilatih',
-				'Percakapan Anda tidak dipakai untuk pelatihan berikutnya, tetapi data yang sudah masuk pelatihan sebelumnya tetap ada di sana',
-				'Akun Anda otomatis berubah menjadi paket organisasi',
+				'Data lama langsung dikeluarkan dari model yang sudah dilatih',
+				'Berlaku untuk pelatihan berikutnya, tidak berlaku mundur',
+				'Semua percakapan lama ikut terhapus dari riwayat dalam 30 hari',
 			],
 			jawaban: 1,
-			pembahasan: 'Pengaturan ini berlaku untuk pelatihan berikutnya saja, tidak berlaku mundur.',
+			pembahasan: 'Percakapan Anda tidak dipakai untuk pelatihan berikutnya, tetapi data yang sudah masuk pelatihan sebelumnya tetap ada di sana. Pengaturan ini juga tidak menghapus riwayat.',
 		},
 	]}
 />

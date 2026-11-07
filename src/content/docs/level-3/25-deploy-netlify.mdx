@@ -1,0 +1,163 @@
+---
+title: "Deploy ke Netlify: menayangkan web dan meninjau lewat Deploy Preview"
+description: Menghubungkan repository GitHub ke Netlify, menayangkan web, meninjau setiap perubahan lewat Deploy Preview sebelum merge, dan memakai kredit paket Free dengan hemat.
+jenis: pelajaran
+level: 3
+durasi: 40 menit
+prasyarat: Pelajaran 21 (git dan GitHub) dan Pelajaran 24 (web kecil sudah di-merge ke main).
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 25
+  label: 25. Deploy ke Netlify
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan beda production deploy dan Deploy Preview.
+2. Menghubungkan repository GitHub ke Netlify dan menayangkan web Anda.
+3. Meninjau perubahan lewat Deploy Preview sebelum merge, sambil menghemat kredit paket Free.
+
+## Dari repository ke web yang bisa dibuka siapa saja
+
+**Deploy** artinya menayangkan web agar bisa dibuka di internet. **Netlify** adalah layanan hosting yang bisa disambungkan ke repository GitHub. Setelah tersambung, Netlify bekerja otomatis:
+
+- **Production deploy:** setiap ada perubahan baru di branch produksi (biasanya main), Netlify memperbarui web utama Anda di alamat `nama-proyek.netlify.app` atau domain sendiri.
+- **Deploy Preview:** setiap ada pull request, Netlify membangun versi pratinjau di alamat terpisah, misalnya `deploy-preview-2--nama-proyek.netlify.app`. Anda bisa melihat hasilnya sebelum merge, tanpa mengganggu web utama.
+
+Alurnya menyambung dengan Pelajaran 21: **branch → pull request → Deploy Preview → review → merge → production deploy**.
+
+### Kredit paket Free
+
+Netlify memakai sistem kredit. Paket Free mendapat **300 kredit per bulan** dengan batas keras: tidak bisa membeli tambahan dan tidak pernah ditagih.
+
+| Pemakaian | Kredit |
+| --- | --- |
+| Production deploy yang berhasil | 15 per deploy |
+| Deploy Preview dan branch deploy | Gratis |
+| Deploy yang gagal | Gratis |
+| Bandwidth | 20 per GB |
+| Kunjungan (web request) | 2 per 10.000 permintaan |
+
+Bila kredit habis, proyek di paket Free dijeda sampai siklus berikutnya. Untuk web profil kecil, yang paling cepat menghabiskan kredit adalah **terlalu sering merge**, karena setiap merge ke main adalah satu production deploy.
+
+<Aside type="tip" title="Belajar dari situs ini">
+Situs jagoklodi menghemat kredit dengan memisahkan branch produksi (`rilis`) dari `main`, lalu merilis sekitar seminggu sekali. Alurnya dijelaskan di [docs/rilis.md](https://github.com/harz84/jagoklodi/blob/main/docs/rilis.md). Untuk web kecil Anda, cukup kumpulkan beberapa perubahan dalam satu pull request.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Daftar Netlify** di [netlify.com](https://www.netlify.com) dengan akun GitHub Anda. Paket Free sudah cukup.
+
+2. **Impor repository.** Di dashboard, pilih **Add new project**, lalu **Import an existing project**, pilih **GitHub**, dan ikuti izin akses. Bila ditanya, beri akses hanya ke repository `web-toko-kue`, bukan ke semua repository.
+
+3. **Isi pengaturan build.** Web Anda tidak perlu dibangun, jadi kosongkan **Build command**. Isi **Publish directory** dengan `situs`. Hanya file di folder ini yang ditayangkan. Lalu pilih **Deploy** atau **Publish**.
+
+4. **Tunggu production deploy pertama**, lalu buka alamat `.netlify.app` yang ditampilkan. Tim Netlify baru biasanya membuat proyek **privat secara bawaan**: hanya Anda yang bisa melihatnya selama masuk ke Netlify. Bila sudah siap dibuka untuk umum, pilih **Make public**. Di langkah yang sama Anda bisa mengganti nama proyek, yang juga mengubah alamat `.netlify.app`.
+
+5. **Simpan pengaturan di repository.** Pengaturan yang hanya ada di dashboard mudah terlupa. Di Claude Code:
+
+    ```text
+    Buat branch fitur/netlify-toml. Tambahkan file netlify.toml
+    di akar repository yang menetapkan folder publish ke "situs".
+    Lalu di situs/index.html, tambahkan jam buka hari Minggu
+    pukul 08.00–12.00. Commit, push, dan buka pull request ke main.
+    ```
+
+    Isi `netlify.toml` yang diharapkan:
+
+    ```toml
+    [build]
+      publish = "situs"
+    ```
+
+6. **Buka Deploy Preview.** Beberapa saat setelah pull request dibuka, Netlify menambahkan status dan tautan Deploy Preview di halaman pull request. Buka tautannya dan periksa perubahan, termasuk di HP. Deploy Preview ikut privat, jadi masuk ke Netlify dulu di perangkat yang Anda pakai.
+
+7. **Merge bila sudah sesuai.** Merge memicu production deploy. Buka alamat utama dan pastikan perubahan sudah tayang.
+
+8. **Opsional: domain sendiri.** Bila Anda punya domain, tambahkan lewat **Domain management > Production domains > Add a domain**, lalu ikuti petunjuk DNS-nya.
+
+</Steps>
+
+## Contoh nyata
+
+Pengurus taman baca (fiktif) punya web jadwal kegiatan di Netlify. Setiap Senin, sekretaris mengumpulkan semua perubahan minggu itu (jadwal baru, foto kegiatan buatan sendiri, dan koreksi alamat) dalam **satu** pull request. Ketua memeriksa Deploy Preview di HP, lalu merge sekali. Dalam sebulan hanya ada sekitar empat production deploy, jauh di bawah batas kredit paket Free.
+
+## Latihan
+
+Tayangkan web dari Pelajaran 24 di Netlify, lalu lakukan satu perubahan lewat pull request dan Deploy Preview seperti langkah 5 sampai 7.
+
+**Kriteria berhasil:** web tayang di alamat `.netlify.app` milik Anda; `netlify.toml` dengan `publish = "situs"` sudah ada di main; ada satu pull request yang Deploy Preview-nya Anda periksa sebelum merge; perubahan itu tampil di web utama setelah merge; dan file seperti `CLAUDE.md` tidak bisa dibuka lewat alamat web (coba buka `/CLAUDE.md` di alamat web Anda; hasilnya harus halaman tidak ditemukan).
+
+## Kesalahan umum
+
+- **Merge setiap perubahan kecil.** Setiap merge adalah production deploy yang memakai 15 kredit. Kumpulkan beberapa perubahan dalam satu pull request.
+- **Menayangkan seluruh repository.** Tanpa folder publish yang tepat, file kerja seperti CLAUDE.md ikut bisa dibuka orang lain.
+- **Bingung karena web tidak bisa dibuka orang lain.** Proyek baru bisa jadi masih privat. Pilih **Make public** setelah production deploy pertama berhasil.
+- **Mengira Deploy Preview sama dengan web utama.** Preview adalah pratinjau di alamat terpisah. Web utama baru berubah setelah merge.
+- **Menyimpan rahasia di `netlify.toml`.** File ini ikut ke repository. Dokumentasi Netlify menyarankan menyimpan nilai sensitif lewat dashboard, bukan di file.
+
+## Rujukan
+
+- [Deploy from your repository](https://docs.netlify.com/start/quickstarts/deploy-from-repository/): langkah mengimpor repository GitHub ke Netlify.
+- [Deploy Previews](https://docs.netlify.com/deploy/deploy-types/deploy-previews/): cara kerja dan alamat Deploy Preview.
+- [Build configuration overview](https://docs.netlify.com/build/configure-builds/overview/): publish directory dan pengaturan build lainnya.
+- [File-based configuration](https://docs.netlify.com/build/configure-builds/file-based-configuration/): menulis pengaturan di `netlify.toml`.
+- [Project visibility](https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/): proyek privat secara bawaan dan tombol Make public.
+- [Credit-based pricing plans](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/): kredit bulanan dan pemakaian per fitur.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Anda membuka pull request di repository yang tersambung ke Netlify. Apa yang terjadi?',
+			pilihan: [
+				'Web utama langsung berubah mengikuti pull request',
+				'Netlify membangun Deploy Preview di alamat terpisah',
+				'Netlify menunggu perintah deploy dari Anda',
+			],
+			jawaban: 1,
+			pembahasan: 'Netlify otomatis membangun Deploy Preview untuk setiap pull request, di alamat seperti deploy-preview-2--nama-proyek.netlify.app. Web utama baru berubah setelah merge.',
+		},
+		{
+			tanya: 'Di paket Free, mana yang memakai kredit Netlify?',
+			pilihan: [
+				'Setiap production deploy yang berhasil',
+				'Setiap Deploy Preview dari pull request',
+				'Setiap deploy yang gagal karena salah pengaturan',
+			],
+			jawaban: 0,
+			pembahasan: 'Production deploy yang berhasil memakai 15 kredit. Deploy Preview, branch deploy, dan deploy yang gagal tidak memakai kredit. Bandwidth dan kunjungan juga memakai kredit, walau sedikit untuk web kecil.',
+		},
+		{
+			tanya: 'Kenapa Publish directory diisi "situs", bukan akar repository?',
+			pilihan: [
+				'Agar file kerja seperti CLAUDE.md tidak ikut tayang',
+				'Karena Netlify menolak repository yang punya README',
+				'Agar Deploy Preview tidak memakai kredit',
+			],
+			jawaban: 0,
+			pembahasan: 'Hanya file di publish directory yang ditayangkan. Dengan "situs", file kerja seperti CLAUDE.md dan README tetap di repository tanpa bisa dibuka lewat alamat web. Deploy Preview memang gratis, apa pun folder publish-nya.',
+		},
+		{
+			tanya: 'Web Anda sudah tayang, tetapi teman Anda melihat halaman "tidak punya akses". Apa penyebab yang paling mungkin?',
+			pilihan: [
+				'Proyeknya masih privat; pilih Make public',
+				'Kredit Netlify habis karena terlalu banyak Deploy Preview',
+				'Teman Anda belum punya akun GitHub',
+			],
+			jawaban: 0,
+			pembahasan: 'Tim Netlify baru biasanya membuat proyek privat secara bawaan, sehingga hanya tim Anda yang bisa melihatnya. Pilih Make public setelah production deploy pertama berhasil. Deploy Preview tidak memakai kredit.',
+		},
+	]}
+/>
+
+<TandaSelesai />

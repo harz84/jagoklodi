@@ -141,8 +141,8 @@ Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya te
 		{
 			tanya: 'Kenapa Anda menghitung sendiri total mingguan sebelum mengotomatiskan laporan?',
 			pilihan: [
-				'Sebagai kunci jawaban untuk memeriksa angka hasil Claude',
-				'Karena Claude tidak bisa berhitung sama sekali',
+				'Sebagai kunci jawaban untuk memeriksa angka Claude',
+				'Karena Claude tidak bisa menjumlahkan angka sama sekali',
 				'Supaya tugas terjadwal berjalan lebih cepat',
 			],
 			jawaban: 0,
@@ -151,18 +151,18 @@ Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya te
 		{
 			tanya: 'Kalimat mana yang paling penting ada di instruksi tugas yang memakai Gmail dan Drive?',
 			pilihan: [
-				'"Kerjakan sebaik mungkin"',
-				'"Buat draf email; jangan mengirim, jangan membagikan file, dan jangan mengubah spreadsheet"',
+				'"Kerjakan sebaik mungkin dan pastikan hasilnya akurat"',
+				'"Buat draf email; jangan mengirim atau membagikan file"',
 				'"Gunakan bahasa yang menarik"',
 			],
 			jawaban: 1,
-			pembahasan: 'Batas tindakan mencegah otomatisasi melakukan hal yang tidak bisa dibatalkan saat Anda tidak mengawasi.',
+			pembahasan: 'Batas tindakan, termasuk "jangan mengubah spreadsheet", mencegah otomatisasi melakukan hal yang tidak bisa dibatalkan saat Anda tidak mengawasi.',
 		},
 		{
 			tanya: 'Apa urutan yang paling aman untuk membangun laporan otomatis?',
 			pilihan: [
 				'Jadwalkan dulu, lalu periksa hasilnya bulan depan',
-				'Uji manual dengan data fiktif sampai benar, baru jadwalkan, lalu uji lagi dengan data baru',
+				'Uji manual dengan data fiktif, baru dijadwalkan',
 				'Langsung pakai data asli agar hasilnya realistis',
 			],
 			jawaban: 1,

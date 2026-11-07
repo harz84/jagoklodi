@@ -1,0 +1,91 @@
+---
+/**
+ * Bilah progres belajar keseluruhan di atas menu kiri, plus angka "selesai/total" di setiap grup Level.
+ * Daftar pelajaran dihitung saat build; progres dibaca dari localStorage di browser.
+ * Tersembunyi sampai JavaScript menghitung, supaya tidak sempat tampil angka yang salah.
+ */
+import { daftarPelajaran } from '../lib/daftar-pelajaran';
+
+const daftar = await daftarPelajaran();
+---
+
+<div class="progres-sidebar" data-progres-sidebar data-daftar={JSON.stringify(daftar)} hidden>
+	<div class="progres-sidebar__baris">
+		<span>Progres belajar</span>
+		<span class="progres-sidebar__angka" data-isi="angka"></span>
+	</div>
+	<div class="progres-bar" role="progressbar" aria-label="Progres belajar keseluruhan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+		<span class="progres-bar__isi"></span>
+	</div>
+</div>
+
+<script>
+	import { bacaSelesai, EVENT_PROGRES_BERUBAH, EVENT_PROGRES_DIMUAT } from '../lib/progres';
+	import { ringkas, type ItemPelajaran } from '../lib/ringkasan';
+
+	document.querySelectorAll<HTMLElement>('[data-progres-sidebar]').forEach((wadah) => {
+		const daftar = JSON.parse(wadah.dataset.daftar ?? '[]') as ItemPelajaran[];
+		const angka = wadah.querySelector<HTMLElement>('[data-isi="angka"]')!;
+		const bar = wadah.querySelector<HTMLElement>('.progres-bar')!;
+		const isi = wadah.querySelector<HTMLElement>('.progres-bar__isi')!;
+		const nav = wadah.closest('.sidebar-content') ?? document;
+
+		const perbarui = () => {
+			const r = ringkas(daftar, bacaSelesai());
+			angka.textContent = `${r.selesai}/${r.total} (${r.persen}%)`;
+			bar.setAttribute('aria-valuenow', String(r.persen));
+			bar.setAttribute('aria-valuetext', `${r.selesai} dari ${r.total} pelajaran selesai`);
+			isi.style.width = `${r.persen}%`;
+			wadah.hidden = false;
+
+			// Angka per level di judul grup, misalnya "Level 1 · Dasar pemakaian   3/8".
+			nav.querySelectorAll<HTMLElement>('details > summary .group-label').forEach((label) => {
+				const m = label.querySelector('.large')?.textContent?.match(/^Level (\d+)/);
+				if (!m) return;
+				const lv = r.perLevel.find((x) => x.level === Number(m[1]));
+				if (!lv) return;
+				let span = label.querySelector<HTMLElement>('.progres-level');
+				if (!span) {
+					span = document.createElement('span');
+					span.className = 'progres-level';
+					label.append(span);
+				}
+				span.textContent = `${lv.selesai}/${lv.total}`;
+				span.toggleAttribute('data-tuntas', lv.selesai === lv.total);
+				span.title = `${lv.selesai} dari ${lv.total} selesai`;
+			});
+		};
+
+		perbarui();
+		window.addEventListener(EVENT_PROGRES_BERUBAH, perbarui);
+		window.addEventListener(EVENT_PROGRES_DIMUAT, perbarui);
+		window.addEventListener('storage', (e) => {
+			if (e.key === null || e.key === 'jagoklodi:selesai') perbarui();
+		});
+	});
+</script>
+
+<style>
+	.progres-sidebar {
+		display: grid;
+		gap: 0.4rem;
+		padding: 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		font-size: var(--sl-text-sm);
+	}
+	.progres-sidebar[hidden] {
+		display: none;
+	}
+	.progres-sidebar__baris {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.5rem;
+		color: var(--sl-color-gray-2);
+	}
+	.progres-sidebar__angka {
+		font-weight: 600;
+		color: var(--sl-color-white);
+		font-variant-numeric: tabular-nums;
+	}
+</style>

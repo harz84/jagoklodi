@@ -87,7 +87,7 @@ Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya te
 		{
 			tanya: 'Apa fungsi kurung siku seperti [pembaca] di dalam template prompt?',
 			pilihan: [
-				'Menandai bagian yang diganti setiap kali template dipakai',
+				'Menandai isian yang diganti setiap kali dipakai',
 				'Perintah khusus yang hanya dimengerti Claude',
 				'Penanda bagian yang boleh dilewati Claude',
 			],
@@ -97,9 +97,9 @@ Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya te
 		{
 			tanya: 'Setelah mengoreksi hasil sebuah template, apa yang sebaiknya Anda lakukan?',
 			pilihan: [
-				'Memperbarui template agar koreksi yang sama tidak perlu diulang',
-				'Membuat Project baru',
-				'Menghapus template itu',
+				'Memperbarui template agar koreksinya tidak perlu diulang',
+				'Membuat Project baru untuk menyimpan hasil yang sudah benar',
+				'Menghapus template dan menulis prompt baru',
 			],
 			jawaban: 0,
 			pembahasan: 'Template yang baik terus disempurnakan dari hasil uji, sehingga makin jarang perlu dikoreksi.',
@@ -107,12 +107,12 @@ Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya te
 		{
 			tanya: 'Aturan "tanyakan dulu bila data kurang; jangan mengarang" paling tepat ditaruh di mana?',
 			pilihan: [
-				'Di project instructions, supaya berlaku di semua percakapan dalam Project',
-				'Di nama Project',
-				'Cukup diingat sendiri',
+				'Di project instructions',
+				'Di nama atau deskripsi Project',
+				'Di project knowledge sebagai dokumen terpisah',
 			],
 			jawaban: 0,
-			pembahasan: 'Project instructions berlaku untuk semua percakapan di Project. Nama Project tidak dibaca oleh Claude.',
+			pembahasan: 'Project instructions berlaku untuk semua percakapan di Project. Nama dan deskripsi tidak dibaca Claude, sedangkan knowledge adalah bahan rujukan, bukan aturan cara menjawab.',
 		},
 	]}
 />

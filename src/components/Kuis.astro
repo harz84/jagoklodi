@@ -13,15 +13,13 @@
  * memvariasikan posisi jawaban benar. Jangan memakai pilihan seperti "Semua benar" yang bergantung pada urutan.
  * Pelajaran wajib 3–5 soal; halaman kuis akhir level minimal 10 soal. Build gagal bila tidak sesuai.
  *
+ * Panjang pilihan juga diperiksa (src/lib/kuis.ts): jawaban benar tidak boleh menonjol
+ * sebagai pilihan terpanjang atau terpendek, karena pembaca bisa menebak dari panjangnya.
+ *
  * Catatan: situs ini statis, jadi kunci jawaban ikut terkirim ke browser.
  * Kuis ini untuk latihan mandiri, bukan ujian resmi.
  */
-export interface Soal {
-	tanya: string;
-	pilihan: string[];
-	jawaban: number;
-	pembahasan: string;
-}
+import { cekPanjangPilihan, type Soal } from '../lib/kuis';
 interface Props {
 	soal: Soal[];
 	/** Skor minimal (persen) untuk lulus. */
@@ -48,6 +46,8 @@ soal.forEach((s, i) => {
 	if (!s.pembahasan?.trim()) salah(`soal ${n} belum ada pembahasannya.`);
 });
 if (ambang <= 0 || ambang > 100) salah('ambang harus antara 1 dan 100.');
+const masalahPanjang = cekPanjangPilihan(soal);
+if (masalahPanjang.length) salah(`jawaban benar mudah ditebak dari panjang pilihan:\n- ${masalahPanjang.join('\n- ')}`);
 ---
 
 <form class="kuis not-content" data-kuis data-ambang={ambang} novalidate>

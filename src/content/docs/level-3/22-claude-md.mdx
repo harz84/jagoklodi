@@ -1,0 +1,172 @@
+---
+title: "CLAUDE.md: aturan proyek yang dibaca setiap sesi"
+description: Menulis CLAUDE.md agar Claude Code tahu aturan, perintah, dan kebiasaan proyek Anda tanpa perlu dijelaskan ulang di setiap sesi.
+jenis: pelajaran
+level: 3
+durasi: 30 menit
+prasyarat: Pelajaran 8 (Projects) dan Pelajaran 21 (git dan GitHub).
+terakhirDiverifikasi: 2026-10-31
+sidebar:
+  order: 22
+  label: 22. CLAUDE.md
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan fungsi CLAUDE.md dan kapan Claude Code membacanya.
+2. Membuat CLAUDE.md dengan `/init`, lalu meringkasnya menjadi aturan yang konkret.
+3. Memilih tempat yang tepat untuk aturan bersama dan catatan pribadi.
+
+## Kenapa perlu CLAUDE.md
+
+Setiap sesi Claude Code dimulai dengan konteks kosong. Tanpa bantuan, Anda harus menjelaskan ulang hal yang sama setiap kali: bahasa yang dipakai, cara menguji, aturan yang tidak boleh dilanggar.
+
+**CLAUDE.md** adalah file teks biasa berformat Markdown yang dibaca Claude Code **otomatis di awal setiap sesi**. Fungsinya mirip project instructions di Pelajaran 8, tetapi tinggal di dalam folder proyek dan ikut tersimpan di git, sehingga siapa pun yang mengerjakan proyek itu memakai aturan yang sama.
+
+Selain CLAUDE.md yang Anda tulis, Claude Code juga bisa menyimpan **auto memory**: catatan yang ditulis Claude sendiri dari koreksi dan preferensi Anda. Keduanya dimuat di awal sesi. Pelajaran ini fokus pada CLAUDE.md, karena di sanalah Anda yang memegang kendali.
+
+### Di mana menaruhnya
+
+| Lokasi | Berlaku untuk | Ikut ke repository? |
+| --- | --- | --- |
+| `./CLAUDE.md` di akar proyek | Semua orang yang mengerjakan proyek ini | Ya, dibagikan lewat git |
+| `~/.claude/CLAUDE.md` | Anda sendiri, di semua proyek | Tidak |
+| `./CLAUDE.local.md` | Anda sendiri, di proyek ini saja | Tidak; tambahkan ke `.gitignore` |
+
+## Menulis aturan yang dipatuhi
+
+Dokumentasi resmi menyebut CLAUDE.md sebagai **konteks, bukan konfigurasi yang dipaksakan**. Karena itu cara menulisnya menentukan seberapa konsisten Claude mematuhinya:
+
+- **Konkret dan bisa dicek.** "Jalankan `npm test` sebelum commit" lebih baik daripada "uji perubahan Anda".
+- **Ringkas.** Targetkan di bawah 200 baris. File yang panjang memakan konteks dan membuat aturan penting tenggelam.
+- **Hanya yang tidak bisa dibaca dari kode.** Claude bisa membaca struktur folder sendiri; tulis hal yang tidak terlihat, seperti "rilis hanya dari branch `rilis`".
+- **Tidak perlu huruf kapital atau kata "PENTING".** Model saat ini mengikuti kalimat biasa yang jelas. Bila aturan terus terlewat, biasanya filenya terlalu panjang.
+- **Tidak saling bertentangan.** Bila dua aturan bertabrakan, Claude bisa memilih salah satunya sembarang.
+
+<Aside type="caution" title="CLAUDE.md bukan pagar">
+CLAUDE.md membentuk apa yang **dicoba** Claude, tetapi tidak mengubah apa yang **diizinkan** Claude Code. Untuk hal yang benar-benar tidak boleh terjadi, pakai pengaturan izin (Pelajaran 23). Dan karena CLAUDE.md ikut ke repository, jangan pernah menulis password atau token di dalamnya.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. Masuk ke folder `latihan-claude-code` dan jalankan `claude`.
+
+2. Ketik `/init`. Claude membaca isi folder lalu mengusulkan CLAUDE.md berisi perintah, struktur, dan kebiasaan yang ia temukan. Bila CLAUDE.md sudah ada, `/init` mengusulkan perbaikan, bukan menimpanya.
+
+3. Ringkas hasilnya. Hapus hal yang bisa dibaca Claude sendiri dari folder, lalu tambahkan aturan yang hanya Anda yang tahu:
+
+    ```text
+    Ringkas CLAUDE.md menjadi paling banyak 20 baris.
+    Tambahkan aturan ini:
+    - Semua file ditulis dalam bahasa Indonesia baku.
+    - Semua nama orang dan data di proyek ini fiktif.
+    - Setiap perubahan dibuat di branch baru, lalu lewat pull request.
+    ```
+
+4. Buka file itu dengan `/memory` untuk membaca atau menyuntingnya sendiri.
+
+5. **Uji aturannya.** Ketik `/clear` untuk memulai percakapan baru, lalu beri tugas yang menyentuh salah satu aturan, misalnya "Tambahkan daftar 3 pengurus baru di catatan.md". Perhatikan apakah Claude memakai nama fiktif dan membuat branch baru.
+
+6. Commit CLAUDE.md lewat branch dan pull request seperti di Pelajaran 21.
+
+</Steps>
+
+## Contoh nyata
+
+CLAUDE.md untuk web profil toko kue (fiktif) yang akan Anda bangun di Pelajaran 24:
+
+```markdown
+# Web profil Toko Kue Bu Sari (fiktif)
+
+## Isi
+- Bahasa Indonesia yang ramah. Semua nama, alamat, dan nomor kontak fiktif.
+- Tidak memakai foto, logo, atau gambar milik pihak lain.
+
+## Teknis
+- File situs ada di folder situs/: index.html dan style.css.
+- Tanpa skrip, font, atau layanan dari domain luar.
+- Halaman harus nyaman dibaca di layar HP selebar 360 piksel.
+
+## Alur kerja
+- Jangan commit langsung ke main. Buat branch, lalu buka pull request.
+- Jangan menyimpan password, token, atau data pribadi di repository.
+```
+
+Contoh lain yang lebih lengkap: situs jagoklodi ini juga punya [CLAUDE.md sendiri](https://github.com/harz84/jagoklodi/blob/main/CLAUDE.md), yang dipakai Claude Code setiap kali menulis pelajaran.
+
+## Latihan
+
+Buat CLAUDE.md di repository latihan Anda dengan `/init`, ringkas menjadi paling banyak 20 baris, dan masukkan minimal tiga aturan konkret yang bisa dicek. Lalu uji satu aturan di percakapan baru.
+
+**Kriteria berhasil:** CLAUDE.md ada di akar repository dan sudah masuk lewat pull request; panjangnya paling banyak 20 baris; setiap aturan bisa dijawab "dipatuhi atau tidak" dengan melihat hasilnya; tidak ada password, token, atau data pribadi; dan Claude mematuhi aturan yang Anda uji tanpa diingatkan.
+
+## Kesalahan umum
+
+- **CLAUDE.md terlalu panjang.** Semakin panjang, semakin besar kemungkinan aturan penting terlewat. Pangkas secara berkala.
+- **Aturan yang kabur**, misalnya "kerjakan dengan baik". Tidak ada cara mengecek apakah aturan itu dipatuhi.
+- **Preferensi pribadi di CLAUDE.md bersama.** Taruh di `CLAUDE.local.md` atau `~/.claude/CLAUDE.md`.
+- **Mengira CLAUDE.md mencegah tindakan.** Untuk larangan yang mutlak, pakai pengaturan izin.
+- **Menulis rahasia di CLAUDE.md.** File ini ikut ke repository dan bisa dibaca siapa pun yang punya akses.
+
+## Rujukan
+
+- [How Claude remembers your project](https://code.claude.com/docs/en/memory): lokasi CLAUDE.md, cara menulis instruksi yang efektif, dan auto memory.
+- [Best practices for Claude Code](https://code.claude.com/docs/en/best-practices): kenapa CLAUDE.md sebaiknya pendek dan aturan mutlak dipindah ke pengaturan.
+- [Claude Code user FAQ](https://support.claude.com/en/articles/14554922-claude-code-user-faq): kapan menjalankan `/init` dan apa yang layak masuk CLAUDE.md.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Kapan isi CLAUDE.md dibaca Claude Code?',
+			pilihan: [
+				'Otomatis di awal setiap sesi',
+				'Hanya saat Anda menyebut nama filenya di prompt',
+				'Sekali saat /init dijalankan, lalu disimpan di memory akun',
+			],
+			jawaban: 0,
+			pembahasan: 'CLAUDE.md dibaca otomatis di awal setiap sesi, sehingga aturan proyek tidak perlu dijelaskan ulang. /init hanya membantu membuat versi awalnya.',
+		},
+		{
+			tanya: 'Instruksi mana yang paling efektif untuk ditulis di CLAUDE.md?',
+			pilihan: [
+				'"Tulis kode yang rapi dan mudah dibaca."',
+				'"Semua teks halaman memakai bahasa Indonesia baku."',
+				'"PENTING!!! SELALU IKUTI SEMUA ATURAN DI FILE INI."',
+			],
+			jawaban: 1,
+			pembahasan: 'Instruksi yang konkret bisa dicek: teksnya berbahasa Indonesia baku atau tidak. "Rapi" terlalu kabur, dan huruf kapital tidak membuat aturan lebih dipatuhi.',
+		},
+		{
+			tanya: 'Anda punya catatan pribadi yang hanya berlaku untuk Anda di proyek ini dan tidak boleh ikut ke repository. Di mana menaruhnya?',
+			pilihan: [
+				'Di CLAUDE.local.md yang masuk .gitignore',
+				'Di CLAUDE.md, karena hanya Anda yang membuka proyek ini',
+				'Di ~/.claude/CLAUDE.md',
+			],
+			jawaban: 0,
+			pembahasan: 'CLAUDE.local.md untuk catatan pribadi di satu proyek, dan dimasukkan ke .gitignore agar tidak ikut ke repository. ~/.claude/CLAUDE.md berlaku untuk semua proyek Anda, sedangkan CLAUDE.md dibagikan lewat git.',
+		},
+		{
+			tanya: 'Anda menulis "jangan pernah menghapus file" di CLAUDE.md. Apa yang benar tentang aturan ini?',
+			pilihan: [
+				'Ini panduan bagi Claude, bukan pagar yang dipaksakan sistem',
+				'Claude Code otomatis menolak semua perintah hapus',
+				'Aturan ini hanya berlaku bila ditulis dengan huruf kapital',
+			],
+			jawaban: 0,
+			pembahasan: 'CLAUDE.md adalah konteks, bukan konfigurasi yang dipaksakan. Ia membentuk apa yang dicoba Claude, tetapi larangan mutlak perlu diatur lewat pengaturan izin.',
+		},
+	]}
+/>
+
+<TandaSelesai />

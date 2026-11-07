@@ -69,6 +69,7 @@
 		keluar,
 		hapusProgresSaya,
 		waktuSinkronTerakhir,
+		kabarkanStatusLogin,
 		type StatusSinkron,
 	} from '../lib/sinkron';
 	import { bacaProgres } from '../lib/progres';
@@ -117,7 +118,11 @@
 			const dariTautan = params.has('code') || params.has('error');
 			const { data } = await sb.auth.getSession();
 			if (dariTautan) history.replaceState(null, '', location.pathname);
-			if (data.session) return tampilkanMasuk();
+			if (data.session) {
+				// Login lewat tautan email baru selesai di sini; beri tahu indikator di header.
+				if (dariTautan) kabarkanStatusLogin();
+				return tampilkanMasuk();
+			}
 			tampilkan('email');
 			if (dariTautan) {
 				// Tautan login hanya berlaku di browser tempat kode diminta (pengamanan PKCE),

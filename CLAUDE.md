@@ -18,6 +18,9 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - `src/components/Kuis.astro`: kuis pilihan ganda dengan validasi saat build.
 - `src/components/Footer.astro`: tautan "Laporkan kesalahan", disclaimer, dan centang progres di sidebar.
 - `src/components/FormLapor.astro` + halaman `/lapor/` dan `/lapor/terima/`: formulir laporan kesalahan via Netlify Forms (tanpa email, dengan honeypot). Jangan ganti nama formulir atau nama field tanpa alasan: dashboard Netlify hanya menampilkan field dari versi terakhir.
+- `src/components/Header.astro` (salinan Header bawaan Starlight; bandingkan saat memperbarui Starlight) memuat `TombolMenu.astro` (sembunyikan/tampilkan menu kiri di layar lebar, diingat di localStorage) dan `IndikatorAkun.astro` (status login: Masuk/Akun).
+- `src/components/Sidebar.astro` + `ProgresSidebar.astro`: bilah progres keseluruhan di atas menu dan angka selesai/total per grup Level. `ProgresBeranda.astro`: kartu "Progres Anda" di beranda. Daftar pelajaran dibuat saat build oleh `src/lib/daftar-pelajaran.ts`; perhitungannya di `src/lib/ringkasan.ts` (fungsi murni, diuji di `tests/ringkasan.spec.ts`).
+- Grup sidebar memakai `collapsed: true`: hanya grup Level yang sedang dibaca yang terbuka otomatis. Grup Level baru juga wajib diberi `collapsed: true`.
 - `src/lib/progres.ts`: progres di localStorage (local-first). `src/lib/gabung.ts`: penggabungan progres browser dan server (fungsi murni, diuji di `tests/gabung.spec.ts`).
 - `src/lib/sinkron.ts` + `src/components/Akun.astro` + halaman `/akun/`: login email (Supabase) dan sinkron progres. Nonaktif bila `PUBLIC_SUPABASE_URL` dan `PUBLIC_SUPABASE_PUBLISHABLE_KEY` kosong. Panduan aktivasi: `docs/login.md`.
 - `supabase/migrations/`: skema database dan Row Level Security. Setiap perubahan skema = file migrasi baru, jangan ubah file lama.
@@ -28,10 +31,14 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 - Setiap pelajaran mengikuti format baku, dengan contoh di `src/content/docs/level-0/01-kenalan-dengan-claude.mdx`:
   Tujuan → Penjelasan singkat → Langkah (komponen Steps) → Contoh nyata → Latihan dengan kriteria berhasil → Kesalahan umum → Rujukan → `## Kuis` + `<Kuis />` → `<TandaSelesai />`.
 - Kuis (`src/components/Kuis.astro`): pelajaran wajib 3–5 soal pilihan ganda; halaman kuis akhir level (`jenis: kuis`) minimal 10 soal. Setiap soal wajib punya pembahasan. Urutan pilihan diacak otomatis, jadi jangan pakai pilihan "Semua benar" atau "A dan B". Soal hanya boleh menguji isi pelajaran itu sendiri.
+- Jawaban benar tidak boleh bisa ditebak tanpa membaca pelajaran. Build gagal bila jawaban benar lebih dari 1,2 kali pengecoh terpanjang, atau bila satu posisi panjang (terpanjang, terpendek, di tengah) terlalu sering menjadi jawaban benar dalam satu kuis (`src/lib/kuis.ts`). Cara menulisnya:
+  - Jawaban benar ringkas; penjelasan dan rinciannya taruh di `pembahasan`.
+  - Pengecoh berupa salah paham yang masuk akal, serinci jawaban benar, dan bila perlu memakai istilah dari pelajaran. Hindari pengecoh konyol yang bisa dieliminasi tanpa membaca (misalnya "Supaya Claude merasa senang").
+  - Jangan hanya memberi kata mutlak ("selalu", "pasti", "tidak pernah") di pengecoh, atau hanya memberi kata bersyarat ("biasanya", "kecuali") di jawaban benar.
 - Tombol "Tandai selesai" terkunci sampai kuis lulus (skor minimal 70%). Skor terbaik disimpan di localStorage.
 - `scripts/cek-konten.mjs` berjalan sebelum build dan gagal bila ada pelajaran tanpa `<Kuis>` atau `<TandaSelesai />`.
 - Frontmatter wajib untuk pelajaran: `jenis: pelajaran`, `level`, `durasi`, `prasyarat`, `terakhirDiverifikasi` (YYYY-MM-DD), `sidebar.order`.
-- Jangan mengarang fitur, harga, kuota, atau nama model. Harga dan kuota cukup ditautkan ke halaman resmi. Setiap klaim produk harus punya tautan ke sumber resmi (support.claude.com, docs.claude.com, anthropic.skilljar.com).
+- Jangan mengarang fitur, harga, kuota, atau nama model. Harga dan kuota cukup ditautkan ke halaman resmi. Setiap klaim produk harus punya tautan ke sumber resmi (support.claude.com, docs.claude.com, code.claude.com untuk Claude Code, anthropic.skilljar.com). Klaim tentang layanan lain ditautkan ke dokumentasi resmi layanan itu (misalnya docs.github.com, docs.netlify.com).
 - Saat memperbarui isi pelajaran setelah dicek ulang, perbarui juga `terakhirDiverifikasi`.
 - Semua contoh memakai data fiktif. Jangan pernah memakai data pelanggan, data kantor, atau data pribadi asli.
 - Kurangi screenshot; utamakan nama menu dan teks prompt.
@@ -53,5 +60,7 @@ Situs belajar Claude berbahasa Indonesia, dibangun dengan Astro + Starlight dan 
 
 ## Alur git
 
-- Jangan pernah push langsung ke `main`. Selalu buat branch (`pelajaran/NN-judul` atau `fitur/nama`) lalu buka pull request.
+- Jangan pernah push langsung ke `main` atau `rilis`. Selalu buat branch (`pelajaran/NN-judul` atau `fitur/nama`) lalu buka pull request ke `main`.
 - Deploy preview Netlify dipakai untuk review sebelum merge.
+- Production branch Netlify adalah `rilis`, bukan `main`. Merge ke `main` gratis (branch deploy di `main--jagoklodi.netlify.app`); setiap merge ke `rilis` adalah deploy produksi yang memakai 15 kredit dari kuota 300 kredit per bulan.
+- Rilis hanya lewat PR dari `main` ke `rilis`, sekitar seminggu sekali atau saat pemilik meminta "rilis". Pengecualian: perbaikan keamanan dan kesalahan materi yang merugikan pembaca dirilis segera. Detail di `docs/rilis.md`.

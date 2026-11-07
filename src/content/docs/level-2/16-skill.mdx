@@ -123,9 +123,9 @@ Buat satu skill untuk tugas berulang Anda, lalu uji di dua percakapan baru.
 		{
 			tanya: 'Apa yang paling menentukan apakah Claude memakai sebuah skill secara otomatis?',
 			pilihan: [
-				'Deskripsi skill yang menjelaskan dengan spesifik kapan skill dipakai',
-				'Panjang nama file skill',
-				'Jumlah percakapan yang pernah Anda buat',
+				'Deskripsi skill yang spesifik tentang kapan dipakai',
+				'Nama file skill yang mudah diingat',
+				'Seberapa sering skill itu Anda panggil secara manual',
 			],
 			jawaban: 0,
 			pembahasan: 'Claude membaca nama dan deskripsi setiap skill lebih dulu, lalu memuat isi lengkapnya bila tugas Anda cocok dengan deskripsi itu.',
@@ -133,32 +133,32 @@ Buat satu skill untuk tugas berulang Anda, lalu uji di dua percakapan baru.
 		{
 			tanya: 'Anda ingin aturan "selalu jawab dalam Bahasa Indonesia" berlaku di semua percakapan. Tempat yang paling tepat?',
 			pilihan: [
-				'Skill khusus',
+				'Skill khusus untuk aturan bahasa jawaban',
 				'Instruksi umum di Settings',
-				'Nama Project',
+				'Project instructions di setiap Project',
 			],
 			jawaban: 1,
-			pembahasan: 'Preferensi umum yang berlaku di semua percakapan paling tepat ditaruh di instruksi umum. Skill untuk cara mengerjakan satu jenis tugas.',
+			pembahasan: 'Preferensi umum yang berlaku di semua percakapan paling tepat ditaruh di instruksi umum. Skill untuk cara mengerjakan satu jenis tugas, dan Project instructions hanya berlaku di Project itu.',
 		},
 		{
 			tanya: 'Menu skill tidak muncul di akun Anda. Pengaturan apa yang perlu dicek lebih dulu?',
 			pilihan: [
-				'Code execution and file creation (Create and edit files) di Settings > Capabilities',
-				'Ukuran huruf',
-				'Bahasa keyboard',
+				'Code execution and file creation di Settings > Capabilities',
+				'Apakah Anda sudah membuat minimal satu Project',
+				'Apakah paket Anda Enterprise, karena skill khusus organisasi',
 			],
 			jawaban: 0,
-			pembahasan: 'Skill berjalan di lingkungan komputasi Claude, sehingga membutuhkan pengaturan Code execution and file creation yang aktif.',
+			pembahasan: 'Skill berjalan di lingkungan komputasi Claude, sehingga membutuhkan pengaturan Code execution and file creation (Create and edit files) yang aktif.',
 		},
 		{
 			tanya: 'Kapan sebuah tugas layak dijadikan skill?',
 			pilihan: [
-				'Saat Anda sudah lebih dari sekali menjelaskan format, nada, dan contoh hasil yang baik untuk tugas yang sama',
-				'Untuk setiap pertanyaan sekali jalan',
-				'Hanya untuk tugas yang membutuhkan kode',
+				'Saat Anda berulang kali menjelaskan cara kerja yang sama',
+				'Untuk setiap pertanyaan sekali jalan agar lebih cepat',
+				'Hanya untuk tugas yang membutuhkan kode atau skrip',
 			],
 			jawaban: 0,
-			pembahasan: 'Skill paling berguna untuk tugas berulang yang cara kerjanya sudah Anda ketahui. Tidak perlu kode untuk skill sederhana.',
+			pembahasan: 'Skill paling berguna untuk tugas berulang yang format, nada, dan contoh hasilnya sudah Anda ketahui. Tidak perlu kode untuk skill sederhana.',
 		},
 	]}
 />

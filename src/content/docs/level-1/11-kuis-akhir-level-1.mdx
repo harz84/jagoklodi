@@ -35,46 +35,50 @@ Kalau ragu, buka lagi pelajarannya:
 	soal={[
 		{
 			tanya: 'Prompt "Buatkan undangan rapat" menghasilkan undangan yang terlalu formal untuk grup WhatsApp tim. Bagian resep mana yang kurang?',
-			pilihan: ['Siapa dan Bentuk', 'Contoh saja', 'Tidak ada yang kurang'],
+			pilihan: [
+				'Siapa dan Bentuk',
+				'Contoh saja',
+				'Kenapa dan Contoh',
+			],
 			jawaban: 0,
 			pembahasan: 'Claude tidak tahu pembacanya adalah tim di grup WhatsApp (Siapa) dan bentuk yang diinginkan (Bentuk). Keduanya perlu ditulis.',
 		},
 		{
 			tanya: 'Instruksi mana yang paling membantu Claude memahami maksud Anda?',
 			pilihan: [
-				'"Jangan pakai istilah teknis."',
-				'"Jangan pakai istilah teknis, karena pembacanya pengurus yang bukan orang IT."',
+				'"Jangan pakai istilah teknis. Ini penting, tolong patuhi."',
+				'"Jangan pakai istilah teknis; pembacanya bukan orang IT."',
 				'"Pokoknya jangan teknis!"',
 			],
 			jawaban: 1,
-			pembahasan: 'Menyertakan alasan (Kenapa) membuat Claude bisa menerapkan maksud Anda ke hal serupa yang tidak Anda sebutkan.',
+			pembahasan: 'Menyertakan alasan (Kenapa) membuat Claude bisa menerapkan maksud Anda ke hal serupa yang tidak Anda sebutkan. Penekanan saja tidak menjelaskan maksudnya.',
 		},
 		{
 			tanya: 'Anda puas dengan pembukaan email buatan Claude, tetapi penutupnya terlalu panjang. Koreksi mana yang paling tepat?',
 			pilihan: [
-				'"Tulis ulang emailnya."',
-				'"Pembukaannya sudah pas, pertahankan. Penutupnya cukup satu kalimat ajakan."',
-				'"Kurang bagus."',
+				'"Tulis ulang emailnya dengan penutup yang lebih pendek."',
+				'"Pembukaan sudah pas, pertahankan. Penutup cukup satu kalimat."',
+				'"Kurang bagus, coba lagi."',
 			],
 			jawaban: 1,
-			pembahasan: 'Koreksi spesifik menyebut bagian yang dipertahankan dan bagian yang diubah, sehingga yang sudah bagus tidak ikut berubah.',
+			pembahasan: 'Koreksi spesifik menyebut bagian yang dipertahankan dan bagian yang diubah, sehingga yang sudah bagus tidak ikut berubah. "Tulis ulang" berisiko mengubah pembukaan yang sudah Anda sukai.',
 		},
 		{
 			tanya: 'Kapan sebaiknya Anda berhenti mengoreksi dan memulai percakapan baru?',
 			pilihan: [
-				'Setelah koreksi pertama',
-				'Setelah tiga atau empat putaran koreksi tanpa kemajuan; tulis ulang prompt awal yang lebih lengkap',
-				'Tidak pernah',
+				'Setelah koreksi pertama gagal',
+				'Setelah tiga atau empat koreksi tanpa kemajuan',
+				'Tidak pernah; lebih baik terus di percakapan yang sama',
 			],
 			jawaban: 1,
-			pembahasan: 'Bila koreksi berulang tidak membantu, masalahnya biasanya di prompt awal. Mulai ulang dengan prompt yang matang.',
+			pembahasan: 'Bila koreksi berulang tidak membantu, masalahnya biasanya di prompt awal. Tulis ulang prompt awal yang lebih lengkap dan mulai di percakapan baru.',
 		},
 		{
 			tanya: 'Anda meminta Claude merapikan laporan, tetapi angka-angkanya tidak boleh berubah. Apa yang sebaiknya ditulis di prompt?',
 			pilihan: [
-				'Batasan: "pertahankan semua angka dan nama program", serta minta daftar perubahan',
-				'Cukup "rapikan laporan ini"',
-				'Minta Claude menulis ulang sepenuhnya',
+				'Batasan "pertahankan semua angka", plus minta daftar perubahan',
+				'Cukup "rapikan laporan ini"; angka tidak akan diubah',
+				'Minta Claude menulis ulang laporan sepenuhnya',
 			],
 			jawaban: 0,
 			pembahasan: 'Dalam mode menyunting, sebutkan apa yang tidak boleh diubah dan minta daftar perubahan agar mudah diperiksa.',
@@ -83,8 +87,8 @@ Kalau ragu, buka lagi pelajarannya:
 			tanya: 'Anda bertanya tentang isi PDF peraturan setebal 60 halaman. Cara terbaik agar jawabannya bisa dicek adalah...',
 			pilihan: [
 				'Meminta kutipan kalimat asli dan nomor halamannya',
-				'Meminta jawaban satu kata',
-				'Bertanya tanpa mengunggah dokumennya',
+				'Meminta jawaban sesingkat mungkin, cukup satu kata saja',
+				'Bertanya tanpa mengunggah dokumen agar lebih cepat',
 			],
 			jawaban: 0,
 			pembahasan: 'Kutipan dan nomor halaman memudahkan Anda mencocokkan jawaban dengan dokumen asli.',
@@ -92,9 +96,9 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Grafik penting di dalam file Word tidak dibahas oleh Claude. Kenapa?',
 			pilihan: [
-				'Untuk dokumen non-PDF, Claude hanya membaca teksnya',
-				'Grafik selalu diabaikan di semua jenis file',
-				'Karena memakai paket Free',
+				'Untuk file non-PDF, Claude hanya membaca teksnya',
+				'Claude tidak pernah membaca grafik di jenis file apa pun',
+				'Grafik hanya terbaca di paket berbayar',
 			],
 			jawaban: 0,
 			pembahasan: 'Gambar di dalam dokumen non-PDF tidak terbaca. PDF hingga 100 halaman dibaca beserta unsur visualnya.',
@@ -102,19 +106,19 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Setiap bulan Anda menyusun laporan dengan template dan aturan gaya yang sama. Fitur apa yang paling tepat?',
 			pilihan: [
-				'Project dengan template di project knowledge dan aturan di project instructions',
-				'Percakapan baru tanpa konteks setiap bulan',
-				'Mode incognito',
+				'Project berisi template dan aturan gayanya',
+				'Percakapan baru tanpa konteks apa pun setiap bulan',
+				'Mode incognito agar laporan lama tidak tercampur',
 			],
 			jawaban: 0,
-			pembahasan: 'Project menyimpan konteks dan aturan sehingga tidak perlu dijelaskan ulang setiap bulan.',
+			pembahasan: 'Project menyimpan konteks dan aturan sehingga tidak perlu dijelaskan ulang setiap bulan: template di project knowledge, aturan gaya di project instructions.',
 		},
 		{
 			tanya: 'Anda ingin membagikan alat hitung (artifact) ke pengurus lain. Mana pernyataan yang benar?',
 			pilihan: [
-				'Artifact pribadi sejak awal; penerima link perlu login ke akun Claude untuk membukanya',
+				'Penerima link perlu login ke akun Claude',
 				'Artifact langsung publik begitu dibuat',
-				'Penerima tidak perlu akun apa pun',
+				'Penerima bisa membukanya tanpa akun apa pun',
 			],
 			jawaban: 0,
 			pembahasan: 'Artifact pribadi sampai Anda membagikannya, dan untuk membukanya penerima perlu akun Claude.',
@@ -122,9 +126,9 @@ Kalau ragu, buka lagi pelajarannya:
 		{
 			tanya: 'Apa ciri template prompt yang baik untuk pekerjaan rutin?',
 			pilihan: [
-				'Bagian tetap sudah memuat konteks dan bentuk; bagian yang berubah ditandai kurung siku',
-				'Sependek mungkin, misalnya "Buatkan laporan tentang [topik]"',
-				'Ditulis ulang dari nol setiap kali dipakai',
+				'Konteks dan bentuk tetap; isian berubah ditandai kurung siku',
+				'Sependek mungkin: "Buatkan laporan tentang [topik]"',
+				'Ditulis ulang dari nol setiap kali dipakai agar segar',
 			],
 			jawaban: 0,
 			pembahasan: 'Template yang baik menyimpan konteks dan bentuk yang selalu sama, dan hanya menyisakan isian yang berubah.',

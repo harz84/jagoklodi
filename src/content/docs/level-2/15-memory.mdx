@@ -123,8 +123,8 @@ Periksa memory Anda, perbaiki minimal satu topik, dan tambahkan satu preferensi 
 			tanya: 'Anda menghapus percakapan yang menyebut jabatan lama Anda. Apakah memory tentang jabatan itu ikut hilang?',
 			pilihan: [
 				'Ya, memory selalu ikut terhapus bersama percakapannya',
-				'Tidak; topik memory harus dihapus terpisah di pengaturan memory',
-				'Hanya bila memakai paket Max',
+				'Tidak; topiknya harus dihapus di pengaturan memory',
+				'Ya, tetapi baru terhapus dari memory setelah 30 hari',
 			],
 			jawaban: 1,
 			pembahasan: 'Menghapus percakapan tidak menghapus memory yang sudah tercatat darinya. Hapus atau koreksi topiknya di Settings.',
@@ -132,19 +132,19 @@ Periksa memory Anda, perbaiki minimal satu topik, dan tambahkan satu preferensi 
 		{
 			tanya: 'Anda ingin mencoba prompt untuk keperluan teman tanpa disimpan ke riwayat maupun memory. Pilihan mana yang paling tepat?',
 			pilihan: [
-				'Percakapan biasa',
-				'Incognito',
-				'Membuat Project baru',
+				'Percakapan biasa dengan memory dimatikan',
+				'Percakapan incognito',
+				'Project baru',
 			],
 			jawaban: 1,
-			pembahasan: 'Incognito tidak masuk riwayat dan tidak memakai atau menambah memory, walau tetap disimpan sementara demi keamanan.',
+			pembahasan: 'Incognito tidak masuk riwayat dan tidak memakai atau menambah memory, walau tetap disimpan sementara demi keamanan. Percakapan biasa dengan memory dimatikan tetap masuk riwayat.',
 		},
 		{
 			tanya: 'Kapan memory bisa dimatikan untuk satu percakapan saja?',
 			pilihan: [
 				'Kapan saja, bahkan di tengah percakapan',
-				'Sebelum pesan pertama dikirim, lewat menu + → Memory',
-				'Hanya setelah percakapan selesai',
+				'Sebelum pesan pertama, lewat menu + → Memory',
+				'Setelah percakapan selesai, lewat Settings',
 			],
 			jawaban: 1,
 			pembahasan: 'Pengaturan memory untuk satu percakapan harus dipilih sebelum pesan pertama. Setelah itu, mulai percakapan baru bila ingin mengubahnya.',
@@ -152,12 +152,12 @@ Periksa memory Anda, perbaiki minimal satu topik, dan tambahkan satu preferensi 
 		{
 			tanya: 'Anda punya Project untuk urusan kantor dan ingin memory-nya tidak bercampur dengan urusan pribadi. Apa yang dilakukan?',
 			pilihan: [
-				'Mematikan Use account memory di bagian Memory pada halaman Project',
-				'Mengganti nama Project',
-				'Menghapus semua percakapan pribadi',
+				'Mematikan Use account memory di halaman Project',
+				'Mengganti nama Project menjadi "Kantor"',
+				'Mematikan memory akun di Settings untuk semua percakapan',
 			],
 			jawaban: 0,
-			pembahasan: 'Setiap Project punya memory sendiri. Mematikan Use account memory membuat memory Project benar-benar terpisah dari memory akun.',
+			pembahasan: 'Setiap Project punya memory sendiri. Mematikan Use account memory di bagian Memory pada halaman Project membuat memory Project benar-benar terpisah dari memory akun.',
 		},
 	]}
 />

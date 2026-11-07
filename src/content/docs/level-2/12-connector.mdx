@@ -122,19 +122,19 @@ Sambungkan minimal satu connector Google, lalu gunakan untuk satu pekerjaan nyat
 		{
 			tanya: 'Rekan Anda tidak punya akses ke folder "Keuangan" di Google Drive. Bila ia menyambungkan Drive ke Claude, apakah Claude bisa membaca folder itu untuknya?',
 			pilihan: [
-				'Tidak; hak akses Claude lewat connector sama dengan hak akses pemilik akun',
+				'Tidak; Claude hanya punya hak akses yang sama dengannya',
 				'Ya, karena connector memakai akses khusus milik Anthropic',
-				'Ya, asal ia memakai paket berbayar',
+				'Ya, asal folder itu ada di Drive kantor yang sama',
 			],
 			jawaban: 0,
-			pembahasan: 'Connector meniru hak akses Anda di aplikasi aslinya. Bila Anda tidak bisa membukanya di Drive, Claude juga tidak bisa.',
+			pembahasan: 'Connector meniru hak akses pemilik akun di aplikasi aslinya. Bila Anda tidak bisa membukanya di Drive, Claude juga tidak bisa.',
 		},
 		{
 			tanya: 'Anda meminta Claude membalas email lewat connector Gmail. Apa yang terjadi secara bawaan sebelum email terkirim?',
 			pilihan: [
-				'Email langsung terkirim tanpa konfirmasi',
+				'Email langsung terkirim tanpa konfirmasi apa pun',
 				'Claude meminta persetujuan Anda lebih dulu',
-				'Claude menolak karena Gmail hanya bisa dibaca',
+				'Claude menyimpannya sebagai draf tanpa bertanya',
 			],
 			jawaban: 1,
 			pembahasan: 'Secara bawaan, Claude meminta persetujuan sebelum mengirim, membalas, atau meneruskan email. Baca isinya sebelum menyetujui.',
@@ -143,8 +143,8 @@ Sambungkan minimal satu connector Google, lalu gunakan untuk satu pekerjaan nyat
 			tanya: 'Anda meminta Claude meringkas lampiran PDF dari sebuah email lewat connector Gmail. Apa yang paling mungkin terjadi?',
 			pilihan: [
 				'Claude meringkas isi PDF dengan lengkap',
-				'Claude hanya melihat informasi dasar lampiran, bukan isinya; PDF perlu diunggah atau disimpan ke Drive dulu',
-				'Claude otomatis mengunduh lampiran ke komputer Anda',
+				'Claude hanya melihat info dasar lampiran, bukan isinya',
+				'Claude mengunduh lampiran ke komputer lalu membacanya',
 			],
 			jawaban: 1,
 			pembahasan: 'Connector Gmail hanya mengakses metadata lampiran. Untuk membaca isinya, unggah file ke percakapan atau simpan ke Drive lalu pakai connector Drive.',
@@ -152,9 +152,9 @@ Sambungkan minimal satu connector Google, lalu gunakan untuk satu pekerjaan nyat
 		{
 			tanya: 'Connector Google Calendar sudah tersambung, tetapi Claude menjawab tidak bisa melihat jadwal Anda. Langkah pertama yang paling masuk akal?',
 			pilihan: [
-				'Membuat akun Google baru',
-				'Memeriksa menu + → Connectors di percakapan itu dan memastikan Google Calendar aktif',
-				'Menghapus semua percakapan lama',
+				'Membuat akun Google baru khusus untuk Claude',
+				'Memastikan Calendar aktif di menu + → Connectors',
+				'Menghapus percakapan lama agar konteksnya bersih',
 			],
 			jawaban: 1,
 			pembahasan: 'Connector yang sudah tersambung tetap perlu aktif di percakapan yang sedang dipakai, lewat menu + → Connectors.',

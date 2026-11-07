@@ -1,6 +1,7 @@
-# Dependabot memeriksa versi baru paket setiap minggu dan membuka pull request otomatis.
-# Pembaruan kecil (minor/patch) digabung dalam satu PR supaya tidak banjir notifikasi.
-# Pembaruan keamanan tetap datang sebagai PR terpisah secepatnya.
+# Dependabot memeriksa versi baru paket dan membuka pull request otomatis ke main.
+# Pembaruan digabung per ekosistem supaya tidak banjir PR dan notifikasi.
+# Pembaruan keamanan tetap datang sebagai PR terpisah secepatnya; setelah di-merge,
+# segera rilis (lihat docs/rilis.md), jangan tunggu jadwal rilis mingguan.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -20,5 +21,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      semua-actions:
+        patterns: ["*"]
     commit-message:
       prefix: "ci"
