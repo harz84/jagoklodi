@@ -1,0 +1,249 @@
+---
+title: "Agent SDK: membuat agen dengan mesin Claude Code"
+description: Menjalankan agen dengan query() dari Claude Agent SDK, membatasi alatnya lewat tools, allowedTools, dan mode izin, memasang batas giliran dan biaya, lalu menyambungkan MCP server buatan sendiri.
+jenis: pelajaran
+level: 4
+durasi: 50 menit
+prasyarat: Pelajaran 28, 31, dan 32.
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 33
+  label: 33. Agent SDK
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan beda Client SDK, Agent SDK, dan Claude Code.
+2. Menjalankan agen dengan `query()` dan membaca pesan yang dihasilkannya.
+3. Membatasi alat, izin, jumlah giliran, dan biaya agen, lalu menyambungkan MCP server Anda.
+
+## Tiga cara membangun dengan Claude
+
+Di Pelajaran 31, Anda menulis loop agen sendiri: memanggil API, menjalankan tool, mengirim hasil, dan mengulang. **Claude Agent SDK** menyediakan loop itu siap pakai, lengkap dengan alat bawaan, sistem izin, dan pengelolaan konteks yang sama dengan Claude Code, sebagai pustaka yang bisa dipanggil dari program JavaScript atau Python.
+
+| Pilihan | Cocok untuk | Yang Anda kerjakan |
+| --- | --- | --- |
+| **Client SDK** (`@anthropic-ai/sdk`) | Memanggil Claude langsung dari program | Menulis loop tool sendiri (Pelajaran 29–31) |
+| **Agent SDK** (`@anthropic-ai/claude-agent-sdk`) | Agen yang membaca file, menjalankan perintah, atau memakai MCP, di dalam program Anda | Mengatur tugas, alat, dan batasannya |
+| **Claude Code** | Bekerja langsung di terminal bersama Claude | Memberi perintah dan menyetujui tindakan (Level 3) |
+
+### Autentikasi memakai API key
+
+Agent SDK memakai API key dari Console, sama seperti Pelajaran 29, lewat variabel `ANTHROPIC_API_KEY`. Pemakaiannya ditagih dari kredit API. SDK **tidak** membaca file `.env` sendiri, jadi tetap jalankan program dengan `node --env-file=.env`. Ketentuan Anthropic juga melarang pihak ketiga menawarkan login claude.ai di produk yang dibangun dengan Agent SDK, kecuali sudah disetujui. Untuk program yang akan Anda bagikan, selalu pakai API key.
+
+### Batasan agen
+
+Agen bisa bertindak sendiri, jadi batasannya perlu diatur sejak awal:
+
+| Opsi | Fungsinya |
+| --- | --- |
+| `tools` | Daftar alat bawaan yang **tersedia**. `[]` mematikan semua alat bawaan |
+| `allowedTools` | Alat yang boleh dipakai **tanpa bertanya**. Nama alat MCP berbentuk `mcp__namaserver__namatool`, dan `*` berarti semua alat dari server itu |
+| `permissionMode` | Cara menangani alat di luar daftar. `dontAsk` menolak semua yang tidak ada di `allowedTools`, cocok untuk program tanpa pengguna yang mengawasi |
+| `maxTurns` | Batas jumlah giliran sebelum agen berhenti |
+| `maxBudgetUsd` | Batas biaya dalam dolar AS; agen berhenti dengan status `error_max_budget_usd` bila terlampaui |
+| `settingSources` | Pengaturan Claude Code mana yang ikut dimuat. `[]` membuat agen tidak memakai pengaturan, skill, atau CLAUDE.md dari komputer Anda |
+
+<Aside type="caution" title="Jangan pakai bypassPermissions di komputer sendiri">
+Mode `bypassPermissions` menjalankan semua alat tanpa bertanya. Dokumentasi resmi menyebutnya untuk CI yang terisolasi atau lingkungan yang sepenuhnya tepercaya. Untuk latihan, pakai daftar alat yang sempit dengan `dontAsk`.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Buat folder proyek** dan pasang Agent SDK:
+
+    ```bash
+    mkdir agen-pesanan
+    cd agen-pesanan
+    npm init -y
+    npm pkg set type=module
+    npm install @anthropic-ai/claude-agent-sdk@0.3.319
+    ```
+
+    Salin `.env`, `.gitignore`, dan folder `.claude` dari `latihan-api` ke folder ini. Agent SDK membawa program Claude Code sendiri di dalam paketnya, jadi tidak perlu dipasang terpisah.
+
+2. **Buat data fiktif.** Buat folder `pesanan` berisi dua file teks:
+
+    `pesanan/2026-11-01.txt`:
+
+    ```text
+    Pemesan: Ibu Rina (fiktif)
+    Produk: Bolu pandan x2, Nastar keju x1
+    Ambil: Sabtu pukul 10.00
+    ```
+
+    `pesanan/2026-11-02.txt`:
+
+    ```text
+    Pemesan: Pak Joko (fiktif)
+    Produk: Lapis legit x1
+    Ambil: Minggu pukul 08.00
+    Catatan: minta kartu ucapan
+    ```
+
+3. **Buat file `agen.js`:**
+
+    ```js
+    import { query } from '@anthropic-ai/claude-agent-sdk';
+
+    const hasil = query({
+    	prompt: 'Baca semua file di folder pesanan, lalu buat ringkasan: siapa memesan apa dan kapan diambil. Urutkan dari waktu ambil paling awal.',
+    	options: {
+    		model: 'claude-haiku-5-5',
+    		tools: ['Read', 'Glob'], // hanya alat baca; tidak bisa mengubah file atau menjalankan perintah
+    		allowedTools: ['Read', 'Glob'], // dua alat ini boleh dipakai tanpa bertanya
+    		permissionMode: 'dontAsk', // alat lain ditolak, bukan ditanyakan
+    		settingSources: [], // abaikan pengaturan Claude Code di komputer ini
+    		persistSession: false, // jangan simpan riwayat sesi ke disk
+    		maxTurns: 10,
+    		maxBudgetUsd: 0.1,
+    	},
+    });
+
+    for await (const pesan of hasil) {
+    	if (pesan.type === 'assistant') {
+    		for (const blok of pesan.message.content) {
+    			if (blok.type === 'tool_use') console.log(`[alat] ${blok.name} ${JSON.stringify(blok.input)}`);
+    		}
+    	}
+    	if (pesan.type === 'result') {
+    		console.log(pesan.subtype === 'success' ? pesan.result : `Berhenti: ${pesan.subtype}`);
+    		console.log(`Biaya: US$${pesan.total_cost_usd.toFixed(4)} | giliran: ${pesan.num_turns}`);
+    	}
+    }
+    ```
+
+    `query()` menghasilkan rangkaian pesan selama agen bekerja. Pesan `assistant` memuat langkah Claude, termasuk alat yang dipakainya; pesan `result` berisi jawaban akhir, biaya, dan jumlah giliran.
+
+4. **Jalankan:**
+
+    ```bash
+    node --env-file=.env agen.js
+    ```
+
+    Anda akan melihat baris `[alat] Glob ...` dan `[alat] Read ...`, lalu ringkasan pesanan dan biayanya. Perhatikan bahwa Anda tidak menulis loop atau fungsi alat apa pun; Agent SDK yang mengurusnya.
+
+5. **Uji batasannya.** Ubah `prompt` menjadi "Hapus file pesanan yang paling lama". Agen tidak punya alat untuk menghapus atau menjalankan perintah, sehingga permintaan itu tidak bisa dijalankan. Kembalikan prompt semula.
+
+6. **Sambungkan MCP server dari Pelajaran 32.** Buat file `agen-katalog.js`, ganti alamat server sesuai komputer Anda:
+
+    ```js
+    import { query } from '@anthropic-ai/claude-agent-sdk';
+
+    const hasil = query({
+    	prompt: 'Produk apa saja yang stoknya habis? Jawab dalam Bahasa Indonesia.',
+    	options: {
+    		model: 'claude-haiku-5-5',
+    		tools: [], // tanpa alat bawaan sama sekali
+    		mcpServers: {
+    			katalog: { command: 'node', args: ['/alamat/lengkap/katalog-mcp/server.js'] },
+    		},
+    		allowedTools: ['mcp__katalog__*'], // hanya alat dari server katalog
+    		permissionMode: 'dontAsk',
+    		settingSources: [],
+    		persistSession: false,
+    		maxTurns: 5,
+    		maxBudgetUsd: 0.05,
+    	},
+    });
+
+    for await (const pesan of hasil) {
+    	if (pesan.type === 'system' && pesan.subtype === 'init') {
+    		console.log('Alat tersedia:', pesan.tools.join(', '));
+    	}
+    	if (pesan.type === 'result') {
+    		console.log(pesan.subtype === 'success' ? pesan.result : `Berhenti: ${pesan.subtype}`);
+    		console.log(`Biaya: US$${pesan.total_cost_usd.toFixed(4)}`);
+    	}
+    }
+    ```
+
+    Jalankan dengan `node --env-file=.env agen-katalog.js`. Baris pertama menampilkan `mcp__katalog__cek-stok` dan `mcp__katalog__daftar-produk`: server yang sama dari Pelajaran 32 kini dipakai oleh agen buatan Anda.
+
+7. **Commit** semua file kecuali `.env` dan `node_modules` lewat branch dan pull request.
+
+</Steps>
+
+## Contoh nyata
+
+Bu Sari (fiktif) menjalankan `agen.js` setiap Jumat sore untuk merangkum pesanan akhir pekan dari folder `pesanan`. Karena agen hanya punya alat baca dan batas biaya US$0,10, ia tenang membiarkannya berjalan tanpa diawasi. Ringkasannya lalu ia tempel ke grup karyawan.
+
+## Latihan
+
+Ubah `agen.js` agar ringkasannya juga menghitung total jumlah setiap produk yang harus disiapkan (misalnya "Bolu pandan: 2"). Tambahkan satu file pesanan fiktif baru untuk menguji hasilnya.
+
+**Kriteria berhasil:** agen hanya memakai alat `Read` dan `Glob`; ringkasan dan total produk sesuai isi file; biaya tampil di akhir; dan agen berhenti dengan pesan yang jelas bila `maxTurns` atau `maxBudgetUsd` terlampaui.
+
+**Perkiraan biaya:** setiap jalannya dibatasi oleh `maxBudgetUsd` (US$0,10 dan US$0,05 di contoh). Agen memakai lebih banyak token daripada satu panggilan API biasa karena membawa instruksi dan alat Claude Code, jadi baca angka `total_cost_usd` setiap kali menjalankannya.
+
+## Kesalahan umum
+
+- **"Not logged in" atau "Invalid API key".** `ANTHROPIC_API_KEY` tidak sampai ke program. Agent SDK tidak membaca `.env` sendiri; jalankan dengan `--env-file=.env`.
+- **Mengira `allowedTools` membatasi alat.** `allowedTools` hanya menentukan alat yang boleh dipakai tanpa bertanya. Untuk membatasi alat yang tersedia, pakai `tools`.
+- **Tidak memasang `maxTurns` dan `maxBudgetUsd`.** Agen yang tersesat bisa terus bekerja dan menghabiskan kredit.
+- **Memakai `bypassPermissions` agar cepat.** Semua alat, termasuk menjalankan perintah dan mengubah file, langsung jalan tanpa pemeriksaan.
+- **Salah menulis nama alat MCP.** Formatnya `mcp__namaserver__namatool`, dengan dua garis bawah. Cek daftar alat di pesan `init`.
+
+## Rujukan
+
+- [Agent SDK overview](https://code.claude.com/docs/en/agent-sdk/overview): perbandingan Agent SDK, Client SDK, dan Managed Agents, serta ketentuan login.
+- [Agent SDK quickstart](https://code.claude.com/docs/en/agent-sdk/quickstart): pemasangan, API key, mode izin, dan agen pertama.
+- [Agent SDK reference: TypeScript](https://code.claude.com/docs/en/agent-sdk/typescript): semua opsi `query()` dan jenis pesan.
+- [Connect to external tools with MCP](https://code.claude.com/docs/en/agent-sdk/mcp): opsi `mcpServers` dan nama alat MCP di `allowedTools`.
+- [Work with sessions](https://platform.claude.com/docs/en/agent-sdk/sessions): riwayat sesi dan opsi `persistSession`.
+- [Monthly API credits for Max, Ultra, and Team plans](https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans): kredit bulanan juga berlaku untuk Agent SDK yang memakai API key.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa perbedaan utama Agent SDK dibanding Client SDK yang dipakai di Pelajaran 31?',
+			pilihan: [
+				'Agent SDK menyediakan loop agen dan alat bawaan siap pakai',
+				'Agent SDK tidak memerlukan API key maupun kredit',
+				'Agent SDK hanya bisa dipakai dari dalam Claude Code',
+			],
+			jawaban: 0,
+			pembahasan: 'Agent SDK menyediakan loop agen, alat bawaan, izin, dan pengelolaan konteks yang sama dengan Claude Code. Dengan Client SDK, Anda menulis loop sendiri. Keduanya tetap memakai API key dan kredit API.',
+		},
+		{
+			tanya: 'Anda ingin agen hanya bisa membaca file. Opsi apa yang membatasi alat yang tersedia?',
+			pilihan: ['tools', 'maxTurns', 'settingSources'],
+			jawaban: 0,
+			pembahasan: 'tools menentukan alat bawaan yang tersedia, misalnya hanya Read dan Glob. allowedTools hanya menentukan alat yang boleh dipakai tanpa bertanya, sedangkan maxTurns membatasi jumlah giliran.',
+		},
+		{
+			tanya: 'Agen berjalan tanpa pengawasan, dan alat di luar allowedTools harus ditolak, bukan ditanyakan. Mode izin apa yang tepat?',
+			pilihan: ['bypassPermissions', 'acceptEdits', 'dontAsk'],
+			jawaban: 2,
+			pembahasan: 'dontAsk menolak semua alat yang tidak ada di allowedTools, cocok untuk agen tanpa pengguna yang menjawab pertanyaan izin. bypassPermissions justru menjalankan semua alat tanpa pemeriksaan.',
+		},
+		{
+			tanya: 'Program agen Anda menampilkan "Not logged in" padahal .env sudah berisi API key. Penyebab yang paling mungkin?',
+			pilihan: [
+				'Program dijalankan tanpa --env-file, sehingga key tidak terbaca',
+				'Agent SDK hanya menerima login langganan claude.ai, bukan API key',
+				'Model Haiku tidak bisa dipakai lewat Agent SDK',
+			],
+			jawaban: 0,
+			pembahasan: 'Agent SDK membaca ANTHROPIC_API_KEY dari lingkungan program dan tidak memuat file .env sendiri. Jalankan dengan node --env-file=.env. Agent SDK memang dirancang memakai API key.',
+		},
+		{
+			tanya: 'Nama alat cek-stok dari MCP server bernama katalog ditulis bagaimana di allowedTools?',
+			pilihan: ['katalog.cek-stok', 'mcp__katalog__cek-stok', 'mcp__cek-stok__katalog'],
+			jawaban: 1,
+			pembahasan: 'Alat MCP diberi nama dengan format mcp__namaserver__namatool, memakai dua garis bawah. Bentuk mcp__katalog__* mengizinkan semua alat dari server katalog.',
+		},
+	]}
+/>
+
+<TandaSelesai />

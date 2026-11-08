@@ -1,0 +1,201 @@
+---
+title: "Percakapan dan streaming: menyimpan riwayat dan menampilkan jawaban bertahap"
+description: Memahami bahwa Messages API tidak menyimpan percakapan, menyusun riwayat percakapan sendiri, dan menampilkan jawaban Claude secara bertahap dengan streaming.
+jenis: pelajaran
+level: 4
+durasi: 35 menit
+prasyarat: Pelajaran 29 (panggilan API pertama).
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 30
+  label: 30. Percakapan dan streaming
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan arti "API bersifat stateless" dan akibatnya bagi program Anda.
+2. Membuat program obrolan yang mengingat percakapan dengan menyimpan riwayatnya sendiri.
+3. Menampilkan jawaban secara bertahap dengan streaming.
+
+## API tidak mengingat percakapan
+
+Di claude.ai, aplikasinya mengurus riwayat percakapan untuk Anda. Saat memakai API, urusan itu pindah ke program Anda. Messages API bersifat **stateless**: setiap request berdiri sendiri, dan program Anda wajib menyimpan riwayat lalu mengirim **seluruhnya** di setiap request.
+
+Dokumentasi juga menyebut fitur beta bernama *message threads* yang menyimpan percakapan sementara di server. Materi ini memakai cara standar, karena cara itulah yang berlaku di semua fitur dan tetap menjadi dasar fitur beta tersebut.
+
+Riwayat berbentuk daftar pesan yang bergantian:
+
+```js
+[
+	{ role: 'user', content: 'Ada kue apa saja?' },
+	{ role: 'assistant', content: '...jawaban Claude sebelumnya...' },
+	{ role: 'user', content: 'Yang paling murah yang mana?' },
+]
+```
+
+Akibatnya, **token masuk terus bertambah** seiring panjang percakapan, karena semua pesan lama ikut dikirim lagi. Percakapan panjang berarti biaya per giliran yang lebih besar.
+
+## Streaming
+
+Tanpa streaming, program menunggu sampai jawaban selesai seluruhnya, lalu menampilkannya sekaligus. Dengan **streaming**, jawaban dikirim sedikit demi sedikit selama ditulis, sehingga pengguna langsung melihat teks muncul. Total token dan biayanya sama; yang berubah hanya cara jawaban sampai.
+
+SDK menyediakan `client.messages.stream(...)`. Potongan teks diterima lewat event `text`, dan jawaban lengkap tersedia lewat `finalMessage()` setelah streaming selesai.
+
+## Langkah
+
+<Steps>
+
+1. **Buat file `obrolan.js`** di folder `latihan-api`:
+
+    ```js
+    import Anthropic from '@anthropic-ai/sdk';
+    import readline from 'node:readline';
+
+    const client = new Anthropic();
+    const rl = readline.createInterface({ input: process.stdin });
+    const riwayat = []; // seluruh percakapan disimpan di sini, bukan di server
+
+    process.stdout.write('Anda: ');
+    for await (const baris of rl) {
+    	const teks = baris.trim();
+    	if (teks.toLowerCase() === 'keluar') break;
+
+    	riwayat.push({ role: 'user', content: teks });
+
+    	const stream = client.messages.stream({
+    		model: 'claude-haiku-5-5',
+    		max_tokens: 1024,
+    		system: 'Anda asisten Toko Kue Bu Sari (fiktif). Jawab singkat dalam Bahasa Indonesia.',
+    		messages: riwayat,
+    	});
+
+    	process.stdout.write('Claude: ');
+    	stream.on('text', (potongan) => process.stdout.write(potongan));
+    	const jawaban = await stream.finalMessage();
+
+    	riwayat.push({ role: 'assistant', content: jawaban.content });
+    	process.stdout.write('\n\nAnda: ');
+    }
+
+    rl.close();
+    ```
+
+    Modul `readline` bawaan Node.js membaca ketikan Anda baris demi baris.
+
+2. **Jalankan** dan ajukan dua pertanyaan yang saling terkait:
+
+    ```bash
+    node --env-file=.env obrolan.js
+    ```
+
+    Misalnya "Tolong sarankan satu kue untuk arisan", lalu "Berapa kira-kira porsinya untuk 10 orang?". Claude bisa menjawab pertanyaan kedua karena pertanyaan pertama ikut dikirim. Ketik `keluar` untuk berhenti.
+
+3. **Buktikan bahwa API stateless.** Beri tanda komentar (`//`) di depan baris `riwayat.push({ role: 'assistant', ... })`, lalu ubah `messages: riwayat` menjadi `messages: [{ role: 'user', content: teks }]`. Jalankan lagi dan ulangi dua pertanyaan tadi. Kali ini Claude tidak tahu kue mana yang Anda maksud. Kembalikan kodenya seperti semula.
+
+4. **Amati pertambahan token.** Tambahkan satu baris setelah `finalMessage()`:
+
+    ```js
+    console.error(`\n[token masuk: ${jawaban.usage.input_tokens}]`);
+    ```
+
+    Ajukan beberapa pertanyaan berturut-turut. Angka token masuk naik di setiap giliran.
+
+5. **Commit** `obrolan.js` lewat branch dan pull request.
+
+</Steps>
+
+<Aside type="note" title="Simpan jawaban apa adanya">
+Kode di atas menyimpan `jawaban.content` utuh, bukan hanya teksnya. Dokumentasi resmi menganjurkan mengirim balik giliran Claude persis seperti yang diterima, termasuk blok selain teks, agar konteksnya tetap utuh.
+</Aside>
+
+## Contoh nyata
+
+Bu Sari (fiktif) memakai `obrolan.js` untuk mencoba asisten pemesanan sebelum memasangnya di web toko. Saat menguji percakapan panjang, ia melihat token masuk naik dari sekitar seratus menjadi beberapa ribu. Ia lalu memutuskan percakapan pemesanan dimulai ulang setiap ada pesanan baru, supaya biaya per pesanan tetap kecil.
+
+## Latihan
+
+Tambahkan perintah `reset` ke `obrolan.js`: bila pengguna mengetik `reset`, riwayat dikosongkan dan program menampilkan "Percakapan dimulai ulang". Uji bahwa setelah `reset`, Claude tidak lagi mengetahui isi percakapan sebelumnya.
+
+**Kriteria berhasil:** jawaban tampil bertahap; pertanyaan lanjutan dijawab sesuai konteks; setelah `reset` konteks lama hilang; dan Anda bisa menjelaskan kenapa token masuk naik di setiap giliran.
+
+**Perkiraan biaya:** kurang dari US$0,05 untuk semua latihan pelajaran ini dengan Claude Haiku 5.5, selama percakapan latihan tidak lebih dari belasan giliran.
+
+## Kesalahan umum
+
+- **Mengira server mengingat percakapan.** Tanpa riwayat yang dikirim ulang, setiap pertanyaan dianggap percakapan baru.
+- **Lupa menyimpan jawaban Claude ke riwayat.** Riwayat yang hanya berisi pesan pengguna membuat Claude kehilangan jawabannya sendiri dan bisa mengulang atau bertentangan.
+- **Membiarkan riwayat tumbuh tanpa batas.** Biaya per giliran ikut naik. Mulai percakapan baru bila topiknya sudah berganti.
+- **Mengira streaming lebih murah.** Streaming hanya mengubah cara jawaban sampai; jumlah token dan biayanya sama.
+
+## Rujukan
+
+- [Using the Messages API](https://platform.claude.com/docs/en/build-with-claude/working-with-messages): Messages API stateless dan pola percakapan multi-giliran.
+- [Create a Message](https://platform.claude.com/docs/en/api/messages/create): format `messages` dengan giliran `user` dan `assistant` yang bergantian.
+- [TypeScript SDK](https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/typescript): streaming dengan SDK JavaScript.
+- [Preserved thinking](https://platform.claude.com/docs/en/build-with-claude/preserved-thinking): alasan mengirim balik giliran Claude persis seperti yang diterima.
+- [Node.js: readline](https://nodejs.org/api/readline.html): membaca input baris demi baris.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Program obrolan Pak Budi tidak bisa menjawab "yang paling murah yang mana?" setelah ia bertanya daftar kue. Penyebab yang paling mungkin?',
+			pilihan: [
+				'Riwayat percakapan tidak ikut dikirim di request kedua',
+				'Server API menghapus percakapan setiap lima menit',
+				'Model Haiku tidak mendukung percakapan beberapa giliran',
+			],
+			jawaban: 0,
+			pembahasan: 'Messages API stateless: server tidak menyimpan percakapan. Program wajib menyimpan riwayat dan mengirim seluruhnya di setiap request, termasuk pertanyaan dan jawaban sebelumnya.',
+		},
+		{
+			tanya: 'Kenapa token masuk bertambah di setiap giliran percakapan?',
+			pilihan: [
+				'Karena streaming menambah token pada setiap potongan teks',
+				'Karena semua pesan lama ikut dikirim lagi di request',
+				'Karena system prompt dikirim dua kali per giliran',
+			],
+			jawaban: 1,
+			pembahasan: 'Setiap request membawa seluruh riwayat, jadi makin panjang percakapan, makin banyak token masuk. Streaming tidak menambah token, dan system prompt dikirim satu kali per request.',
+		},
+		{
+			tanya: 'Apa perbedaan utama memakai streaming dibanding tanpa streaming?',
+			pilihan: [
+				'Biaya per jawaban jadi lebih murah',
+				'Jawaban muncul bertahap selama ditulis',
+				'Batas max_tokens tidak berlaku lagi',
+			],
+			jawaban: 1,
+			pembahasan: 'Streaming mengirim jawaban sedikit demi sedikit selama ditulis, sehingga pengguna langsung melihat teks muncul. Jumlah token, batas max_tokens, dan biayanya tetap sama.',
+		},
+		{
+			tanya: 'Setelah streaming selesai, apa yang disimpan program contoh ke riwayat?',
+			pilihan: [
+				'Potongan teks terakhir yang diterima lewat event text',
+				'Ringkasan jawaban buatan program agar riwayat tetap pendek',
+				'Seluruh isi content dari finalMessage, apa adanya',
+			],
+			jawaban: 2,
+			pembahasan: 'Program menyimpan jawaban.content dari finalMessage() secara utuh. Dokumentasi resmi menganjurkan mengirim balik giliran Claude persis seperti yang diterima agar konteksnya tetap utuh.',
+		},
+		{
+			tanya: 'Bu Sari ingin biaya asisten pemesanannya tetap kecil. Kebiasaan apa yang paling membantu?',
+			pilihan: [
+				'Memulai percakapan baru untuk setiap pesanan',
+				'Mematikan streaming agar token tidak terpecah',
+				'Mengirim hanya jawaban Claude, tanpa pesan pengguna',
+			],
+			jawaban: 0,
+			pembahasan: 'Riwayat yang panjang membuat token masuk dan biaya per giliran naik. Memulai percakapan baru saat topik berganti menjaga riwayat tetap pendek. Streaming tidak memengaruhi biaya, dan riwayat tanpa pesan pengguna tidak valid.',
+		},
+	]}
+/>
+
+<TandaSelesai />

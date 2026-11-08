@@ -1,0 +1,257 @@
+---
+title: "MCP: membuat server pertama dan menyambungkannya ke Claude Code"
+description: Memahami host, client, server, dan transport stdio di MCP, membuat MCP server kecil dengan SDK TypeScript v2 dalam JavaScript, mengujinya dengan MCP Inspector, lalu memakainya dari Claude Code.
+jenis: pelajaran
+level: 4
+durasi: 50 menit
+prasyarat: Pelajaran 28 dan 31, serta Claude Code dari Pelajaran 20.
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 32
+  label: 32. MCP server pertama
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Menjelaskan peran host, client, dan server di MCP, serta transport stdio.
+2. Membuat MCP server berisi dua tool dengan SDK MCP versi 2.
+3. Menguji server dengan MCP Inspector, lalu memakainya dari Claude Code.
+
+## Apa itu MCP
+
+Di Pelajaran 31, tool hanya bisa dipakai oleh program `stok.js` karena definisinya ditulis di dalam program itu. **MCP** (Model Context Protocol) adalah standar terbuka agar tool cukup dibuat **sekali** dalam sebuah **MCP server**, lalu bisa dipakai oleh banyak aplikasi AI: Claude Code, Claude Desktop, agen buatan Agent SDK (Pelajaran 33), dan aplikasi lain yang mendukung MCP. Connector yang Anda pakai di Level 2 juga dibangun di atas MCP.
+
+| Peran | Artinya | Contoh |
+| --- | --- | --- |
+| **Host** | Aplikasi AI yang dipakai pengguna | Claude Code |
+| **Client** | Komponen di dalam host yang menyambung ke satu server | Dibuat otomatis oleh Claude Code untuk setiap server |
+| **Server** | Program yang menyediakan tool, data, atau template prompt | Server katalog toko yang Anda buat di pelajaran ini |
+
+Server bisa menyediakan tiga jenis kemampuan: **tools** (fungsi yang dipanggil model), **resources** (data untuk konteks), dan **prompts** (template instruksi). Pelajaran ini fokus pada tools.
+
+**Transport** adalah jalur komunikasi host dan server. Server lokal memakai **stdio**: host menjalankan server sebagai program di komputer Anda, lalu keduanya bertukar pesan lewat input dan output standar program itu. Server jarak jauh memakai **Streamable HTTP** lewat alamat URL.
+
+<Aside type="caution" title="Perhatikan versi SDK MCP">
+Materi ini memakai SDK MCP **versi 2** dengan paket `@modelcontextprotocol/server`. Tutorial di modelcontextprotocol.io dan banyak artikel di internet masih memakai paket versi 1, `@modelcontextprotocol/sdk`, dengan cara impor yang berbeda. Jangan mencampur keduanya dalam satu proyek.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Buat folder proyek baru** di luar `latihan-api`:
+
+    ```bash
+    mkdir katalog-mcp
+    cd katalog-mcp
+    npm init -y
+    npm pkg set type=module
+    npm install @modelcontextprotocol/server@2.4.0 zod@4.6.7
+    ```
+
+    **zod** adalah pustaka untuk mendefinisikan bentuk input. SDK MCP memakainya untuk membuat skema input tool dan memeriksa setiap panggilan sebelum fungsi Anda berjalan.
+
+2. **Buat file `produk.json`** berisi data fiktif:
+
+    ```json
+    [
+      { "kode": "KUE-01", "nama": "Bolu pandan", "harga": 45000, "stok": 12 },
+      { "kode": "KUE-02", "nama": "Lapis legit", "harga": 180000, "stok": 3 },
+      { "kode": "KUE-03", "nama": "Nastar keju", "harga": 95000, "stok": 0 }
+    ]
+    ```
+
+3. **Buat file `server.js`:**
+
+    ```js
+    import { readFile } from 'node:fs/promises';
+    import { McpServer } from '@modelcontextprotocol/server';
+    import { serveStdio } from '@modelcontextprotocol/server/stdio';
+    import * as z from 'zod/v4';
+
+    const FILE_DATA = new URL('./produk.json', import.meta.url);
+
+    async function bacaProduk() {
+    	return JSON.parse(await readFile(FILE_DATA, 'utf8'));
+    }
+
+    function buatServer() {
+    	const server = new McpServer({ name: 'katalog-toko', version: '1.0.0' });
+
+    	server.registerTool(
+    		'daftar-produk',
+    		{
+    			description: 'Menampilkan semua produk toko kue fiktif beserta harga dan stok.',
+    			inputSchema: z.object({}),
+    		},
+    		async () => {
+    			const produk = await bacaProduk();
+    			const baris = produk.map((p) => `${p.kode} | ${p.nama} | Rp${p.harga} | stok ${p.stok}`);
+    			return { content: [{ type: 'text', text: baris.join('\n') }] };
+    		},
+    	);
+
+    	server.registerTool(
+    		'cek-stok',
+    		{
+    			description: 'Mengecek stok satu produk berdasarkan kodenya, misalnya KUE-01.',
+    			inputSchema: z.object({
+    				kode: z.string().describe('Kode produk, misalnya KUE-01'),
+    			}),
+    		},
+    		async ({ kode }) => {
+    			const produk = await bacaProduk();
+    			const p = produk.find((x) => x.kode === kode.toUpperCase());
+    			if (!p) {
+    				return {
+    					content: [{ type: 'text', text: `Produk ${kode} tidak ditemukan. Panggil daftar-produk untuk melihat kode yang ada.` }],
+    					isError: true,
+    				};
+    			}
+    			return { content: [{ type: 'text', text: `${p.nama}: stok ${p.stok}` }] };
+    		},
+    	);
+
+    	return server;
+    }
+
+    serveStdio(buatServer);
+    console.error('Server katalog-toko berjalan lewat stdio');
+    ```
+
+    Polanya sama dengan Pelajaran 31: nama, deskripsi, skema input, dan fungsi. Bedanya, Anda tidak menulis loop agen; host yang mengurusnya. `serveStdio` menerima fungsi `buatServer` dan memanggilnya setiap kali butuh server baru.
+
+4. **Uji dengan MCP Inspector**, alat resmi untuk mencoba server tanpa model AI:
+
+    ```bash
+    npx @modelcontextprotocol/inspector@2.14.0 node server.js
+    ```
+
+    Halaman Inspector terbuka di browser (alamatnya tampil di terminal). Hubungkan ke server, buka daftar **Tools**, lalu panggil `cek-stok` dengan kode `KUE-02` dan `KUE-09`. Yang kedua harus menghasilkan pesan error yang jelas. Tekan **Ctrl+C** di terminal untuk berhenti.
+
+    Inspector juga punya mode teks tanpa browser, berguna bila halaman tidak terbuka:
+
+    ```bash
+    npx @modelcontextprotocol/inspector@2.14.0 --cli node server.js --method tools/call --tool-name cek-stok --tool-arg kode=KUE-02
+    ```
+
+5. **Sambungkan ke Claude Code.** Cari alamat lengkap folder Anda dengan `pwd` (macOS dan Linux) atau `(Get-Location).Path` (Windows PowerShell). Lalu daftarkan server, ganti alamatnya sesuai hasil tadi:
+
+    ```bash
+    claude mcp add katalog -- node /alamat/lengkap/katalog-mcp/server.js
+    ```
+
+    Tanda `--` memisahkan pilihan untuk Claude Code dari perintah yang menjalankan server. Server lokal memakai transport stdio secara bawaan, jadi tidak perlu opsi `--transport`. Secara bawaan server hanya aktif di folder tempat perintah ini dijalankan; opsi `--scope user` membuatnya aktif di semua proyek Anda.
+
+6. **Periksa sambungan.** Jalankan `claude` di folder `katalog-mcp`, lalu ketik `/mcp`. Server `katalog` harus tampil tersambung.
+
+7. **Pakai dari Claude Code.** Tanyakan:
+
+    ```text
+    Produk apa saja yang stoknya habis di katalog toko?
+    ```
+
+    Bila Claude Code meminta izin memakai tool dari server `katalog` (misalnya dalam mode Manual), setujui, lalu lihat jawabannya. Langkah ini memakai kuota langganan Claude Code Anda, bukan kredit API.
+
+8. **Commit** `package.json`, `package-lock.json`, `produk.json`, dan `server.js` lewat branch dan pull request. Buat `.gitignore` berisi `node_modules/` lebih dulu.
+
+</Steps>
+
+<Aside type="caution" title="Jangan memakai console.log di server stdio">
+Pada transport stdio, output standar dipakai sebagai jalur protokol. Satu `console.log` akan merusak pesan yang dikirim ke host. Tulis catatan dengan `console.error`, seperti baris terakhir di `server.js`.
+</Aside>
+
+## Keamanan MCP server
+
+- **Pasang hanya server yang Anda percayai.** Server lokal berjalan dengan hak akses penuh akun Anda di komputer.
+- **Waspadai prompt injection.** Server yang mengambil konten dari luar bisa membawa instruksi jahat ke Claude, seperti yang dibahas di Pelajaran 23.
+- **Mulai dari tool yang hanya membaca.** Tool yang menulis, menghapus, atau mengirim sesuatu ke luar butuh pengaman tambahan dan sebaiknya ditunda sampai Anda benar-benar memahami alurnya.
+
+## Contoh nyata
+
+Bu Sari (fiktif) membuat server `katalog-toko` dan memasangnya di Claude Code. Saat menyiapkan unggahan media sosial, ia cukup bertanya "Kue apa yang stoknya masih banyak? Buatkan caption promosinya". Claude Code mengambil data stok dari server, lalu menulis caption hanya untuk produk yang masih tersedia.
+
+## Latihan
+
+Tambahkan tool ketiga, `cari-produk`, yang menerima kata kunci dan mengembalikan produk yang namanya mengandung kata itu, tanpa membedakan huruf besar dan kecil. Uji di Inspector, lalu dari Claude Code.
+
+**Kriteria berhasil:** ketiga tool tampil di Inspector; `cari-produk` dengan kata kunci yang tidak cocok mengembalikan `isError: true` beserta pesan yang membantu; server tampil tersambung di `/mcp`; dan semua data tetap fiktif.
+
+**Perkiraan biaya:** nol kredit API. Inspector tidak memanggil model, dan Claude Code memakai kuota langganan Anda.
+
+## Kesalahan umum
+
+- **Mencampur contoh SDK versi 1 dan versi 2.** Bila impornya dari `@modelcontextprotocol/sdk/...`, itu contoh versi 1.
+- **Memakai `console.log` di server stdio**, sehingga host gagal membaca respons server.
+- **Memakai alamat relatif** saat mendaftarkan server, misalnya `node server.js`. Alamat itu hanya benar bila folder kerjanya kebetulan sama. Alamat lengkap menjamin server ditemukan, termasuk bila nanti Anda memasangnya untuk semua proyek dengan `--scope user`. Dengan alasan yang sama, `server.js` membuka `produk.json` berdasarkan lokasi file server (`import.meta.url`), bukan folder kerja.
+- **Menjalankan `claude mcp add` di dalam sesi Claude Code.** Perintah ini dijalankan di terminal biasa, sebelum memulai sesi.
+- **Mengira server perlu dijalankan manual dulu.** Untuk transport stdio, host yang menjalankan server sesuai perintah yang didaftarkan.
+
+## Rujukan
+
+- [Architecture overview (MCP)](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture): host, client, server, lapisan data, dan transport.
+- [Understanding MCP servers](https://modelcontextprotocol.io/docs/2026-07-28/learn/server-concepts): tools, resources, dan prompts.
+- [MCP TypeScript SDK v2: Build your first server](https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server): `registerTool`, `serveStdio`, dan peringatan stdout.
+- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp): `claude mcp add`, cakupan pemasangan, dan keamanan.
+- [Connect to MCP servers](https://code.claude.com/docs/en/mcp-quickstart): menambah server lokal dan memeriksanya dengan `/mcp`.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Apa keuntungan utama membuat tool sebagai MCP server dibanding menulisnya langsung di program seperti stok.js?',
+			pilihan: [
+				'Tool otomatis lebih cepat karena dijalankan di server Anthropic',
+				'Tool yang sama bisa dipakai banyak aplikasi AI yang mendukung MCP',
+				'Tool tidak lagi membutuhkan deskripsi dan skema input sama sekali',
+			],
+			jawaban: 1,
+			pembahasan: 'MCP adalah standar terbuka: server dibuat sekali lalu bisa dipakai Claude Code, Claude Desktop, agen Agent SDK, dan aplikasi lain. Server lokal tetap berjalan di komputer Anda, dan tool tetap butuh deskripsi serta skema input.',
+		},
+		{
+			tanya: 'Dalam susunan MCP, Claude Code berperan sebagai apa?',
+			pilihan: ['Host', 'Server', 'Transport'],
+			jawaban: 0,
+			pembahasan: 'Host adalah aplikasi AI yang dipakai pengguna, dan membuat satu client untuk setiap server yang disambungkan. Server menyediakan tool, sedangkan transport adalah jalur komunikasinya.',
+		},
+		{
+			tanya: 'Server stdio Anda gagal dibaca Claude Code setelah Anda menambahkan console.log("mulai"). Kenapa?',
+			pilihan: [
+				'Claude Code melarang server menulis teks apa pun',
+				'console.log hanya berfungsi di browser, bukan di Node.js',
+				'Output standar adalah jalur protokol, jadi teks tambahan merusaknya',
+			],
+			jawaban: 2,
+			pembahasan: 'Pada transport stdio, output standar membawa pesan protokol. Teks dari console.log ikut masuk dan merusak pesan itu. Tulis catatan dengan console.error yang memakai jalur terpisah.',
+		},
+		{
+			tanya: 'Contoh di sebuah artikel mengimpor dari "@modelcontextprotocol/sdk/server/mcp.js". Apa artinya bagi proyek Anda?',
+			pilihan: [
+				'Itu contoh SDK versi 1, berbeda dari paket versi 2 di materi ini',
+				'Itu cara impor versi 2 yang lebih baru dan lebih disarankan',
+				'Itu paket khusus untuk server yang memakai transport Streamable HTTP',
+			],
+			jawaban: 0,
+			pembahasan: 'Paket @modelcontextprotocol/sdk adalah SDK versi 1. Materi ini memakai versi 2 dengan paket @modelcontextprotocol/server dan cara impor yang berbeda. Jangan mencampur keduanya.',
+		},
+		{
+			tanya: 'Kenapa server didaftarkan dengan alamat lengkap, misalnya node /Users/sari/katalog-mcp/server.js?',
+			pilihan: [
+				'Agar server tetap ditemukan dari folder kerja mana pun',
+				'Agar Claude Code tidak meminta izin saat memakai tool',
+				'Agar server berjalan di Streamable HTTP, bukan stdio',
+			],
+			jawaban: 0,
+			pembahasan: 'Host menjalankan server sesuai perintah yang didaftarkan. Alamat relatif seperti server.js hanya benar bila folder kerjanya kebetulan sama. Alamat lengkap tidak mengubah izin maupun transport.',
+		},
+	]}
+/>
+
+<TandaSelesai />

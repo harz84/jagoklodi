@@ -1,0 +1,207 @@
+---
+title: "Persiapan developer: Node.js, akun Console, dan API key"
+description: Memasang Node.js, membuat akun Claude Console dan API key, lalu menyimpan key dengan aman agar tidak bocor ke repository atau tercampur dengan langganan Claude Code.
+jenis: pelajaran
+level: 4
+durasi: 40 menit
+prasyarat: Level 3, terutama Pelajaran 20 (terminal dan Claude Code) dan Pelajaran 21 (git dan GitHub).
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 28
+  label: 28. Persiapan developer
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Memasang Node.js dan memeriksa versinya.
+2. Membuat akun Claude Console dan API key.
+3. Menyimpan API key di file `.env` yang tidak ikut ter-commit dan tidak bisa dibaca Claude Code.
+
+## Dari Claude Code ke Claude API
+
+Di Level 3, Claude Code bekerja untuk Anda dengan kuota langganan Claude. Di Level 4, Anda menulis **program sendiri** yang memanggil Claude. Program berkomunikasi dengan Claude lewat **API** (application programming interface), yaitu pintu masuk khusus untuk program, bukan untuk manusia.
+
+Ada tiga hal baru yang dibutuhkan:
+
+| Kebutuhan | Fungsinya |
+| --- | --- |
+| **Node.js** | Menjalankan program JavaScript di komputer Anda, di luar browser. Semua contoh Level 4 memakai JavaScript |
+| **Akun Claude Console** | Tempat membuat API key, membeli kredit, dan melihat pemakaian. Terpisah dari akun langganan Claude |
+| **API key** | Kata sandi panjang yang dibawa program setiap kali memanggil Claude. Siapa pun yang memegang key ini bisa memakai saldo Anda |
+
+### Biaya API terpisah dari langganan
+
+Pemakaian API **ditagih terpisah** dari paket Claude Anda. Paket Pro tidak termasuk kredit API, sedangkan paket Max, Ultra, dan Team mendapat kredit API bulanan yang harus diklaim dengan menautkan organisasi Console ke paket. Di luar itu, kredit dibeli lebih dulu (prabayar) di halaman **Billing** Console. Harga per model ada di [halaman harga](https://platform.claude.com/docs/en/about-claude/pricing).
+
+Latihan Level 4 memakai **Claude Haiku 5.5**, model termurah saat ini, dengan batas jawaban kecil. Perkiraan biaya setiap pelajaran dicantumkan di bagian Latihan.
+
+<Aside type="caution" title="Jangan pasang ANTHROPIC_API_KEY untuk seluruh komputer">
+Bila variabel `ANTHROPIC_API_KEY` terpasang di terminal Anda, Claude Code memakai key itu dan **tagihannya ikut tarif API**, bukan kuota langganan. Karena itu, jangan menaruh key di file pengaturan terminal seperti `~/.zshrc` atau di variabel lingkungan Windows. Simpan hanya di file `.env` milik proyek, seperti di langkah berikut.
+</Aside>
+
+## Langkah
+
+<Steps>
+
+1. **Pasang Node.js.** Buka [nodejs.org/en/download](https://nodejs.org/en/download), pilih versi **LTS** (long-term support, versi yang didukung paling lama), lalu jalankan pemasangnya dengan pilihan bawaan. Contoh Level 4 membutuhkan minimal Node.js 20, dan versi LTS terbaru sudah memenuhinya.
+
+2. **Periksa pemasangan.** Tutup terminal, buka lagi, lalu ketik:
+
+    ```bash
+    node --version
+    npm --version
+    ```
+
+    Hasilnya dua nomor versi, misalnya `v24.x.x`. **npm** adalah pengelola paket yang ikut terpasang bersama Node.js; Anda memakainya untuk memasang SDK.
+
+3. **Buat akun Console.** Buka [platform.claude.com](https://platform.claude.com) dan daftar. Akun ini terpisah dari akun langganan Claude, walau boleh memakai email yang sama.
+
+4. **Siapkan kredit.** Pelanggan Max, Ultra, atau Team: tautkan organisasi Console ke paket Anda lewat **Settings > Billing** di claude.ai, bagian **API credits**. Pengguna lain: buka halaman **Billing** di Console, lalu **Buy credits**. Beli secukupnya untuk latihan, dan biarkan **auto-reload** mati agar pengeluaran tidak melewati saldo yang Anda beli.
+
+5. **Buat API key.** Buka halaman **API keys** di Console ([platform.claude.com/settings/keys](https://platform.claude.com/settings/keys)), lalu buat key baru. Beri nama yang jelas, misalnya `latihan-jagoklodi`, dan pilih masa berlaku. Key hanya ditampilkan **sekali**; salin sekarang.
+
+6. **Buat folder proyek** dan siapkan git:
+
+    ```bash
+    mkdir latihan-api
+    cd latihan-api
+    npm init -y
+    npm pkg set type=module
+    git init
+    ```
+
+    `npm init -y` membuat file `package.json` yang mencatat paket proyek. `type=module` membuat Node.js memakai gaya `import` modern, sama seperti contoh di dokumentasi.
+
+7. **Lindungi file rahasia sebelum membuatnya.** Buat file `.gitignore` berisi dua baris berikut, supaya git mengabaikan folder paket dan file `.env`:
+
+    ```text
+    node_modules/
+    .env
+    ```
+
+8. **Simpan key di `.env`.** Buat file `.env` di folder yang sama, isinya satu baris (ganti dengan key Anda):
+
+    ```text
+    ANTHROPIC_API_KEY=sk-ant-...
+    ```
+
+9. **Cegah Claude Code membaca `.env`.** Buat folder `.claude` dan file `.claude/settings.json` berisi:
+
+    ```json
+    {
+      "permissions": {
+        "deny": ["Read(./.env)", "Read(./.env.*)"]
+      }
+    }
+    ```
+
+    Aturan `deny` ini berlaku di semua mode izin, sehingga key Anda tidak ikut terbaca dan tersimpan di riwayat sesi Claude Code bila Anda memakai Claude Code di folder ini.
+
+10. **Periksa sebelum commit.** Jalankan `git status`. File `.env` **tidak boleh** muncul di daftar. Bila muncul, periksa lagi isi `.gitignore` sebelum melanjutkan.
+
+</Steps>
+
+## Cara program membaca key
+
+Mulai Pelajaran 29, program dijalankan dengan perintah seperti ini:
+
+```bash
+node --env-file=.env halo.js
+```
+
+Opsi `--env-file` membuat Node.js membaca `.env` dan menyediakan isinya sebagai variabel lingkungan **hanya untuk program itu**. Terminal Anda dan Claude Code tidak ikut menerima key, sehingga tagihan langganan dan tagihan API tidak tercampur.
+
+## Contoh nyata
+
+Bu Sari (fiktif) ingin membuat program kecil yang menulis deskripsi produk untuk Toko Kue Bu Sari. Ia berlangganan Pro, jadi ia membeli kredit API secukupnya di Console dan mematikan auto-reload. Key disimpan di `.env`, dan `git status` memastikan file itu tidak ikut ter-commit. Saat repository-nya kelak dipublikasikan di GitHub, tidak ada rahasia yang ikut terbuka.
+
+## Latihan
+
+Siapkan folder `latihan-api` sesuai langkah di atas, lalu buat commit pertama berisi `package.json`, `.gitignore`, dan `.claude/settings.json`.
+
+**Kriteria berhasil:** `node --version` menampilkan versi 20 atau lebih baru; API key sudah dibuat dan tersimpan di `.env`; `git status` tidak pernah menampilkan `.env`; commit pertama tidak memuat key; dan `ANTHROPIC_API_KEY` tidak terpasang di pengaturan terminal Anda.
+
+**Perkiraan biaya:** nol. Pelajaran ini belum memanggil API.
+
+## Kesalahan umum
+
+- **Menaruh key di pengaturan terminal** (`~/.zshrc`, `~/.bashrc`, atau variabel lingkungan Windows). Claude Code ikut memakainya, sehingga pemakaian Claude Code ditagih dengan tarif API.
+- **Membuat `.env` sebelum `.gitignore`**, lalu tidak sengaja ikut ter-commit. Key yang pernah masuk ke repository publik harus dianggap bocor: hapus key itu di Console dan buat yang baru.
+- **Menempel key di prompt atau chat**, termasuk ke Claude. Key cukup ada di `.env`.
+- **Mengira kredit Max atau Ultra langsung aktif.** Kredit bulanan harus diklaim dengan menautkan organisasi Console ke paket lebih dulu.
+
+## Rujukan
+
+- [Why is Claude API usage billed separately from my paid Claude plan?](https://support.claude.com/en/articles/9876003-i-have-a-paid-claude-subscription-pro-max-team-or-enterprise-plans-why-is-claude-api-usage-billed-separately-from-my-paid-claude-plan): langganan dan API adalah dua produk terpisah.
+- [Monthly API credits for Max, Ultra, and Team plans](https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans): siapa yang mendapat kredit bulanan dan cara mengklaimnya.
+- [How do I pay for my Claude API usage?](https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-claude-api-usage): kredit prabayar dan cara membelinya.
+- [Use Claude Code with your Pro, Max, or Ultra plan](https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan): efek `ANTHROPIC_API_KEY` pada tagihan Claude Code.
+- [Authentication](https://platform.claude.com/docs/en/manage-claude/authentication): jenis API key dan cara membuatnya.
+- [Configure permissions](https://code.claude.com/docs/en/permissions): aturan `Read(./.env)` untuk Claude Code.
+- [Get your Claude API key](https://platform.claude.com/docs/en/get-api-key): key hanya ditampilkan sekali saat dibuat.
+- [Node.js: Command-line API](https://nodejs.org/api/cli.html): opsi `--env-file` untuk membaca file `.env`.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Bu Sari berlangganan Pro dan ingin memanggil Claude dari programnya. Apa yang ia butuhkan?',
+			pilihan: [
+				'Akun Console dan kredit API, karena API ditagih terpisah',
+				'Tidak ada; kuota Pro otomatis bisa dipakai lewat API',
+				'Upgrade ke Max, karena Pro tidak bisa membuat API key',
+			],
+			jawaban: 0,
+			pembahasan: 'Langganan Claude dan Claude API adalah dua produk terpisah. Pro tidak termasuk kredit API, jadi Bu Sari perlu akun Console dan membeli kredit. Max, Ultra, dan Team mendapat kredit bulanan, tetapi Pro tetap bisa memakai API dengan kredit yang dibeli sendiri.',
+		},
+		{
+			tanya: 'Pak Budi menaruh ANTHROPIC_API_KEY di ~/.zshrc. Apa akibatnya saat ia memakai Claude Code?',
+			pilihan: [
+				'Claude Code memakai key itu dan ditagih tarif API',
+				'Tidak ada; Claude Code hanya membaca login langganan',
+				'Claude Code menolak berjalan sampai key dihapus',
+			],
+			jawaban: 0,
+			pembahasan: 'Bila ANTHROPIC_API_KEY terpasang di terminal, Claude Code memakai key itu dan pemakaiannya ditagih dengan tarif API, bukan kuota langganan. Simpan key di .env proyek dan berikan hanya ke program lewat node --env-file.',
+		},
+		{
+			tanya: 'Kenapa .gitignore dibuat sebelum file .env?',
+			pilihan: [
+				'Supaya Node.js bisa membaca .env lebih cepat',
+				'Supaya .env tidak sempat ikut ter-commit ke repository',
+				'Supaya Console tahu bahwa key sudah disimpan dengan aman',
+			],
+			jawaban: 1,
+			pembahasan: 'File yang tercantum di .gitignore diabaikan git. Bila .env dibuat lebih dulu, ia bisa ikut ter-commit tanpa sengaja. Key yang pernah masuk repository publik harus dianggap bocor dan diganti.',
+		},
+		{
+			tanya: 'Apa fungsi aturan "deny": ["Read(./.env)"] di .claude/settings.json?',
+			pilihan: [
+				'Mencegah git meng-commit file .env',
+				'Mencegah Claude Code membaca file .env',
+				'Menyembunyikan .env dari program Node.js',
+			],
+			jawaban: 1,
+			pembahasan: 'Aturan deny di pengaturan Claude Code mencegah Claude membaca file itu, di semua mode izin. Git diatur lewat .gitignore, dan program Node.js tetap bisa membaca .env lewat --env-file.',
+		},
+		{
+			tanya: 'Satu API key Anda ternyata pernah ter-commit ke repository publik, lalu commit-nya dihapus. Apa langkah yang benar?',
+			pilihan: [
+				'Biarkan saja, karena commit-nya sudah tidak ada',
+				'Ganti nama key itu di Console agar tidak dikenali',
+				'Hapus key itu di Console, lalu buat key baru',
+			],
+			jawaban: 2,
+			pembahasan: 'Key yang pernah tampil di repository publik harus dianggap bocor, karena bisa saja sudah disalin orang lain sebelum commit dihapus. Hapus key itu di Console dan buat yang baru; mengganti nama tidak mengubah isi key.',
+		},
+	]}
+/>
+
+<TandaSelesai />

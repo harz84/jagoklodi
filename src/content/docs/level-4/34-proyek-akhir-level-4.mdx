@@ -1,0 +1,159 @@
+---
+title: "Proyek akhir Level 4: MCP server untuk usaha fiktif Anda"
+description: Membuat MCP server sendiri untuk usaha atau organisasi fiktif pilihan Anda, mengujinya dengan MCP Inspector, memakainya dari Claude Code, lalu dari agen Agent SDK yang hanya boleh memakai alat server itu.
+jenis: pelajaran
+level: 4
+durasi: 120 menit
+prasyarat: Pelajaran 28 sampai 33.
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 34
+  label: 34. Proyek akhir Level 4
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Di proyek ini Anda membuat **MCP server sendiri** untuk usaha atau organisasi fiktif pilihan Anda, tanpa menyalin katalog toko kue. Server yang sama dipakai dari dua tempat: Claude Code dan agen buatan Agent SDK. Setelah selesai, Anda bisa:
+
+1. Merancang tool yang deskripsi, skema input, dan pesan error-nya jelas.
+2. Menguji server tanpa model AI, lalu memakainya dari host yang berbeda.
+3. Menjalankan agen dengan batas alat, izin, giliran, dan biaya yang ketat.
+
+<Aside type="note" title="Bahan yang dibutuhkan">
+- Node.js, akun Console, kredit API, dan file `.env` dari Pelajaran 28.
+- Claude Code dari Pelajaran 20, serta git dan GitHub dari Pelajaran 21.
+- Subjek **fiktif**: misalnya bengkel sepeda, perpustakaan RT, jadwal les mengaji anak, atau koperasi simpan pinjam. Semua nama dan angka rekaan. Jangan memakai data kantor, data pelanggan, atau data pribadi asli.
+</Aside>
+
+## Langkah proyek
+
+<Steps>
+
+1. **Rancang dulu di kertas.** Tulis di `RANCANGAN.md`: subjek fiktif Anda, bentuk data (misalnya daftar buku dengan judul, penulis, dan status pinjam), serta minimal **tiga tool yang hanya membaca**. Untuk setiap tool, tulis nama, kapan dipakai, input, dan contoh pesan error. Contoh untuk perpustakaan RT: `daftar-buku`, `cari-buku` (kata kunci), dan `status-pinjam` (kode buku).
+
+2. **Siapkan repository.** Buat folder proyek, jalankan `npm init -y` dan `npm pkg set type=module`, buat `.gitignore` berisi `node_modules/` dan `.env`, lalu `git init`. Buat repository privat di GitHub dan push commit pertama.
+
+3. **Buat data dan server di branch baru** `fitur/server`. Pasang paket dengan versi yang sama seperti Pelajaran 32, simpan data fiktif di file JSON, lalu tulis `server.js`. Anda boleh meminta Claude Code menulis kodenya berdasarkan `RANCANGAN.md`, tetapi baca dan pahami setiap tool sebelum menyetujuinya.
+
+4. **Uji dengan MCP Inspector.** Panggil setiap tool dengan input yang benar dan input yang salah. Setiap input salah harus menghasilkan `isError: true` dengan pesan yang menjelaskan apa yang bisa dicoba. Perbaiki deskripsi yang kurang jelas.
+
+5. **Pakai dari Claude Code.** Daftarkan server dengan `claude mcp add` memakai alamat lengkap, periksa dengan `/mcp`, lalu ajukan tiga pertanyaan yang membutuhkan tool berbeda. Catat pertanyaan mana yang membuat Claude memilih tool yang keliru, lalu perbaiki deskripsinya.
+
+6. **Buat agen di branch** `fitur/agen`. Tulis `agen.js` dengan Agent SDK yang:
+    - tidak punya alat bawaan (`tools: []`);
+    - hanya boleh memakai alat server Anda (`allowedTools: ['mcp__namaserver__*']`);
+    - memakai `permissionMode: 'dontAsk'`, `settingSources: []`, dan `persistSession: false`;
+    - dibatasi `maxTurns` dan `maxBudgetUsd` yang kecil;
+    - menampilkan daftar alat dari pesan `init`, jawaban akhir, dan biaya.
+
+    Beri agen satu tugas yang butuh lebih dari satu tool, misalnya "Buku apa yang sedang dipinjam, dan siapa penulisnya?".
+
+7. **Pull request dan review.** Buka pull request untuk setiap branch. Di tab **Files changed**, pastikan tidak ada `.env`, API key, atau data asli. Merge setelah semua kriteria di bawah terpenuhi.
+
+8. **Tulis catatan proyek** di README: apa yang dilakukan setiap tool, cara menjalankan server dan agen, biaya agen yang Anda amati, satu deskripsi tool yang harus diperbaiki beserta alasannya, dan satu hal yang akan Anda tambahkan berikutnya. Isinya pilihan Anda sendiri; Claude cukup merapikan tulisannya.
+
+</Steps>
+
+## Penilaian mandiri
+
+Centang setiap kriteria dengan jujur. Proyek dinyatakan selesai bila semuanya terpenuhi.
+
+| Kriteria | Pertanyaan pemeriksa |
+| --- | --- |
+| Rancangan | Apakah `RANCANGAN.md` memuat minimal tiga tool beserta input dan contoh error-nya? |
+| Hanya membaca | Apakah tidak ada tool yang menulis, menghapus, atau mengirim data ke luar? |
+| Deskripsi | Apakah Claude memilih tool yang tepat untuk ketiga pertanyaan uji di Claude Code? |
+| Error | Apakah setiap input salah menghasilkan `isError: true` dengan pesan yang membantu? |
+| Versi SDK | Apakah server memakai paket `@modelcontextprotocol/server` (versi 2) dengan versi yang dikunci di `package.json`? |
+| Stdio bersih | Apakah server tidak memakai `console.log`, hanya `console.error` untuk catatan? |
+| Batas agen | Apakah agen memakai `tools: []`, `allowedTools` yang hanya berisi alat server Anda, `dontAsk`, `maxTurns`, dan `maxBudgetUsd`? |
+| Rahasia | Apakah tidak ada API key di kode, commit, atau README, dan `ANTHROPIC_API_KEY` tidak terpasang di pengaturan terminal? |
+| Data | Apakah semua data fiktif? |
+| Catatan | Apakah README memuat biaya yang diamati dan perbaikan deskripsi yang Anda pilih sendiri? |
+
+## Tantangan tambahan
+
+Bila ingin lebih jauh, coba salah satu, tetap lewat branch dan pull request:
+
+- Tambahkan satu **resource** ke server, misalnya aturan peminjaman, lalu pelajari bedanya dengan tool di dokumentasi MCP.
+- Daftarkan server untuk semua proyek Anda dengan `claude mcp add --scope user`.
+- Buat versi agen yang meminta persetujuan Anda lewat terminal sebelum setiap tool dipakai, memakai opsi `canUseTool` di dokumentasi Agent SDK.
+
+## Kesalahan umum
+
+- **Langsung menulis kode tanpa rancangan.** Deskripsi tool yang dipikirkan sejak awal menentukan apakah Claude memilih tool yang tepat.
+- **Membuat tool yang menulis atau menghapus data** di proyek pertama. Tunda sampai Anda memahami izin dan risiko prompt injection.
+- **Menguji hanya jalur yang berhasil.** Input salah adalah tempat bug dan pesan error yang membingungkan paling sering muncul.
+- **Agen tanpa batas biaya.** Selalu pasang `maxBudgetUsd` dan baca `total_cost_usd` setiap kali menjalankan.
+- **Menyalin kode tanpa membacanya.** Anda bertanggung jawab atas setiap tool yang dijalankan di komputer Anda, termasuk yang ditulis Claude.
+
+## Rujukan
+
+- [MCP TypeScript SDK v2: Build your first server](https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server): pola server dan pengujian dengan Inspector.
+- [Understanding MCP servers](https://modelcontextprotocol.io/docs/2026-07-28/learn/server-concepts): tools, resources, dan prompts.
+- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp): pemasangan server dan cakupannya.
+- [Connect to external tools with MCP (Agent SDK)](https://code.claude.com/docs/en/agent-sdk/mcp): `mcpServers` dan `allowedTools` untuk alat MCP.
+- [Agent SDK reference: TypeScript](https://code.claude.com/docs/en/agent-sdk/typescript): opsi `tools`, `permissionMode`, `maxBudgetUsd`, dan `canUseTool`.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Kenapa proyek ini dimulai dengan menulis RANCANGAN.md sebelum kode?',
+			pilihan: [
+				'Karena deskripsi dan input tool menentukan apakah Claude memilih tool yang tepat',
+				'Karena SDK MCP membaca RANCANGAN.md untuk membuat tool secara otomatis',
+				'Karena Claude Code menolak menulis kode tanpa file rancangan di folder',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude memilih tool hanya dari nama, deskripsi, dan skema inputnya. Merancang ketiganya lebih dulu, termasuk contoh error, membuat tool lebih mudah dipakai dengan benar. SDK dan Claude Code tidak membaca RANCANGAN.md secara khusus.',
+		},
+		{
+			tanya: 'Di Claude Code, Claude memakai tool status-pinjam untuk pertanyaan yang seharusnya memakai cari-buku. Apa perbaikan pertama yang tepat?',
+			pilihan: [
+				'Memperjelas deskripsi kedua tool',
+				'Menambah maxTurns di agen',
+				'Mengganti transport ke Streamable HTTP',
+			],
+			jawaban: 0,
+			pembahasan: 'Pemilihan tool bergantung pada deskripsinya. Jelaskan kapan setiap tool dipakai dan apa bedanya. maxTurns dan transport tidak memengaruhi tool mana yang dipilih.',
+		},
+		{
+			tanya: 'Konfigurasi agen mana yang paling sesuai dengan kriteria proyek?',
+			pilihan: [
+				'tools: [], allowedTools: [mcp__perpus__*], dontAsk, ditambah maxTurns dan maxBudgetUsd',
+				'tools bawaan lengkap, permissionMode bypassPermissions, dan tanpa batas giliran maupun biaya',
+				'tools: [Read, Bash], allowedTools kosong, permissionMode default tanpa batas',
+			],
+			jawaban: 0,
+			pembahasan: 'Agen proyek tidak punya alat bawaan, hanya boleh memakai alat server Anda, menolak alat lain tanpa bertanya, dan dibatasi giliran serta biayanya. bypassPermissions dan alat Bash justru membuka akses yang tidak diperlukan.',
+		},
+		{
+			tanya: 'Saat menguji di Inspector, input yang salah membuat server mengembalikan teks kosong. Apa yang perlu diperbaiki?',
+			pilihan: [
+				'Tidak perlu diperbaiki, karena Claude akan menebak sendiri maksudnya',
+				'Kembalikan isError: true dengan pesan yang membantu',
+				'Ganti semua console.error di server menjadi console.log',
+			],
+			jawaban: 1,
+			pembahasan: 'Pesan error yang jelas memberi tahu Claude apa yang salah dan apa yang bisa dicoba. console.log justru merusak jalur protokol stdio.',
+		},
+		{
+			tanya: 'Kenapa tool di proyek pertama sebaiknya hanya membaca data?',
+			pilihan: [
+				'Karena SDK MCP versi 2 belum mendukung tool yang bisa menulis data',
+				'Karena tool yang hanya membaca tidak dihitung dalam tagihan biaya API',
+				'Karena risikonya kecil bila dipakai keliru atau disusupi prompt injection',
+			],
+			jawaban: 2,
+			pembahasan: 'Tool yang menulis, menghapus, atau mengirim data ke luar bisa menimbulkan kerusakan bila dipakai keliru atau dibelokkan prompt injection. Mulai dari tool baca, lalu tambahkan pengaman sebelum membuat tool yang mengubah data.',
+		},
+	]}
+/>
+
+<TandaSelesai />
