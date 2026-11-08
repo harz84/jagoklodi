@@ -1,0 +1,155 @@
+---
+title: Kuis akhir Level 4
+description: Uji pemahaman Anda tentang API key dan biaya, Messages API, percakapan dan streaming, tool use, MCP server, dan Agent SDK.
+jenis: kuis
+level: 4
+durasi: 15 menit
+prasyarat: Pelajaran 28 sampai 34.
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 99
+  label: Kuis akhir Level 4
+  badge:
+    text: Kuis
+    variant: tip
+---
+
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+Kuis ini menggabungkan materi Level 4. Sebagian besar soal berupa kasus sehari-hari; pilih jawaban yang paling tepat menurut materi pelajaran.
+
+Kalau ragu, buka lagi pelajarannya:
+
+- [28. Persiapan developer](/level-4/28-persiapan-developer/)
+- [29. Panggilan API pertama](/level-4/29-panggilan-api-pertama/)
+- [30. Percakapan dan streaming](/level-4/30-percakapan-dan-streaming/)
+- [31. Tool use](/level-4/31-tool-use/)
+- [32. MCP server pertama](/level-4/32-mcp-server-pertama/)
+- [33. Agent SDK](/level-4/33-agent-sdk/)
+- [34. Proyek akhir Level 4](/level-4/34-proyek-akhir-level-4/)
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Pak Andi berlangganan Max. Agar kredit API bulanannya bisa dipakai programnya, apa yang perlu ia lakukan?',
+			pilihan: [
+				'Menautkan organisasi Console ke paket Max-nya',
+				'Login dengan akun claude.ai di program',
+				'Tidak ada; kredit itu otomatis masuk ke kuota Claude Code',
+			],
+			jawaban: 0,
+			pembahasan: 'Kredit API bulanan untuk Max, Ultra, dan Team harus diklaim dengan menautkan organisasi Console ke paket. Kredit itu terpisah dari kuota Claude Code dan dipakai lewat API key dari organisasi yang ditautkan.',
+		},
+		{
+			tanya: 'Di mana API key sebaiknya disimpan untuk latihan Level 4?',
+			pilihan: [
+				'Di file .env proyek yang tercantum di .gitignore',
+				'Di ~/.zshrc agar semua program bisa memakainya',
+				'Langsung di kode program agar tidak perlu --env-file',
+			],
+			jawaban: 0,
+			pembahasan: 'File .env proyek yang diabaikan git menjaga key tidak ter-commit, dan --env-file memberikannya hanya ke program itu. Key di pengaturan terminal ikut dipakai Claude Code dengan tarif API, sedangkan key di kode bisa bocor lewat repository.',
+		},
+		{
+			tanya: 'Jawaban API berhenti di tengah kalimat dengan stop_reason max_tokens. Apa langkah yang tepat?',
+			pilihan: [
+				'Membeli kredit tambahan di Console',
+				'Menaikkan nilai max_tokens di request',
+				'Mengganti system prompt dengan instruksi yang lebih panjang',
+			],
+			jawaban: 1,
+			pembahasan: 'max_tokens berarti jawaban mencapai batas token yang Anda tetapkan. Naikkan batasnya. Biaya tetap dihitung dari token yang benar-benar terpakai, bukan dari angka batasnya.',
+		},
+		{
+			tanya: 'Program obrolan Bu Sari mengirim hanya pertanyaan terbaru di setiap request. Apa akibatnya?',
+			pilihan: [
+				'Claude tidak tahu isi percakapan sebelumnya',
+				'Jawaban menjadi lebih panjang dan lebih mahal',
+				'Streaming tidak bisa dipakai sama sekali',
+			],
+			jawaban: 0,
+			pembahasan: 'Messages API stateless. Tanpa riwayat yang dikirim ulang, setiap pertanyaan dianggap percakapan baru. Streaming tetap bisa dipakai, dan mengirim lebih sedikit pesan justru membuat token masuk lebih kecil.',
+		},
+		{
+			tanya: 'Dalam tool use, siapa yang menjalankan fungsi cek_stok buatan Anda?',
+			pilihan: [
+				'Claude sendiri, di server Anthropic saat menjawab',
+				'Program Anda, lalu hasilnya dikirim sebagai tool_result',
+				'Console, setelah tool didaftarkan di halaman Console',
+			],
+			jawaban: 1,
+			pembahasan: 'Claude hanya mengirim blok tool_use berisi nama tool dan input. Program Anda yang menjalankan fungsinya dan mengirim hasilnya kembali sebagai tool_result dengan tool_use_id yang cocok.',
+		},
+		{
+			tanya: 'Loop tool use Anda berulang terus karena tool selalu gagal. Pengaman apa yang seharusnya sudah dipasang?',
+			pilihan: [
+				'Batas jumlah putaran loop',
+				'Streaming untuk setiap request',
+				'Model yang lebih besar dari Haiku',
+			],
+			jawaban: 0,
+			pembahasan: 'Batas putaran menghentikan loop setelah jumlah tertentu, sehingga kesalahan tidak menghabiskan kredit. Streaming dan model yang lebih besar tidak menghentikan loop.',
+		},
+		{
+			tanya: 'Apa peran MCP server dalam susunan host, client, dan server?',
+			pilihan: [
+				'Aplikasi AI yang dipakai langsung oleh pengguna',
+				'Program yang menyediakan tool, data, atau template prompt',
+				'Jalur komunikasi antara aplikasi AI dan model Claude',
+			],
+			jawaban: 1,
+			pembahasan: 'Server menyediakan tools, resources, dan prompts. Host adalah aplikasi AI seperti Claude Code, client adalah komponen di dalam host yang menyambung ke satu server, dan transport adalah jalur komunikasinya.',
+		},
+		{
+			tanya: 'Setelah menambahkan console.log di server.js, Claude Code tidak bisa memakai server stdio Anda. Kenapa?',
+			pilihan: [
+				'Teks itu masuk ke jalur protokol dan merusak pesan',
+				'console.log membuat server berpindah ke transport HTTP',
+				'Claude Code menolak server yang mencetak teks apa pun ke layar',
+			],
+			jawaban: 0,
+			pembahasan: 'Pada transport stdio, output standar adalah jalur protokol. Catatan harus ditulis dengan console.error, yang memakai jalur terpisah.',
+		},
+		{
+			tanya: 'Anda menemukan tutorial MCP yang mengimpor dari "@modelcontextprotocol/sdk/server/mcp.js". Apa yang perlu diingat?',
+			pilihan: [
+				'Itu SDK versi 1; jangan dicampur dengan paket versi 2',
+				'Itu versi terbaru yang menggantikan @modelcontextprotocol/server',
+				'Itu paket khusus untuk menyambungkan server ke Agent SDK',
+			],
+			jawaban: 0,
+			pembahasan: 'Paket @modelcontextprotocol/sdk adalah SDK versi 1. Materi ini memakai versi 2 dengan paket @modelcontextprotocol/server. Cara impor keduanya berbeda.',
+		},
+		{
+			tanya: 'Opsi Agent SDK mana yang menentukan alat bawaan apa saja yang tersedia bagi agen?',
+			pilihan: ['tools', 'allowedTools', 'settingSources'],
+			jawaban: 0,
+			pembahasan: 'tools menentukan alat bawaan yang tersedia; [] mematikan semuanya. allowedTools hanya menentukan alat yang boleh dipakai tanpa bertanya, sedangkan settingSources mengatur pengaturan Claude Code yang ikut dimuat.',
+		},
+		{
+			tanya: 'Agen akan berjalan setiap Jumat tanpa diawasi. Kombinasi pengaman apa yang paling tepat?',
+			pilihan: [
+				'Mode bypassPermissions agar tidak tertahan pertanyaan izin',
+				'Alat yang sempit, mode dontAsk, maxTurns, dan maxBudgetUsd',
+				'Semua alat bawaan, tetapi dengan model termurah',
+			],
+			jawaban: 1,
+			pembahasan: 'Alat yang sempit membatasi apa yang bisa dilakukan, dontAsk menolak alat lain tanpa bertanya, dan maxTurns serta maxBudgetUsd membatasi lama dan biaya. bypassPermissions menjalankan semua alat tanpa pemeriksaan.',
+		},
+		{
+			tanya: 'Program Agent SDK menampilkan "Not logged in" padahal file .env berisi API key yang benar. Apa yang terlewat?',
+			pilihan: [
+				'Login ke claude.ai di browser',
+				'Menjalankan program dengan --env-file=.env',
+				'Memasang Claude Code secara terpisah',
+			],
+			jawaban: 1,
+			pembahasan: 'Agent SDK tidak membaca file .env sendiri; key harus ada di lingkungan program, misalnya lewat node --env-file=.env. Agent SDK membawa Claude Code di dalam paketnya, dan untuk program yang dibagikan ia memakai API key, bukan login claude.ai.',
+		},
+	]}
+/>
+
+<TandaSelesai />
