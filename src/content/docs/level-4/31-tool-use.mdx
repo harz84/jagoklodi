@@ -1,0 +1,229 @@
+---
+title: "Tool use: memberi Claude alat yang dijalankan program Anda"
+description: Mendefinisikan tool dengan input_schema, menjalankan loop tool_use dan tool_result sampai Claude selesai, serta melaporkan kegagalan tool dengan is_error.
+jenis: pelajaran
+level: 4
+durasi: 45 menit
+prasyarat: Pelajaran 29 dan 30.
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 31
+  label: 31. Tool use
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Mendefinisikan tool dengan nama, deskripsi, dan `input_schema`.
+2. Menjalankan loop tool use: membaca `tool_use`, menjalankan tool, dan mengirim balik `tool_result`.
+3. Melaporkan kegagalan tool dengan `is_error` dan membatasi jumlah putaran loop.
+
+## Claude meminta, program Anda menjalankan
+
+**Tool use** (disebut juga *function calling*) membuat Claude bisa memakai fungsi buatan Anda, misalnya mengecek stok di data toko. Hal terpenting yang perlu dipahami: **Claude tidak menjalankan apa pun sendiri.** Claude hanya mengirim permintaan terstruktur; program Andalah yang menjalankan fungsinya lalu mengirim hasilnya kembali. Claude juga tidak pernah melihat kode fungsi Anda, hanya definisi dan hasilnya.
+
+Satu putaran tool use berjalan seperti ini:
+
+1. Program mengirim request berisi daftar `tools` dan pertanyaan pengguna.
+2. Bila perlu tool, Claude menjawab dengan `stop_reason: "tool_use"` dan satu atau beberapa blok `tool_use`. Setiap blok berisi `id`, nama tool, dan `input`.
+3. Program menjalankan tool itu, lalu menyusun blok `tool_result` dengan `tool_use_id` yang sama dengan `id` tadi.
+4. Program mengirim request baru berisi riwayat lengkap: pesan awal, jawaban Claude yang memuat `tool_use`, lalu pesan `user` berisi semua `tool_result`.
+5. Ulangi dari langkah 2 selama `stop_reason` masih `tool_use`. Bila sudah `end_turn`, Claude memberi jawaban akhir.
+
+Pola berulang ini disebut **loop agen** (agentic loop), dan menjadi dasar semua agen, termasuk Claude Code.
+
+### Mendefinisikan tool
+
+Setiap tool punya tiga bagian:
+
+| Bagian | Isi |
+| --- | --- |
+| `name` | Nama pendek tanpa spasi, misalnya `cek_stok` |
+| `description` | Penjelasan kapan dan untuk apa tool dipakai. Claude memutuskan memakai tool berdasarkan teks ini, jadi tulis sejelas instruksi untuk rekan kerja |
+| `input_schema` | Bentuk input dalam format **JSON Schema**: nama field, tipenya, dan field mana yang wajib |
+
+## Langkah
+
+<Steps>
+
+1. **Buat file `stok.js`** di folder `latihan-api`:
+
+    ```js
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic();
+    const MODEL = 'claude-haiku-5-5';
+    const BATAS_PUTARAN = 5;
+
+    // Data fiktif. Di aplikasi nyata, bagian ini bisa berupa database atau API lain.
+    const STOK = { 'KUE-01': 12, 'KUE-02': 3, 'KUE-03': 0 };
+
+    const tools = [
+    	{
+    		name: 'cek_stok',
+    		description:
+    			'Mengecek sisa stok satu produk Toko Kue Bu Sari berdasarkan kode produknya, misalnya KUE-01. ' +
+    			'Pakai tool ini setiap kali pengguna menanyakan ketersediaan produk.',
+    		input_schema: {
+    			type: 'object',
+    			properties: {
+    				kode: { type: 'string', description: 'Kode produk, misalnya KUE-01' },
+    			},
+    			required: ['kode'],
+    		},
+    	},
+    ];
+
+    function jalankanTool(nama, input) {
+    	if (nama !== 'cek_stok') return { isi: `Tool ${nama} tidak dikenal.`, gagal: true };
+    	const kode = String(input.kode).toUpperCase();
+    	if (!(kode in STOK)) {
+    		return { isi: `Kode ${kode} tidak ada. Kode yang tersedia: ${Object.keys(STOK).join(', ')}.`, gagal: true };
+    	}
+    	return { isi: `Stok ${kode}: ${STOK[kode]} buah.`, gagal: false };
+    }
+
+    const messages = [{ role: 'user', content: 'Masih ada stok KUE-02 dan KUE-03?' }];
+    let respons = await client.messages.create({ model: MODEL, max_tokens: 1024, tools, messages });
+    let putaran = 0;
+
+    while (respons.stop_reason === 'tool_use' && putaran < BATAS_PUTARAN) {
+    	putaran++;
+    	messages.push({ role: 'assistant', content: respons.content });
+
+    	const hasil = respons.content
+    		.filter((blok) => blok.type === 'tool_use')
+    		.map((blok) => {
+    			const { isi, gagal } = jalankanTool(blok.name, blok.input);
+    			console.log(`[tool] ${blok.name}(${JSON.stringify(blok.input)}) -> ${isi}`);
+    			return { type: 'tool_result', tool_use_id: blok.id, content: isi, is_error: gagal };
+    		});
+
+    	messages.push({ role: 'user', content: hasil });
+    	respons = await client.messages.create({ model: MODEL, max_tokens: 1024, tools, messages });
+    }
+
+    for (const blok of respons.content) {
+    	if (blok.type === 'text') console.log(blok.text);
+    }
+    ```
+
+2. **Jalankan:**
+
+    ```bash
+    node --env-file=.env stok.js
+    ```
+
+    Anda akan melihat baris `[tool]` untuk setiap panggilan, lalu jawaban akhir Claude. Claude bisa meminta dua tool sekaligus dalam satu jawaban; kode di atas menjalankan semuanya dan mengirim semua `tool_result` dalam **satu** pesan `user`.
+
+3. **Uji jalur gagal.** Ubah pertanyaan menjadi "Masih ada stok KUE-09?". Tool mengembalikan `is_error: true` beserta daftar kode yang tersedia, dan Claude menyampaikannya dengan wajar kepada pengguna.
+
+4. **Uji pentingnya deskripsi.** Ubah `description` menjadi "Tool stok." lalu ajukan pertanyaan yang tidak menyebut kode, misalnya "Bolu pandan masih ada?". Bandingkan perilakunya dengan deskripsi lengkap. Kembalikan deskripsi semula.
+
+5. **Commit** `stok.js` lewat branch dan pull request.
+
+</Steps>
+
+<Aside type="note" title="Kenapa ada BATAS_PUTARAN?">
+Loop berjalan selama Claude meminta tool. Bila ada kesalahan di tool atau data, loop bisa berulang terus dan menghabiskan kredit. Batas putaran adalah pengaman sederhana: setelah lima putaran, program berhenti apa pun yang terjadi.
+</Aside>
+
+## Aturan format yang sering membuat error
+
+- Pesan `user` berisi `tool_result` harus **langsung** mengikuti pesan `assistant` yang berisi `tool_use`, tanpa pesan lain di antaranya.
+- Di pesan itu, semua blok `tool_result` diletakkan **lebih dulu**. Teks tambahan, bila ada, ditaruh setelahnya.
+- Setiap `tool_use` harus dijawab dengan `tool_result` yang `tool_use_id`-nya sama.
+
+SDK juga menyediakan *tool runner* (masih beta) yang menjalankan loop ini secara otomatis. Materi ini menulis loop sendiri agar Anda memahami apa yang terjadi di baliknya.
+
+## Contoh nyata
+
+Bu Sari (fiktif) menambahkan tool kedua, `cek_harga`, ke program stoknya. Saat pengguna bertanya "Lapis legit masih ada, harganya berapa?", Claude meminta `cek_stok` dan `cek_harga` sekaligus. Program menjalankan keduanya dan mengirim dua `tool_result` dalam satu pesan. Claude lalu menjawab dalam satu kalimat yang memuat stok dan harga.
+
+## Latihan
+
+Tambahkan tool `cek_harga` ke `stok.js` dengan data harga fiktif untuk ketiga kode produk. Ajukan pertanyaan yang membutuhkan kedua tool sekaligus.
+
+**Kriteria berhasil:** kedua tool punya deskripsi yang jelas; Claude memanggil kedua tool untuk pertanyaan gabungan; kode yang tidak ada menghasilkan `is_error: true` dengan pesan yang membantu; dan loop berhenti paling lambat setelah lima putaran.
+
+**Perkiraan biaya:** kurang dari US$0,05 untuk semua latihan pelajaran ini dengan Claude Haiku 5.5. Setiap definisi tool menambah token masuk di setiap request.
+
+## Kesalahan umum
+
+- **Mengira Claude menjalankan tool sendiri.** Bila program tidak menjalankan tool dan mengirim `tool_result`, tidak ada yang terjadi.
+- **Error "tool_use ids were found without tool_result blocks immediately after".** Ada `tool_use` yang belum dijawab, atau ada pesan lain di antara `tool_use` dan `tool_result`.
+- **Mengirim satu pesan per `tool_result`** saat Claude meminta beberapa tool sekaligus. Semua hasil masuk ke satu pesan `user`.
+- **Pesan error yang tidak membantu**, seperti "gagal". Tulis apa yang salah dan apa yang bisa dicoba, supaya Claude bisa memperbaiki permintaannya.
+- **Loop tanpa batas putaran.** Selalu pasang batas sebagai pengaman biaya.
+
+## Rujukan
+
+- [Tool use with Claude](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview): gambaran tool use dan contoh satu putaran lengkap.
+- [How tool use works](https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works): kontrak antara program dan model, serta loop agen.
+- [Define tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools): cara menulis definisi tool.
+- [Handle tool calls](https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls): format `tool_result`, aturan urutan, dan `is_error`.
+- [Tutorial: Build a tool-using agent](https://platform.claude.com/docs/en/agents-and-tools/tool-use/build-a-tool-using-agent): dari satu tool sampai loop agen dan tool runner.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Claude menjawab dengan stop_reason "tool_use". Apa yang harus dilakukan program Anda?',
+			pilihan: [
+				'Menjalankan tool yang diminta, lalu mengirim tool_result',
+				'Menunggu Claude selesai menjalankan tool di server',
+				'Mengulang request yang sama sampai muncul end_turn',
+			],
+			jawaban: 0,
+			pembahasan: 'Claude tidak menjalankan tool buatan Anda. Program yang menjalankan fungsinya, lalu mengirim hasilnya sebagai tool_result di request berikutnya. Mengulang request yang sama tidak menyelesaikan apa pun.',
+		},
+		{
+			tanya: 'Bagaimana Claude tahu kapan harus memakai tool cek_stok?',
+			pilihan: [
+				'Dari kode fungsi jalankanTool yang dibaca Claude',
+				'Dari nama dan deskripsi tool di definisinya',
+				'Dari jumlah putaran yang tersisa di loop',
+			],
+			jawaban: 1,
+			pembahasan: 'Claude hanya menerima definisi tool (nama, deskripsi, input_schema) dan hasilnya; kode fungsi tidak pernah dikirim. Karena itu deskripsi yang jelas sangat menentukan kapan tool dipakai.',
+		},
+		{
+			tanya: 'Claude meminta dua tool sekaligus dalam satu jawaban. Bagaimana hasilnya dikirim balik?',
+			pilihan: [
+				'Dua pesan user terpisah, satu untuk setiap tool_result',
+				'Satu pesan assistant berisi kedua hasil sebagai teks',
+				'Satu pesan user berisi dua blok tool_result',
+			],
+			jawaban: 2,
+			pembahasan: 'Semua tool_result untuk satu jawaban Claude dikirim dalam satu pesan user, masing-masing dengan tool_use_id yang cocok. Pesan itu harus langsung mengikuti pesan assistant yang berisi tool_use.',
+		},
+		{
+			tanya: 'Kode produk yang diminta Claude tidak ada di data. Apa respons tool yang paling tepat?',
+			pilihan: [
+				'tool_result dengan is_error: true dan pesan jelas',
+				'Menghentikan program sepenuhnya agar data tidak ikut rusak',
+				'Mengirim teks gagal saja tanpa menyertakan tool_result',
+			],
+			jawaban: 0,
+			pembahasan: 'is_error: true memberi tahu Claude bahwa tool gagal, dan pesan yang menjelaskan masalahnya membantu Claude mencoba lagi atau menjelaskan kepada pengguna. Setiap tool_use tetap wajib dijawab dengan tool_result.',
+		},
+		{
+			tanya: 'Apa fungsi BATAS_PUTARAN di program contoh?',
+			pilihan: [
+				'Mencegah loop berulang terus dan menghabiskan kredit',
+				'Membatasi jumlah tool yang boleh didefinisikan',
+				'Menentukan berapa token boleh dipakai per putaran',
+			],
+			jawaban: 0,
+			pembahasan: 'Loop berjalan selama Claude meminta tool. Bila ada kesalahan, loop bisa berulang terus. Batas putaran menghentikan program setelah jumlah tertentu sebagai pengaman biaya. Batas token per jawaban diatur lewat max_tokens.',
+		},
+	]}
+/>
+
+<TandaSelesai />
