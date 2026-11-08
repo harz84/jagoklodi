@@ -1,0 +1,184 @@
+---
+title: "Panggilan API pertama: mengirim pesan dari JavaScript"
+description: Memasang SDK Claude untuk JavaScript, mengirim pesan dengan system prompt dan batas token, lalu membaca jawaban, alasan berhenti, dan jumlah token yang terpakai.
+jenis: pelajaran
+level: 4
+durasi: 35 menit
+prasyarat: Pelajaran 28 (Node.js, API key, dan file .env sudah siap).
+terakhirDiverifikasi: 2026-11-08
+sidebar:
+  order: 29
+  label: 29. Panggilan API pertama
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import TandaSelesai from '~/components/TandaSelesai.astro';
+import Kuis from '~/components/Kuis.astro';
+
+## Tujuan
+
+Setelah pelajaran ini, Anda bisa:
+
+1. Memasang SDK Claude untuk JavaScript.
+2. Mengirim pesan dengan `model`, `max_tokens`, `system`, dan `messages`.
+3. Membaca isi jawaban, `stop_reason`, dan jumlah token yang terpakai.
+
+## Bagaimana program memanggil Claude
+
+Program Anda mengirim **request** (permintaan) ke **Messages API**, lalu menerima **response** (jawaban) dalam bentuk data terstruktur. Supaya tidak perlu menyusun request HTTP sendiri, Anda memakai **SDK** (software development kit), yaitu paket siap pakai yang membungkus API. Untuk JavaScript, paketnya bernama `@anthropic-ai/sdk`.
+
+Empat bagian request yang dipakai di pelajaran ini:
+
+| Bagian | Isi |
+| --- | --- |
+| `model` | Model yang dipakai. Latihan memakai `claude-haiku-5-5`; daftar lengkapnya ada di [Models overview](https://platform.claude.com/docs/en/models/overview) |
+| `max_tokens` | Batas panjang jawaban dalam **token**, potongan teks yang dipakai model untuk menghitung. Batas ini juga membatasi biaya satu panggilan |
+| `system` | **System prompt**: instruksi tetap tentang peran dan gaya jawaban, sama seperti instruksi Project di Pelajaran 8 |
+| `messages` | Daftar pesan percakapan. Setiap pesan punya `role` (`user` atau `assistant`) dan `content` |
+
+Jawaban berisi beberapa bagian penting:
+
+- `content`: daftar **blok**. Teks jawaban ada di blok bertipe `text`. Blok lain bisa muncul, jadi program memilih blok `text` saja.
+- `stop_reason`: alasan Claude berhenti. `end_turn` berarti jawaban selesai; `max_tokens` berarti jawaban terpotong karena batas token.
+- `usage`: jumlah token masuk (`input_tokens`) dan keluar (`output_tokens`). Inilah dasar tagihan.
+
+## Langkah
+
+<Steps>
+
+1. **Masuk ke folder latihan** dari Pelajaran 28, lalu pasang SDK dengan versi yang dikunci:
+
+    ```bash
+    cd latihan-api
+    npm install @anthropic-ai/sdk@1.6.0
+    ```
+
+    Angka `1.6.0` adalah versi yang dipakai materi ini. Mengunci versi membuat contoh tetap jalan walau ada rilis baru yang mengubah cara pakai.
+
+2. **Buat file `halo.js`** berisi kode berikut:
+
+    ```js
+    import Anthropic from '@anthropic-ai/sdk';
+
+    const client = new Anthropic(); // otomatis membaca ANTHROPIC_API_KEY
+
+    const pesan = await client.messages.create({
+    	model: 'claude-haiku-5-5',
+    	max_tokens: 1024,
+    	system: 'Anda asisten Toko Kue Bu Sari (fiktif). Jawab singkat dalam Bahasa Indonesia.',
+    	messages: [{ role: 'user', content: 'Beri 3 ide nama kue kering untuk Lebaran.' }],
+    });
+
+    for (const blok of pesan.content) {
+    	if (blok.type === 'text') console.log(blok.text);
+    }
+    console.log('---');
+    console.log('stop_reason:', pesan.stop_reason);
+    console.log('token masuk:', pesan.usage.input_tokens, '| token keluar:', pesan.usage.output_tokens);
+    ```
+
+3. **Jalankan** dengan membaca `.env`:
+
+    ```bash
+    node --env-file=.env halo.js
+    ```
+
+    Hasilnya tiga ide nama kue, diikuti `stop_reason: end_turn` dan jumlah token.
+
+4. **Ubah system prompt**, misalnya menjadi "Jawab dengan gaya ceria dan sertakan satu emoji di setiap ide". Jalankan lagi dan bandingkan hasilnya. System prompt mengubah gaya tanpa mengubah pertanyaan.
+
+5. **Coba batas token.** Ubah `max_tokens` menjadi `20`, jalankan, lalu lihat `stop_reason`. Nilainya menjadi `max_tokens` dan jawabannya terpotong. Kembalikan ke `1024`.
+
+6. **Commit** `halo.js`, `package.json`, dan `package-lock.json` lewat branch dan pull request, seperti di Level 3. Folder `node_modules` dan file `.env` tidak ikut karena sudah ada di `.gitignore`.
+
+</Steps>
+
+<Aside type="note" title="Kenapa max_tokens 1024, padahal jawabannya pendek?">
+Claude Haiku 5.5 bisa **berpikir** (thinking) dulu sebelum menjawab, dan token berpikir ikut dihitung dalam `max_tokens` serta tagihan token keluar. Batas yang terlalu kecil bisa membuat jawaban terpotong sebelum sempat ditulis. Biaya hanya dihitung dari token yang benar-benar terpakai, bukan dari angka batasnya.
+</Aside>
+
+## Contoh nyata
+
+Bu Sari (fiktif) memakai `halo.js` sebagai dasar program penulis deskripsi produk. Ia mengganti isi `messages` dengan "Tulis deskripsi 2 kalimat untuk bolu pandan, harga Rp45.000", dan system prompt-nya berisi gaya bahasa toko. Setiap kali program dijalankan, ia melihat `usage` untuk memperkirakan biaya bila nanti dipakai untuk 50 produk.
+
+## Latihan
+
+Ubah `halo.js` agar menulis deskripsi singkat untuk tiga produk fiktif pilihan Anda, satu panggilan API per produk. Setelah semua selesai, tampilkan total token masuk dan total token keluar.
+
+**Kriteria berhasil:** program berjalan tanpa error; setiap jawaban berakhir dengan `stop_reason: end_turn`; total token tampil di akhir; dan tidak ada API key yang tertulis di kode.
+
+**Perkiraan biaya:** kurang dari US$0,01 untuk semua latihan pelajaran ini dengan Claude Haiku 5.5 (dihitung dari batas `max_tokens` dan harga per 8 November 2026). Angka pastinya bisa Anda lihat di halaman **Usage** Console ([platform.claude.com/usage](https://platform.claude.com/usage)).
+
+## Kesalahan umum
+
+- **`authentication_error` atau "invalid x-api-key".** Key salah, sudah dihapus, atau `.env` tidak terbaca. Pastikan perintahnya memakai `--env-file=.env` dan Anda menjalankannya dari folder yang berisi `.env`.
+- **`.env` sudah benar tetapi key lama yang terpakai.** Bila terminal Anda sudah punya variabel `ANTHROPIC_API_KEY`, nilai di terminal yang menang; `--env-file` tidak menimpanya. Hapus variabel itu dari pengaturan terminal (lihat Pelajaran 28).
+- **"Cannot use import statement outside a module".** `package.json` belum berisi `"type": "module"`. Jalankan `npm pkg set type=module`.
+- **Menganggap `content` pasti satu blok teks.** Jawaban bisa berisi beberapa blok dengan tipe berbeda; selalu pilih blok bertipe `text`.
+- **Memakai contoh lama dari internet.** SDK versi 1.0 baru rilis 21 Oktober 2026. Contoh lama bisa memakai nama model atau cara pakai yang sudah berubah, jadi cocokkan dengan dokumentasi resmi.
+
+## Rujukan
+
+- [TypeScript SDK](https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/typescript): pemasangan, syarat versi Node.js, dan contoh dasar.
+- [Using the Messages API](https://platform.claude.com/docs/en/build-with-claude/working-with-messages): pola dasar request dan response.
+- [Create a Message](https://platform.claude.com/docs/en/api/messages/create): rincian setiap parameter, termasuk `stop_reason`.
+- [Models overview](https://platform.claude.com/docs/en/models/overview): daftar model dan ID-nya.
+- [Pricing](https://platform.claude.com/docs/en/about-claude/pricing): harga per model.
+- [Thinking](https://platform.claude.com/docs/en/build-with-claude/thinking): token berpikir dihitung dalam `max_tokens` dan ditagih sebagai token keluar.
+- [Cost and usage reporting in the Claude Console](https://support.claude.com/en/articles/9534590-cost-and-usage-reporting-in-the-claude-console): membaca pemakaian per model dan per API key.
+- [Claude Platform release notes](https://platform.claude.com/docs/en/release-notes/overview): perubahan SDK dan API terbaru.
+
+## Kuis
+
+<Kuis
+	soal={[
+		{
+			tanya: 'Program Anda menampilkan stop_reason: max_tokens dan jawabannya terpotong. Apa artinya?',
+			pilihan: [
+				'Jawaban berhenti karena mencapai batas token',
+				'Saldo kredit API habis di tengah jawaban',
+				'Model menolak menjawab pertanyaan tersebut',
+			],
+			jawaban: 0,
+			pembahasan: 'stop_reason max_tokens berarti Claude berhenti karena mencapai batas max_tokens yang Anda tetapkan. Naikkan batasnya bila jawaban memang perlu lebih panjang. Jawaban yang selesai dengan wajar bernilai end_turn.',
+		},
+		{
+			tanya: 'Di bagian mana Anda menaruh instruksi tetap seperti "Jawab singkat dengan gaya toko kue"?',
+			pilihan: ['Di system', 'Di max_tokens', 'Di nama model'],
+			jawaban: 0,
+			pembahasan: 'System prompt berisi instruksi tetap tentang peran dan gaya jawaban. Pertanyaan pengguna ada di messages, sedangkan max_tokens hanya membatasi panjang jawaban.',
+		},
+		{
+			tanya: 'Kenapa kode contoh hanya mencetak blok yang bertipe text?',
+			pilihan: [
+				'Karena blok text adalah satu-satunya blok yang ditagih',
+				'Karena jawaban bisa berisi beberapa blok dengan tipe berbeda',
+				'Karena blok lain hanya muncul bila API key salah',
+			],
+			jawaban: 1,
+			pembahasan: 'content adalah daftar blok, dan tidak semuanya berupa teks jawaban. Program yang mengambil blok pertama begitu saja bisa keliru, jadi pilih blok bertipe text.',
+		},
+		{
+			tanya: 'Dari mana Anda tahu berapa token yang dipakai satu panggilan?',
+			pilihan: [
+				'Dari panjang system prompt dibagi empat',
+				'Dari angka max_tokens di request',
+				'Dari bagian usage di jawaban API',
+			],
+			jawaban: 2,
+			pembahasan: 'Bagian usage berisi input_tokens dan output_tokens yang benar-benar terpakai, dan itulah dasar tagihan. max_tokens hanya batas atas; biaya dihitung dari token yang terpakai.',
+		},
+		{
+			tanya: '.env sudah berisi key baru, tetapi program tetap memakai key lama. Penyebab yang paling mungkin?',
+			pilihan: [
+				'Variabel di terminal menang atas isi .env',
+				'SDK menyimpan key lama di dalam folder node_modules',
+				'Console butuh sehari penuh untuk mengaktifkan key baru',
+			],
+			jawaban: 0,
+			pembahasan: 'node --env-file tidak menimpa variabel yang sudah ada di terminal. Bila ANTHROPIC_API_KEY sudah terpasang di sana, nilai itu yang terpakai. Hapus variabel tersebut dari pengaturan terminal.',
+		},
+	]}
+/>
+
+<TandaSelesai />

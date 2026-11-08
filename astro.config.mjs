@@ -36,6 +36,7 @@ export default defineConfig({
 				{ label: 'Level 1 · Dasar pemakaian', collapsed: true, items: [{ autogenerate: { directory: 'level-1' } }] },
 				{ label: 'Level 2 · Produktivitas', collapsed: true, items: [{ autogenerate: { directory: 'level-2' } }] },
 				{ label: 'Level 3 · Builder', collapsed: true, items: [{ autogenerate: { directory: 'level-3' } }] },
+				{ label: 'Level 4 · Developer', collapsed: true, items: [{ autogenerate: { directory: 'level-4' } }] },
 				// Tambahkan grup level berikutnya setelah folder-nya berisi minimal satu pelajaran.
 				// collapsed: true → hanya grup yang berisi halaman yang sedang dibaca yang terbuka otomatis.
 			],
