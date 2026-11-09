@@ -12,13 +12,13 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.42.7",
-    "@supabase/supabase-js": "2.118.0",
-    "astro": "^7.4.4",
+    "@astrojs/starlight": "^0.42.9",
+    "@supabase/supabase-js": "2.119.0",
+    "astro": "^7.4.7",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "@playwright/test": "1.64.1",
+    "@playwright/test": "1.65.0",
     "starlight-links-validator": "^0.27.0"
   },
   "engines": {
